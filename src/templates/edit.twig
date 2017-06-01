@@ -1,0 +1,56 @@
+{% extends "_layouts/cp" %}
+
+{% set fullPageForm = true %}
+{% set title = "Redirects"|t('redirect') %}
+
+{% import "_includes/forms" as forms %}
+
+
+{% block content %}
+    <input type="hidden" name="action" value="redirect/settings/save-redirect">
+		<input type="hidden" name="pluginHandle" value="redirect">
+		<input type="hidden" name="redirectUrl" value="{{ url( pathPrefix ~ 'redirect') }}">
+
+    {{ redirectInput('settings/redirect') }}
+
+    {% if redirect.id %}<input type="hidden" name="redirectId" value="{{ redirect.id }}">{% endif %}
+
+    <div id="categorygroup-settings">
+
+            {{ forms.textField({
+                label: "Source URL"|t('redirect'),
+                instructions: "The URL to be redirected"|t('redirect'),
+                id: 'source-url',
+                class: 'ltr',
+                name: 'sourceUrl',
+                value: redirect.sourceUrl,
+                errors: redirect.getErrors('sourceUrl'),
+                autofocus: true,
+                required: true
+            }) }}
+
+            {{ forms.textField({
+                label: "Destination URL"|t('redirect'),
+                instructions: "The final URL"|t('redirect'),
+                id: 'destination-url',
+                class: 'ltr',
+                name: 'destinationUrl',
+                value: redirect.destinationUrl,
+                errors: redirect.getErrors('destinationUrl'),
+                required: true
+            }) }}
+            {{ forms.selectField({
+              label: "Redirect type"|t('redirect'),
+              instructions: "Redirect status code"|t('redirect'),
+              id: 'status-code',
+              name: 'statusCode',
+              options: statusCodeOptions,
+              value: redirect.statusCode,
+              toggle: true,
+              targetPrefix: '.statusCode-',
+              errors: redirect.getErrors('statusCode')
+          }) }}
+    </div>
+{% endblock %}
+
+

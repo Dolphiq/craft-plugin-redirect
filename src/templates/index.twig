@@ -1,0 +1,66 @@
+{% extends "_layouts/cp" %}
+{% set title = "Redirects"|t('redirect') %}
+
+{% set extraPageHeaderHtml %}
+    <div class="buttons right">
+        <a href="{{ url( pathPrefix ~ 'redirect/new') }}" class="btn submit add icon">{{ "New redirect"|t('redirect') }}</a>
+    </div>
+{% endset %}
+
+{% set crumbs = [
+    { label: "Settings"|t('app'), url: url('settings') }
+] %}
+
+{% block sidebar %}{% if source == "CpSettings" %}
+
+    {% set selectedNavItem = "redirects" %}
+    {% include "redirect/nav" %}
+{% endif %}{% endblock %}
+
+
+{% set docsUrl = 'https://github.com/Dolphiq/craft3-plugin-redirect' %}
+
+
+{% block content %}
+
+    {% if settings.redirectsActive == false %}
+      <div id="redirectsdisabled">
+          <p>{{ "The redirects are not active! Please activate the redirects in the settings tab before the are active."|t('redirect') }}<br><br></p>
+      </div>
+    {% endif %}
+    <div id="noredirects"{% if allRedirects|length %} class="hidden"{% endif %}>
+        <p>{{ "No redirects exist yet."|t('redirect') }}</p>
+    </div>
+    {% if allRedirects|length %}
+    <table id="redirects" class="data fullwidth collapsible">
+        <thead>
+            <th scope="col">{{ "Source URL"|t('redirect') }}</th>
+            <th scope="col">{{ "Destination URL"|t('redirect') }}</th>
+            <th scope="col">{{ "Redirect type"|t('redirect') }}</th>
+            <td class="thin"></td>
+        </thead>
+        <tbody>
+            {% for redirect in allRedirects %}
+                <tr data-id="{{ redirect.id }}" data-name="{{ redirect.sourceUrl }}">
+                    <th scope="row" data-title="{{ 'Source URL'|t('redirect') }}"><a href="{{ url('settings/redirect/' ~ redirect.id) }}"><code>{{ redirect.sourceUrl }}</code></a></th>
+                    <td data-title="{{ 'Destination URL'|t('redirect') }}"><code>{{ redirect.destinationUrl }}</code></td>
+                    <td data-title="{{ 'Redirect type'|t('redirect') }}"><code>{{ redirect.statusCode }}</code></td>
+                    <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('redirect') }}" role="button"></a></td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endblock %}
+{% js %}
+    var a = new Craft.AdminTable({
+        tableSelector: '#redirects',
+        noItemsSelector: '#noredirects',
+        deleteAction: 'redirect/settings/delete-redirect',
+        confirmDeleteMessage: '{{ "Are you sure you want to delete {name}"|t('source') }}',
+    });
+
+    console.log(a);
+
+{% endjs %}

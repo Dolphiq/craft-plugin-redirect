@@ -1,0 +1,41 @@
+{% extends "_layouts/cp" %}
+{% set title = "Redirect settings"|t('redirect') %}
+
+{% set fullPageForm = true %}
+
+{% set crumbs = [
+    { label: "Settings"|t('app'), url: url('settings') }
+] %}
+
+{% block sidebar %}
+  {% if source == "CpSettings" %}
+
+  {% set selectedNavItem = "settings" %}
+    {% include "redirect/nav" %}
+
+  {% endif %}
+{% endblock %}
+
+{% set docsUrl = 'https://github.com/Dolphiq/craft3-plugin-redirect' %}
+
+
+{% import "_includes/forms" as forms %}
+
+
+{% block content %}
+
+    <input type="hidden" name="action" value="redirect/settings/save-settings">
+		<input type="hidden" name="pluginHandle" value="redirect">
+
+
+{{ forms.lightswitchField({
+    label:        "Activate redirects"|t('redirect'),
+    instructions: "This switch activate/de-activate all the entered redirects without removing them."|t('redirect'),
+    id:           'redirectsActive',
+    name:         'redirectsActive',
+    on:           settings.redirectsActive,
+    errors:       settings.getErrors('redirectsActive')
+}) }}
+
+
+{% endblock content %}

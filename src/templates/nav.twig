@@ -1,0 +1,7 @@
+  {% set navItems = {
+      redirects: { label: "Redirect entries"|t('redirect'), url: url(pathPrefix ~ 'redirect') },
+      settings: { label: "Settings"|t('app'), url: url(pathPrefix ~ 'redirect/settings') }
+  } %}
+    <nav>
+        {% include "_includes/nav" with { items: navItems, selectedItem: selectedNavItem } only %}
+    </nav>
