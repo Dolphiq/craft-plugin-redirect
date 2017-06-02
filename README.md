@@ -4,6 +4,8 @@ Craft plugin that provides an easy way to enter and maintain 301 and 302 redirec
 
 This is particularly useful if you are migrating pages from an old website and want to avoid dead links and want to keep the page ranks for the SEO. But also use full if you are making (big) changes in the site (url) structure.
 
+The plugin also registers and shows the last hit date and hit count per visited redirect.
+
 ## Installation
 
 To Redirect, follow these steps:

@@ -37,6 +37,9 @@
             <th scope="col">{{ "Source URL"|t('redirect') }}</th>
             <th scope="col">{{ "Destination URL"|t('redirect') }}</th>
             <th scope="col">{{ "Redirect type"|t('redirect') }}</th>
+            <th scope="col">{{ "Hit count"|t('redirect') }}</th>
+            <th scope="col">{{ "Last hit"|t('redirect') }}</th>
+
             <td class="thin"></td>
         </thead>
         <tbody>
@@ -45,6 +48,11 @@
                     <th scope="row" data-title="{{ 'Source URL'|t('redirect') }}"><a href="{{ url('settings/redirect/' ~ redirect.id) }}"><code>{{ redirect.sourceUrl }}</code></a></th>
                     <td data-title="{{ 'Destination URL'|t('redirect') }}"><code>{{ redirect.destinationUrl }}</code></td>
                     <td data-title="{{ 'Redirect type'|t('redirect') }}"><code>{{ redirect.statusCode }}</code></td>
+
+                    <td data-title="{{ 'Hit count'|t('redirect') }}"><code>{{ redirect.hitCount }}</code></td>
+                    <td data-title="{{ 'Last hit'|t('redirect') }}"><code>{{ redirect.hitAt|date('m-d-Y H:i:s') }}</code></td>
+
+
                     <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('redirect') }}" role="button"></a></td>
 
                 </tr>

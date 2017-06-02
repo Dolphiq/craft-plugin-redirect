@@ -70,7 +70,7 @@ class Redirects extends Component
     public function getAllRedirects(): array
     {
         $results = (new Query())
-            ->select(['id', 'sourceUrl', 'destinationUrl', 'statusCode'])
+            ->select(['id', 'sourceUrl', 'destinationUrl', 'statusCode', 'hitCount', 'hitAt'])
             ->from(['{{%dolphiq_redirects}}'])
             ->where([
                 'or',
@@ -159,4 +159,32 @@ class Redirects extends Component
         $redirectRecord->delete();
         return true;
     }
+
+    /**
+     * Register a hit to the redirect by its ID.
+     *
+     * @param int $redirectId
+     *
+     * @return bool
+     */
+    public function registerHitById(int $redirectId, $destinationUrl = ''): bool
+    {
+        // simple update to keep it fast
+        if($redirectId<1) {
+          return false;
+        }
+        $res = \Yii::$app->db->createCommand()
+          ->update(
+            'dolphiq_redirects',
+            [
+              'hitAt'=>new \yii\db\Expression('now()'),
+              'hitCount'=>new \yii\db\Expression('hitCount + 1'),
+            ],
+            ['id'=>$redirectId]
+          )
+          ->execute();
+
+        return true;
+    }
+
 }

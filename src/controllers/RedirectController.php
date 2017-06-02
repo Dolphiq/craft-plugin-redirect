@@ -29,13 +29,13 @@ class RedirectController extends Controller
         $sourceUrl = $routeParameters['sourceUrl'];
         $destinationUrl = $routeParameters['destinationUrl'];
         $statusCode = $routeParameters['statusCode'];
+        $redirectId = $routeParameters['redirectId'];
 
       // are there parameters in the destination url?
       if (strpos($destinationUrl, '<') !== false && preg_match_all('/<([\w._-]+)>/', $destinationUrl, $matches)) {
 
           // a bug in Craft cms overwrites the parameters parsed by Yii-UrlRule.
           // Please get them again
-
           $parseRule = new UrlRule([
             'pattern'=> $sourceUrl,
             'route' => 'templates/render'
@@ -43,11 +43,9 @@ class RedirectController extends Controller
 
           $request = Craft::$app->getRequest();
           $sourceParameters = $parseRule->parseRequestParams($request);
-
+          // insert the parameters into the destination url
           foreach ($matches[1] as $name) {
-              // $this->_routeParams[$name] = "<$name>";
             if (isset($sourceParameters[$name])) {
-                // replace the string with this value
               $destinationUrl = str_ireplace("<$name>", $sourceParameters[$name], $destinationUrl);
             } elseif (isset($_GET[$name])) {
                 $destinationUrl = str_ireplace("<$name>", $_GET[$name], $destinationUrl);
@@ -59,6 +57,10 @@ class RedirectController extends Controller
       if (strpos($destinationUrl, '://') === false) {
           $destinationUrl = UrlHelper::baseUrl() . ltrim($destinationUrl, '/');
       }
-        $this->redirect($destinationUrl, $statusCode);
+
+      // register the hit to the database
+      RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId,$destinationUrl);
+
+     $this->redirect($destinationUrl, $statusCode);
     }
 }

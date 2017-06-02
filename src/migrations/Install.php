@@ -50,10 +50,13 @@ class Install extends Migration
             'sourceUrl' => $this->string(),
             'destinationUrl' => $this->string(),
             'statusCode' => $this->string(),
+            'hitCount' => $this->integer()->unsigned()->notNull(),
+            'hitAt' => $this->dateTime(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'creatorId' => $this->integer(),
             'uid' => $this->uid()
         ]);
     }
+
 }
