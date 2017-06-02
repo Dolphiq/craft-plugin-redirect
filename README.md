@@ -1,6 +1,6 @@
 # Redirect plugin for Craft CMS 3.x
 
-Craft plugin that provides an easy way to enter and mentain 301 and 302 redirects for your Craft 3 powered website.
+Craft plugin that provides an easy way to enter and maintain 301 and 302 redirects. The plugin provides a clear user interface for admin and non-admin users.
 
 This is particularly useful if you are migrating pages from an old website and want to avoid dead links and want to keep the page ranks for the SEO. But also use full if you are making (big) changes in the site (url) structure.
 
