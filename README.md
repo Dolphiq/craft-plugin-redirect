@@ -1,4 +1,4 @@
-# Redirect plugin for Craft CMS 3.x
+# Craft CMS 3.x Redirect Manager
 
 Craft plugin that provides an easy way to enter and maintain 301 and 302 redirects. The plugin provides a clear user interface for admin and non-admin users.
 
