@@ -26,7 +26,7 @@ You can use the Redirect plugin to redirect simple routes but also use it for mo
 ### Simple redirect exact match
 Source URL:
 ```
-oldpage/dont/work/anymore
+oldpage/wont/work/anymore
 ```
 Destination URL:
 ```
@@ -36,7 +36,7 @@ newpage/will/work/again
 ### Simple redirect to an other (sub)domain
 Source URL:
 ```
-oldpage/dont/work/anymore
+oldpage/wont/work/anymore
 ```
 Destination URL:
 ```
