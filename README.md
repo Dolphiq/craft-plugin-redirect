@@ -2,7 +2,7 @@
 
 Craft plugin that provides an easy way to enter and maintain 301 and 302 redirects. The plugin provides a clear user interface for admin and non-admin users.
 
-This is particularly useful if you are migrating pages from an old website and want to avoid dead links and want to keep the page ranks for the SEO. But also use full if you are making (big) changes in the site (url) structure.
+This is particularly useful if you are migrating pages from an old website and want to avoid dead links and want to keep the page ranks for the SEO. But also useful if you are making (big) changes in the site (url) structure.
 
 The plugin also registers and shows the last hit date and hit count per visited redirect.
 
@@ -80,11 +80,11 @@ Example: the original url looks like:
 books/detail?bookId=124
 ```
 
-After the redirect, the url look likes
+After the redirect, the url will look like:
 ```
 book-detail/124/index.html
 ```
 
 ### Contributors & Developers
-Johan Zandstra - johan@dolphiq.nl
+Johan Zandstra - info@dolphiq.nl
 Brought to you by [Dolphiq](https://dolphiq.nl)
