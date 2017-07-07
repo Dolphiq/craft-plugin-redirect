@@ -6,23 +6,21 @@ use Craft;
 use craft\db\Migration;
 
 /**
- * m170602_080218_redirect_1_0_1 migration.
+ * m170707_211256_count_fix migration.
  */
-class m170602_080218_redirect_1_0_1 extends Migration
+class m170707_211256_count_fix extends Migration
 {
     /**
      * @inheritdoc
      */
     public function safeUp()
     {
-        // create new columns
+        // Place migration code here...
         if (!$this->db->columnExists('{{%dolphiq_redirects}}', 'hitCount')) {
             $this->addColumn('{{%dolphiq_redirects}}', 'hitCount', $this->integer()->notNull()->unsigned()->defaultValue(0));
+        } else {
+          $this->alterColumn('{{%dolphiq_redirects}}', 'hitCount', $this->integer()->notNull()->unsigned()->defaultValue(0));
         }
-        if (!$this->db->columnExists('{{%dolphiq_redirects}}', 'hitAt')) {
-            $this->addColumn('{{%dolphiq_redirects}}', 'hitAt', $this->dateTime());
-        }
-        return true;
     }
 
     /**
@@ -30,7 +28,7 @@ class m170602_080218_redirect_1_0_1 extends Migration
      */
     public function safeDown()
     {
-        echo "m170602_080218_redirect_1_0_1 cannot be reverted.\n";
-        return true;
+        echo "m170707_211256_count_fix cannot be reverted.\n";
+        return false;
     }
 }

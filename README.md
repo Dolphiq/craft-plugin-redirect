@@ -6,18 +6,26 @@ This is particularly useful if you are migrating pages from an old website and w
 
 The plugin also registers and shows the last hit date and hit count per visited redirect.
 
+
+## Requirements
+* Craft 3.0 (beta 18)+
+* PHP 7.0+
+
 ## Installation
 
-To Redirect, follow these steps:
+To install the plugin, follow these instructions.
 
-1. Install with Composer via `composer require dolphiq/redirect` from your project folder
-2. Install plugin in the Craft Control Panel under Settings > Plugins
-3. The redirect plugin will be visible in the settings view on in the plugins section
+1. Open your terminal and go to your Craft project:
 
-Redirect plugin works on Craft 3.x.
+        cd /path/to/project
 
-## Redirect plugin
+2. Then tell Composer to load the plugin:
 
+        composer require dolphiq/redirect
+
+3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Redirect plugin.
+
+4. The redirect plugin will be visible in the settings view on in the plugins section
 
 ## Using the Redirect plugin
 
