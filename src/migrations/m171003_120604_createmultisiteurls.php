@@ -52,7 +52,12 @@ class m171003_120604_createmultisiteurls extends Migration
               $redirect->sourceUrl = $oldRedirect['sourceUrl'];
               $redirect->destinationUrl = $oldRedirect['destinationUrl'];
               $redirect->statusCode = $oldRedirect['statusCode'];
-              $redirect->siteId = $oldRedirect['siteId'];
+
+              if($oldRedirect['siteId'] == null) {
+                $siteId = Craft::$app->getSites()->currentSite->id;
+              } else {
+                $redirect->siteId = $oldRedirect['siteId'];
+              }
               $redirect->hitCount = $oldRedirect['hitCount'];
               $redirect->hitAt = $oldRedirect['hitAt'];
               $redirect->dateCreated = $oldRedirect['dateCreated'];
