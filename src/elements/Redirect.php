@@ -230,7 +230,7 @@ class Redirect extends Element
                 '302' => 'Temporarily redirect (302)',
               ];
 
-              return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => $statusCodesOptions[$this->statusCode]]) : '';
+              return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('redirect', $statusCodesOptions[$this->statusCode])]) : '';
 
             case 'baseUrl':
 

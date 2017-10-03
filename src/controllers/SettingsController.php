@@ -118,7 +118,6 @@ class SettingsController extends Controller
 
         return $this->redirectToPostedUrl($newSettings);
 
-      //return $this->redirectToPostedUrl($settings);
     }
 
     /**
