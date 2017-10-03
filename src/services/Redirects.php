@@ -11,9 +11,7 @@ namespace dolphiq\redirect\services;
 use Craft;
 use craft\db\Query;
 use craft\helpers\Json;
-//use dolphiq\redirect\records\Redirect as RedirectRecord;
 use dolphiq\redirect\elements\Redirect;
-// use dolphiq\redirect\models\Redirect;
 use yii\web\NotFoundHttpException;
 use yii\base\Component;
 use craft\helpers\Db;
@@ -71,20 +69,7 @@ class Redirects extends Component
      */
     public function getAllRedirectsForSite($siteId = null): array
     {
-
-      // Craft::$app->getSites()->currentSite->id
-      $results = Redirect::find()->andWhere(Db::parseParam('elements_sites.siteId', $siteId))->all();
-/*
-        $results = (new Query())
-            ->select(['id', 'sourceUrl', 'destinationUrl', 'statusCode', 'hitCount', 'hitAt'])
-            ->from(['{{%dolphiq_redirects}}'])
-            ->andWhere([
-            ->all();
-
-        if (empty($results)) {
-            return [];
-        }*/
-
+        $results = Redirect::find()->andWhere(Db::parseParam('elements_sites.siteId', $siteId))->all();
         return $results;
     }
 
@@ -124,7 +109,7 @@ class Redirects extends Component
               'hitAt'=>new \yii\db\Expression('now()'),
               'hitCount'=>new \yii\db\Expression('hitCount + 1'),
             ],
-            ['id'=>$redirectId]
+            ['id' => $redirectId]
           )
           ->execute();
 
