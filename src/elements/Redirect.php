@@ -208,7 +208,7 @@ class Redirect extends Element
             'hitCount' => ['label' => Craft::t('redirect', 'Hit count')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'statusCode' => ['label' => Craft::t('redirect', 'Redirect type')],
-            'baseUrl' => ['label' => Craft::t('redirect', 'Site')],
+            // 'baseUrl' => ['label' => Craft::t('redirect', '')],
 
         ];
 
@@ -230,7 +230,7 @@ class Redirect extends Element
                 '302' => 'Temporarily redirect (302)',
               ];
 
-              return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => $statusCodesOptions[$this->statusCode]]) : '';
+              return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('redirect', $statusCodesOptions[$this->statusCode])]) : '';
 
             case 'baseUrl':
 

@@ -9,7 +9,7 @@ The plugin also registers and shows the last hit date and hit count per visited 
 **Note**: This plugin may become a paid add-on when the Craft Plugin store becomes available.
 
 ## Requirements
-* Craft 3.0 (beta 18)+
+* Craft 3.0 (beta 20)+
 * PHP 7.0+
 
 ## Installation
@@ -27,6 +27,10 @@ To install the plugin, follow these instructions.
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Redirect plugin.
 
 4. The redirect plugin will be visible in the settings view on in the plugins section
+
+
+### Example of the redirect overview
+![Screenshot](resources/screenshots/sire_redirects_overview_example.png)
 
 ## Using the Redirect plugin
 
@@ -93,6 +97,28 @@ After the redirect, the url will look like:
 ```
 book-detail/124/index.html
 ```
+
+### Replace a long path with unknown amount of segments for an other url
+
+Source URL:
+```
+wholepath/<options:.+>
+```
+Destination URL:
+```
+otherpath/index.html?cat=<a>&subcat=<b>
+```
+
+Example: the original url looks like:
+```
+wholepath/this/is/a/long/path/with/params?a=1&b=2&c=4
+```
+
+After the redirect, the url will look like:
+```
+/otherpath/index.html?cat=1&subcat=2
+```
+
 
 ### Contributors & Developers
 Johan Zandstra - info@dolphiq.nl
