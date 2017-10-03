@@ -103,7 +103,6 @@ class Redirect extends Element
             $supportedSites[] = ['siteId' => $site->id, 'enabledByDefault' => false];
           //}
         }
-        $supportedSites = [1,2];
         return $supportedSites;
     }
 
@@ -306,6 +305,7 @@ class Redirect extends Element
             $record = new RedirectRecord();
             $record->id = $this->id;
             $record->hitCount = 0;
+            $record->hitAt = null;
         }
         $record->sourceUrl = $this->sourceUrl;
         $record->destinationUrl = $this->destinationUrl;
