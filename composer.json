@@ -2,7 +2,7 @@
     "name": "dolphiq/redirect",
     "description": "Redirect plugin for Craft3 CMS",
     "type": "craft-plugin",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "keywords": [
         "craft",
         "cms",
@@ -31,7 +31,7 @@
     "extra": {
         "name": "Redirect",
         "handle": "redirect",
-        "schemaVersion": "1.0.3",
+        "schemaVersion": "1.0.4",
         "developer": "Dolphiq",
         "developerUrl": "https://dolphiq.nl/",
         "description": "Redirect plugin for Craft3 CMS",
