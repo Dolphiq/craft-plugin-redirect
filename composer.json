@@ -2,7 +2,7 @@
     "name": "dolphiq/redirect",
     "description": "Redirect plugin for Craft3 CMS",
     "type": "craft-plugin",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "keywords": [
         "craft",
         "cms",
@@ -31,14 +31,14 @@
     "extra": {
         "name": "Redirect",
         "handle": "redirect",
-        "schemaVersion": "1.0.0",
+        "schemaVersion": "1.0.2",
         "developer": "Dolphiq",
         "developerUrl": "https://dolphiq.nl/",
         "description": "Redirect plugin for Craft3 CMS",
         "hasCpSettings": true,
         "hasCpSection": true,
-        "documentationUrl": "https://github.com/Dolphiq/craft3-plugin-redirect/master/README.md",
-        "changelogUrl": "https://github.com/Dolphiq/craft3-plugin-redirect/master/CHANGELOG.md",
+        "documentationUrl": "https://github.com/Dolphiq/craft3-plugin-redirect/blob/master/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/Dolphiq/craft3-plugin-redirect/master/CHANGELOG.md",
         "class": "dolphiq\\redirect\\RedirectPlugin"
     }
 }

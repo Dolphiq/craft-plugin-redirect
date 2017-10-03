@@ -54,6 +54,9 @@ class RedirectPlugin extends \craft\base\Plugin
     public $hasCpSection = true;
     public $hasCpSettings = true;
 
+    // table schema version
+    public $schemaVersion = '1.0.2';
+
     /*
     *
     *  The Craft plugin documentation points to the EVENT_REGISTER_CP_NAV_ITEMS event to register navigation items.
@@ -140,7 +143,8 @@ class RedirectPlugin extends \craft\base\Plugin
                 'params'=>[
                   'sourceUrl' => $redirect['sourceUrl'],
                   'destinationUrl' => $redirect['destinationUrl'],
-                  'statusCode' => $redirect['statusCode']
+                  'statusCode' => $redirect['statusCode'],
+                  'redirectId' => $redirect['id']
                 ]
               ];
                 }
