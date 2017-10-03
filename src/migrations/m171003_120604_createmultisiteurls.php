@@ -54,7 +54,7 @@ class m171003_120604_createmultisiteurls extends Migration
               $redirect->statusCode = $oldRedirect['statusCode'];
 
               if($oldRedirect['siteId'] == null) {
-                $siteId = Craft::$app->getSites()->currentSite->id;
+                $redirect->siteId = Craft::$app->getSites()->currentSite->id;
               } else {
                 $redirect->siteId = $oldRedirect['siteId'];
               }
