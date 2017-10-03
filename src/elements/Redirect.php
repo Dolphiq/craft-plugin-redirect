@@ -208,7 +208,7 @@ class Redirect extends Element
             'hitCount' => ['label' => Craft::t('redirect', 'Hit count')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'statusCode' => ['label' => Craft::t('redirect', 'Redirect type')],
-            'baseUrl' => ['label' => Craft::t('redirect', 'Site')],
+            // 'baseUrl' => ['label' => Craft::t('redirect', '')],
 
         ];
 
