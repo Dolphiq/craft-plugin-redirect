@@ -6,6 +6,7 @@ This is particularly useful if you are migrating pages from an old website and w
 
 The plugin also registers and shows the last hit date and hit count per visited redirect.
 
+**Note**: This plugin may become a paid add-on when the Craft Plugin store becomes available.
 
 ## Requirements
 * Craft 3.0 (beta 18)+
@@ -64,7 +65,7 @@ overview/category/<catname>/index.html
 ### Multiple parameters mixed
 Source URL:
 ```
-/cars/<brand>/<dontusepart>/<color>/index.html
+cars/<brand>/<dontusepart>/<color>/index.html
 ```
 Destination URL:
 ```

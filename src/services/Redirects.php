@@ -11,10 +11,12 @@ namespace dolphiq\redirect\services;
 use Craft;
 use craft\db\Query;
 use craft\helpers\Json;
-use dolphiq\redirect\records\Redirect as RedirectRecord;
-use dolphiq\redirect\models\Redirect;
+//use dolphiq\redirect\records\Redirect as RedirectRecord;
+use dolphiq\redirect\elements\Redirect;
+// use dolphiq\redirect\models\Redirect;
 use yii\web\NotFoundHttpException;
 use yii\base\Component;
+use craft\helpers\Db;
 
 /**
  * Class Redirects service.
@@ -67,98 +69,40 @@ class Redirects extends Component
      *
      * @return array
      */
-    public function getAllRedirects(): array
+    public function getAllRedirectsForSite($siteId = null): array
     {
+
+      // Craft::$app->getSites()->currentSite->id
+      $results = Redirect::find()->andWhere(Db::parseParam('elements_sites.siteId', $siteId))->all();
+/*
         $results = (new Query())
             ->select(['id', 'sourceUrl', 'destinationUrl', 'statusCode', 'hitCount', 'hitAt'])
             ->from(['{{%dolphiq_redirects}}'])
-            ->where([
-                'or',
-                ['siteId' => null],
-                ['siteId' => Craft::$app->getSites()->currentSite->id]
-            ])
+            ->andWhere([
             ->all();
 
         if (empty($results)) {
             return [];
-        }
+        }*/
 
         return $results;
     }
 
+
     /**
      * Returns a redirect by its ID.
      *
-     * @param int $redirectId
+     * @param int      $redirectId
+     * @param int|null $siteId
      *
-     * @return RedirectRecord|null
+     * @return Redirect|null
      */
-    public function getRedirectById(int $redirectId)
+    public function getRedirectById(int $redirectId, int $siteId = null)
     {
-        if (!$redirectId) {
-            return null;
-        }
-
-
-        $record = RedirectRecord::findOne($redirectId);
-        if (!$record) {
-            throw new Exception('Invalid record ID: ' . $redirectId);
-        }
-        return $record;
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return Craft::$app->getElements()->getElementById($redirectId, Redirect::class, $siteId);
     }
 
-    /**
-     * Saves a redirect.
-     *
-     * @param Redirect $redirect        The redirect to be saved
-     * @param bool     $runValidation   Whether the redirect should be validated
-     *
-     * @return bool Whether the redirect was saved successfully
-     * @throws NotFoundException if $redirect->id is invalid
-     */
-    public function saveRedirect(Redirect $redirect, bool $runValidation = true): bool
-    {
-        if ($runValidation && !$redirect->validate()) {
-            Craft::info('Redirect not saved due to validation error.', __METHOD__);
-            return false;
-        }
-        $isNewRedirect = !$redirect->id;
-
-        if (!$isNewRedirect) {
-            $redirectRecord = RedirectRecord::findOne($redirect->id);
-            if (!$redirectRecord) {
-                throw new NotFoundHttpException("No redirect exists with the ID '{$redirect->id}'");
-            }
-        } else {
-            $redirectRecord = new RedirectRecord();
-        }
-        $redirectRecord->sourceUrl = $redirect->sourceUrl;
-        $redirectRecord->destinationUrl = $redirect->destinationUrl;
-        $redirectRecord->statusCode = $redirect->statusCode;
-
-        // store to db
-        $redirectRecord->save();
-
-        return true;
-    }
-
-    /**
-     * Deletes a redirect by its ID.
-     *
-     * @param int $redirectId
-     *
-     * @return bool
-     */
-    public function deleteRedirectById(int $redirectId): bool
-    {
-        $redirectRecord = RedirectRecord::findOne($redirectId);
-
-        if (!$redirectRecord) {
-            return true;
-        }
-        $redirectRecord->delete();
-        return true;
-    }
 
     /**
      * Register a hit to the redirect by its ID.

@@ -3,8 +3,9 @@
 {% set fullPageForm = true %}
 {% set title = "Redirects"|t('redirect') %}
 
-{% import "_includes/forms" as forms %}
+{% set docsUrl = 'https://github.com/Dolphiq/craft3-plugin-redirect' %}
 
+{% import "_includes/forms" as forms %}
 
 {% block content %}
     <input type="hidden" name="action" value="redirect/settings/save-redirect">
@@ -16,6 +17,20 @@
     {% if redirect.id %}<input type="hidden" name="redirectId" value="{{ redirect.id }}">{% endif %}
 
     <div id="categorygroup-settings">
+
+          {% if craft.app.getIsMultiSite() %}
+              {{ forms.selectField({
+                label: "Site"|t('redirect'),
+                instructions: "Site"|t('redirect'),
+                id: 'site-id',
+                name: 'siteId',
+                options: editableSitesOptions,
+                value: currentSiteId,
+                toggle: true,
+                targetPrefix: '.siteId-',
+                errors: redirect.getErrors('siteId')
+            }) }}
+          {% endif %}
 
             {{ forms.textField({
                 label: "Source URL"|t('redirect'),

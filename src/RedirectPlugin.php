@@ -136,7 +136,9 @@ class RedirectPlugin extends \craft\base\Plugin
             Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) {
 
             // get rules from db!
-            $allRedirects = self::$plugin->getRedirects()->getAllRedirects();
+            // please only if we are on the site
+            $siteId = Craft::$app->getSites()->currentSite->id;
+            $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
                 foreach ($allRedirects as $redirect) {
                     $event->rules[$redirect['sourceUrl']] = [
                 'route'=>'redirect/redirect/index',
