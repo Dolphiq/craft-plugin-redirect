@@ -1,4 +1,9 @@
 # Changelog
+## 1.0.3 - 2017-10-03
+- Multi site support
+- Searchable and sortable list
+- Small fixes
+
 ## 1.0.2 - 2017-07-07
 - Fix for non default value in hitCount column needed for some database engines
 

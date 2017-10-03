@@ -35,4 +35,15 @@ class Redirect extends ActiveRecord
     {
         return $this->hasOne(Element::class, ['id' => 'id']);
     }
+
+
+    /**
+     * Returns the redirect group.
+     *
+     * @return ActiveQueryInterface The relational query object.
+     */
+    public function getGroup(): ActiveQueryInterface
+    {
+        return $this->hasOne(RedirectGroup::class, ['id' => 'groupId']);
+    }
 }

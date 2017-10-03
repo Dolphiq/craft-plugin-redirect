@@ -14,7 +14,7 @@ use craft\web\Controller;
 use craft\helpers\UrlHelper;
 
 use dolphiq\redirect\RedirectPlugin;
-use dolphiq\redirect\models\Redirect;
+use dolphiq\redirect\elements\Redirect;
 
 use craft\db\Query;
 
@@ -33,17 +33,32 @@ class SettingsController extends Controller
     {
         $this->requireLogin();
 
-        $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
+      //  $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
 
-        $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
+         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
 
-        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
-        return $this->renderTemplate('redirect/index', [
+         $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+
+        $variables = [
           'settings' => RedirectPlugin::$plugin->getSettings(),
-          'source' => $source,
-          'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
-          'allRedirects' => $allRedirects
-       ]);
+           'source' => $source,
+           'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
+          // 'allRedirects' => $allRedirects
+        ];
+
+        // Get the site
+        // ---------------------------------------------------------------------
+        if (Craft::$app->getIsMultiSite()) {
+            // Only use the sites that the user has access to
+            $variables['siteIds'] = Craft::$app->getSites()->getEditableSiteIds();
+        } else {
+            $variables['siteIds'] = [Craft::$app->getSites()->getPrimarySite()->id];
+        }
+        if (!$variables['siteIds']) {
+            throw new ForbiddenHttpException('User not permitted to edit content in any sites');
+        }
+
+        return $this->renderTemplate('redirect/index', $variables);
     }
 
 
@@ -126,10 +141,16 @@ class SettingsController extends Controller
                 'url' => UrlHelper::url('settings')
             ],
             [
-                'label' => Craft::t('redirect', 'Reidrects'),
+                'label' => Craft::t('redirect', 'Redirects'),
                 'url' => UrlHelper::url('settings/redirect')
             ]
         ];
+        $editableSitesOptions = [
+        ];
+
+        foreach (Craft::$app->getSites()->getAllSites() as $site) {
+          $editableSitesOptions[$site['id']] = $site->name;
+        }
 
         $statusCodesOptions = [
           '301' => 'Permanent redirect (301)',
@@ -137,13 +158,15 @@ class SettingsController extends Controller
         ];
 
         $variables['statusCodeOptions'] = $statusCodesOptions;
+        $variables['editableSitesOptions'] = $editableSitesOptions;
 
 
         $variables['brandNewRedirect'] = false;
 
         if ($redirectId !== null) {
             if ($redirect === null) {
-                $redirect = RedirectPlugin::$plugin->getRedirects()->getRedirectById($redirectId);
+              $siteId = Craft::$app->request->get('siteId');
+              $redirect = RedirectPlugin::$plugin->getRedirects()->getRedirectById($redirectId, $siteId);
 
                 if (!$redirect) {
                     throw new NotFoundHttpException('Redirect not found');
@@ -167,7 +190,7 @@ class SettingsController extends Controller
 
         $variables['source'] = $source;
         $variables['pathPrefix'] = ($source == 'CpSettings' ? 'settings/': '');
-
+        $variables['currentSiteId'] = $redirect->siteId;
         return $this->renderTemplate('redirect/edit', $variables);
     }
 
@@ -176,7 +199,7 @@ class SettingsController extends Controller
      *
      * @return Response|null
      */
-    public function actionSaveRedirect()
+    public function actionSaveRedirectOld()
     {
         $this->requirePostRequest();
         $this->requireLogin();
@@ -207,6 +230,70 @@ class SettingsController extends Controller
         $url = $request->getBodyParam('redirectUrl');
         return $this->redirect($url);
     }
+
+
+    /**
+     * Saves a redirect.
+     *
+     * @return Response|null
+     */
+    public function actionSaveRedirect()
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+
+       // $groupId = Craft::$app->getRequest()->getRequiredBodyParam('groupId');
+       /* if (($group = Craft::$app->getTags()->getTagGroupById($groupId)) === null) {
+            throw new BadRequestHttpException('Invalid tag group ID: '.$groupId);
+        }
+      */
+
+        $request = Craft::$app->getRequest();
+        $redirect = new Redirect();
+        // $tag->groupId = $group->id;
+        // $tag->fieldLayoutId = $group->fieldLayoutId;
+        $redirect->id = $request->getBodyParam('redirectId');
+        $redirect->sourceUrl = $request->getBodyParam('sourceUrl');
+        $redirect->destinationUrl = $request->getBodyParam('destinationUrl');
+        $redirect->statusCode = $request->getBodyParam('statusCode');
+        $redirect->validateCustomFields = false;
+        $redirect->siteId = $request->getBodyParam('siteId');
+
+        // public function saveElement(ElementInterface $element, bool $runValidation = true, bool $propagate = true): bool
+
+        $res = Craft::$app->getElements()->saveElement($redirect, true, false);
+        if ($request->getAcceptsJson()) {
+        if ($res) {
+            return $this->asJson([
+                'success' => true,
+                'id' => $redirect->id
+            ]);
+        } else {
+            return $this->asJson([
+                'success' => false
+            ]);
+
+        }
+        // die('test');
+         /*   return $this->asJson([
+                'success' => true,
+                'id' => $category->id,
+                'title' => $category->title,
+                'status' => $category->getStatus(),
+                'url' => $category->getUrl(),
+                'cpEditUrl' => $category->getCpEditUrl()
+            ]);*/
+        }
+
+        Craft::$app->getSession()->setNotice(Craft::t('redirect', 'Redirect saved.'));
+        // return $this->redirectToPostedUrl($category);
+
+
+        $url = $request->getBodyParam('redirectUrl');
+        return $this->redirect($url);
+    }
+
+
 
     /**
      * Deletes a route.
