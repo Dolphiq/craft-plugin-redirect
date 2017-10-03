@@ -306,6 +306,7 @@ class Redirect extends Element
             $record->id = $this->id;
             $record->hitCount = 0;
             $record->hitAt = null;
+
         }
         $record->sourceUrl = $this->sourceUrl;
         $record->destinationUrl = $this->destinationUrl;

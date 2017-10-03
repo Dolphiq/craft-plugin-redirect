@@ -69,6 +69,7 @@ class Redirects extends Component
      */
     public function getAllRedirectsForSite($siteId = null): array
     {
+
         $results = Redirect::find()->andWhere(Db::parseParam('elements_sites.siteId', $siteId))->all();
         return $results;
     }
