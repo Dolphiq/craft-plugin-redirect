@@ -44,19 +44,21 @@ class Install extends Migration
      */
     protected function createTables()
     {
+      // new table!!
+
         $this->createTable('{{%dolphiq_redirects}}', [
             'id' => $this->primaryKey(),
-            'siteId' => $this->integer(),
             'sourceUrl' => $this->string(),
             'destinationUrl' => $this->string(),
             'statusCode' => $this->string(),
-            'hitCount' => $this->integer()->unsigned()->notNull(),
+            'hitCount' => $this->integer()->unsigned()->notNull()->defaultValue(0),
             'hitAt' => $this->dateTime(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
-            'creatorId' => $this->integer(),
             'uid' => $this->uid()
         ]);
+
+        $this->addForeignKey(null, '{{%dolphiq_redirects}}', ['id'], '{{%elements}}', ['id'], 'CASCADE', null);
     }
 
 }

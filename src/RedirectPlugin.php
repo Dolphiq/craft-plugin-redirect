@@ -55,7 +55,7 @@ class RedirectPlugin extends \craft\base\Plugin
     public $hasCpSettings = true;
 
     // table schema version
-    public $schemaVersion = '1.0.2';
+    public $schemaVersion = '1.0.3';
 
     /*
     *

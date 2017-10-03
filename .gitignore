@@ -11,6 +11,9 @@
 # BUILD FILES
 /node_modules/*
 
+# Resources
+/screenshots
+
 # MISC FILES
 .cache
 .DS_Store

@@ -18,8 +18,6 @@ class m170707_211256_count_fix extends Migration
         // Place migration code here...
         if (!$this->db->columnExists('{{%dolphiq_redirects}}', 'hitCount')) {
             $this->addColumn('{{%dolphiq_redirects}}', 'hitCount', $this->integer()->notNull()->unsigned()->defaultValue(0));
-        } else {
-          $this->alterColumn('{{%dolphiq_redirects}}', 'hitCount', $this->integer()->notNull()->unsigned()->defaultValue(0));
         }
     }
 
