@@ -165,6 +165,9 @@ class SettingsController extends Controller
         if ($redirectId !== null) {
             if ($redirect === null) {
               $siteId = Craft::$app->request->get('siteId');
+              if($siteId == null) {
+                $siteId = Craft::$app->getSites()->currentSite->id;
+              }
               $redirect = RedirectPlugin::$plugin->getRedirects()->getRedirectById($redirectId, $siteId);
 
                 if (!$redirect) {
@@ -256,7 +259,12 @@ class SettingsController extends Controller
         $redirect->destinationUrl = $request->getBodyParam('destinationUrl');
         $redirect->statusCode = $request->getBodyParam('statusCode');
         $redirect->validateCustomFields = false;
-        $redirect->siteId = $request->getBodyParam('siteId');
+        $siteId = $request->getBodyParam('siteId');
+        if($siteId == null) {
+          $siteId = Craft::$app->getSites()->currentSite->id;
+        }
+
+        $redirect->siteId = $siteId;
 
         // public function saveElement(ElementInterface $element, bool $runValidation = true, bool $propagate = true): bool
 
