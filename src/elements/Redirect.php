@@ -164,6 +164,16 @@ class Redirect extends Element
                   'key' => '*',
                   'label' => Craft::t('redirect', 'All redirects'),
                   'criteria' => []
+              ],
+              [
+                'key' => 'permanent',
+                'label' => Craft::t('redirect', 'Permanent redirects'),
+                'criteria' => ['statusCode' => 301]
+              ],
+              [
+                'key' => 'temporarily',
+                'label' => Craft::t('redirect', 'Temporarily redirects'),
+                'criteria' => ['statusCode' => 302]
               ]
           ];
         }

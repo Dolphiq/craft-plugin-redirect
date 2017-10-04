@@ -39,6 +39,11 @@ class RedirectQuery extends ElementQuery
      */
     public $destinationUrl;
 
+    /**
+     * @var string|string[]|null The handle(s) that the resulting global sets must have.
+     */
+    public $statusCode;
+
     // Public Methods
     // =========================================================================
 
@@ -96,6 +101,8 @@ class RedirectQuery extends ElementQuery
 
         return $this;
     }
+
+
     // Protected Methods
     // =========================================================================
 
@@ -128,7 +135,9 @@ class RedirectQuery extends ElementQuery
         if ($this->destinationUrl) {
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.destinationUrl', $this->destinationUrl));
         }
-
+        if ($this->statusCode) {
+            $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.statusCode', $this->statusCode));
+        }
 
 
        // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));
