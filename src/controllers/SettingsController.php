@@ -244,16 +244,8 @@ class SettingsController extends Controller
         $this->requirePostRequest();
         $this->requireLogin();
 
-       // $groupId = Craft::$app->getRequest()->getRequiredBodyParam('groupId');
-       /* if (($group = Craft::$app->getTags()->getTagGroupById($groupId)) === null) {
-            throw new BadRequestHttpException('Invalid tag group ID: '.$groupId);
-        }
-      */
-
         $request = Craft::$app->getRequest();
         $redirect = new Redirect();
-        // $tag->groupId = $group->id;
-        // $tag->fieldLayoutId = $group->fieldLayoutId;
         $redirect->id = $request->getBodyParam('redirectId');
         $redirect->sourceUrl = $request->getBodyParam('sourceUrl');
         $redirect->destinationUrl = $request->getBodyParam('destinationUrl');
@@ -266,35 +258,25 @@ class SettingsController extends Controller
 
         $redirect->siteId = $siteId;
 
-        // public function saveElement(ElementInterface $element, bool $runValidation = true, bool $propagate = true): bool
-
+        // ElementInterface $element, bool $runValidation = true, bool $propagate = true): bool
         $res = Craft::$app->getElements()->saveElement($redirect, true, false);
         if ($request->getAcceptsJson()) {
-        if ($res) {
-            return $this->asJson([
-                'success' => true,
-                'id' => $redirect->id
-            ]);
-        } else {
-            return $this->asJson([
-                'success' => false
-            ]);
+          if ($res) {
+              return $this->asJson([
+                  'success' => true,
+                  'id' => $redirect->id
+              ]);
+          } else {
+              return $this->asJson([
+                  'success' => false
+              ]);
 
-        }
-        // die('test');
-         /*   return $this->asJson([
-                'success' => true,
-                'id' => $category->id,
-                'title' => $category->title,
-                'status' => $category->getStatus(),
-                'url' => $category->getUrl(),
-                'cpEditUrl' => $category->getCpEditUrl()
-            ]);*/
+          }
+
         }
 
         Craft::$app->getSession()->setNotice(Craft::t('redirect', 'Redirect saved.'));
         // return $this->redirectToPostedUrl($category);
-
 
         $url = $request->getBodyParam('redirectUrl');
         return $this->redirect($url);

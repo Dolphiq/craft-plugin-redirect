@@ -280,10 +280,28 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
+    public function formatUrl(string $url): string {
+      $resultUrl = $url;
+      // trim spaces
+      $resultUrl = trim($resultUrl);
+
+      if(stripos($url, '://') !== false) {
+        // complete url
+
+      } else {
+        // strip leading slash
+        $resultUrl = ltrim($resultUrl,'/');
+
+      }
+      return $resultUrl;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
     public function beforeSave(bool $isNew): bool
     {
-        // Make sure the field layout is set correctly
-        // $this->fieldLayoutId = $this->getGroup()->fieldLayoutId;
 
         return parent::beforeSave($isNew);
     }
@@ -294,7 +312,7 @@ class Redirect extends Element
      */
     public function afterSave(bool $isNew)
     {
-        // Get the tag record
+        // Get the redirect record
         if (!$isNew) {
             $record = RedirectRecord::findOne($this->id);
 
@@ -304,12 +322,23 @@ class Redirect extends Element
         } else {
             $record = new RedirectRecord();
             $record->id = $this->id;
-            $record->hitCount = 0;
-            $record->hitAt = null;
 
+            if($this->hitCount > 0) {
+              $record->hitCount = $this->hitCount;
+            } else {
+              $record->hitCount = 0;
+            }
+
+             if($record->hitAt != null) {
+              $record->hitAt = $this->hitAt;
+            } else {
+              $record->hitAt = null;
+            }
         }
-        $record->sourceUrl = $this->sourceUrl;
-        $record->destinationUrl = $this->destinationUrl;
+
+
+        $record->sourceUrl = $this->formatUrl($this->sourceUrl);
+        $record->destinationUrl = $this->formatUrl($this->destinationUrl);
         $record->statusCode = $this->statusCode;
 
 
