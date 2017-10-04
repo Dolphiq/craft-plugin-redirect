@@ -20,6 +20,7 @@
     "Site" => "Website",
     "Permanent redirects" => "Permanente doorverwijzingen",
     "Temporarily redirects" => "Tijdelijke doorverwijzingen",
-    "Couldn’t save the redirect." => "Opslaan van de doorverwijzing mislukt!"
+    "Couldn’t save the redirect." => "Opslaan van de doorverwijzing mislukt!",
+    "Redirect saved." => "Doorverwijzing opgeslagen."
 
 ];

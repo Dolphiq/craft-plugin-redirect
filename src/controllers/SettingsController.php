@@ -195,43 +195,6 @@ class SettingsController extends Controller
         return $this->renderTemplate('redirect/edit', $variables);
     }
 
-    /**
-     * Saves a redirect.
-     *
-     * @return Response|null
-     */
-    public function actionSaveRedirectOld()
-    {
-        $this->requirePostRequest();
-        $this->requireLogin();
-
-        $request = Craft::$app->getRequest();
-
-        $redirect = new Redirect();
-
-        // Set request values to the Redirect model
-        $redirect->sourceUrl = $request->getBodyParam('sourceUrl');
-        $redirect->destinationUrl = $request->getBodyParam('destinationUrl');
-        $redirect->statusCode = $request->getBodyParam('statusCode');
-        $redirect->id = $request->getBodyParam('redirectId');
-
-        // Save it
-        if (!RedirectPlugin::$plugin->getRedirects()->saveRedirect($redirect)) {
-            Craft::$app->getSession()->setError(Craft::t('redirect', 'Couldn’t save the redirect.'));
-
-            // Send the redirect back to the template
-            Craft::$app->getUrlManager()->setRouteParams([
-                'redirect' => $redirect
-            ]);
-
-            return null;
-        }
-        Craft::$app->getSession()->setNotice(Craft::t('redirect', 'Redirect saved.'));
-
-        $url = $request->getBodyParam('redirectUrl');
-        return $this->redirect($url);
-    }
-
 
     /**
      * Saves a redirect.
@@ -259,24 +222,41 @@ class SettingsController extends Controller
 
         // ElementInterface $element, bool $runValidation = true, bool $propagate = true): bool
         $res = Craft::$app->getElements()->saveElement($redirect, true, false);
-        if ($request->getAcceptsJson()) {
-            if ($res) {
-                return $this->asJson([
-                  'success' => true,
-                  'id' => $redirect->id
-              ]);
-            } else {
+
+        if (!$res) {
+
+          if ($request->getAcceptsJson()) {
+
                 return $this->asJson([
                   'success' => false
               ]);
-            }
-        }
+          }
+          // else, normal result
+            Craft::$app->getSession()->setError(Craft::t('redirect', 'Couldn’t save the redirect.'));
 
+            Craft::$app->getUrlManager()->setRouteParams([
+                'redirect' => $redirect
+            ]);
+
+            return null;
+
+        } else {
+
+          if ($request->getAcceptsJson()) {
+
+          return $this->asJson([
+                  'success' => true,
+                  'id' => $redirect->id
+              ]);
+        }
+        // else, normal result
         Craft::$app->getSession()->setNotice(Craft::t('redirect', 'Redirect saved.'));
         // return $this->redirectToPostedUrl($category);
 
         $url = $request->getBodyParam('redirectUrl');
         return $this->redirect($url);
+
+        }
     }
 
 
