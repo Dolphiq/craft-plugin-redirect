@@ -37,7 +37,7 @@ class SettingsController extends Controller
 
          $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
 
-         $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
 
         $variables = [
           'settings' => RedirectPlugin::$plugin->getSettings(),
@@ -117,7 +117,6 @@ class SettingsController extends Controller
         Craft::$app->getSession()->setNotice(Craft::t('app', 'Plugin settings saved.'));
 
         return $this->redirectToPostedUrl($newSettings);
-
     }
 
     /**
@@ -148,7 +147,7 @@ class SettingsController extends Controller
         ];
 
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
-          $editableSitesOptions[$site['id']] = $site->name;
+            $editableSitesOptions[$site['id']] = $site->name;
         }
 
         $statusCodesOptions = [
@@ -164,11 +163,11 @@ class SettingsController extends Controller
 
         if ($redirectId !== null) {
             if ($redirect === null) {
-              $siteId = Craft::$app->request->get('siteId');
-              if($siteId == null) {
-                $siteId = Craft::$app->getSites()->currentSite->id;
-              }
-              $redirect = RedirectPlugin::$plugin->getRedirects()->getRedirectById($redirectId, $siteId);
+                $siteId = Craft::$app->request->get('siteId');
+                if ($siteId == null) {
+                    $siteId = Craft::$app->getSites()->currentSite->id;
+                }
+                $redirect = RedirectPlugin::$plugin->getRedirects()->getRedirectById($redirectId, $siteId);
 
                 if (!$redirect) {
                     throw new NotFoundHttpException('Redirect not found');
@@ -252,8 +251,8 @@ class SettingsController extends Controller
         $redirect->statusCode = $request->getBodyParam('statusCode');
         $redirect->validateCustomFields = false;
         $siteId = $request->getBodyParam('siteId');
-        if($siteId == null) {
-          $siteId = Craft::$app->getSites()->currentSite->id;
+        if ($siteId == null) {
+            $siteId = Craft::$app->getSites()->currentSite->id;
         }
 
         $redirect->siteId = $siteId;
@@ -261,18 +260,16 @@ class SettingsController extends Controller
         // ElementInterface $element, bool $runValidation = true, bool $propagate = true): bool
         $res = Craft::$app->getElements()->saveElement($redirect, true, false);
         if ($request->getAcceptsJson()) {
-          if ($res) {
-              return $this->asJson([
+            if ($res) {
+                return $this->asJson([
                   'success' => true,
                   'id' => $redirect->id
               ]);
-          } else {
-              return $this->asJson([
+            } else {
+                return $this->asJson([
                   'success' => false
               ]);
-
-          }
-
+            }
         }
 
         Craft::$app->getSession()->setNotice(Craft::t('redirect', 'Redirect saved.'));

@@ -15,7 +15,6 @@ use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 use yii\db\Connection;
 
-
 class RedirectQuery extends ElementQuery
 {
     // Properties
@@ -111,7 +110,6 @@ class RedirectQuery extends ElementQuery
      */
     protected function beforePrepare(): bool
     {
-
         Craft::info('dolphiq/redirect beforePrepare', __METHOD__);
         $this->joinElementTable('dolphiq_redirects');
 
@@ -162,5 +160,4 @@ class RedirectQuery extends ElementQuery
             $this->subQuery->andWhere(['elements.id' => $editableSetIds]);
         }
     }
-
 }

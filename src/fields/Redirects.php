@@ -61,5 +61,4 @@ class Redirects extends BaseRelationField
         $this->allowMultipleSources = false;
         $this->allowLimit = false;
     }
-
 }

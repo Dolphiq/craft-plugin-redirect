@@ -69,7 +69,6 @@ class Redirects extends Component
      */
     public function getAllRedirectsForSite($siteId = null): array
     {
-
         $results = Redirect::find()->andWhere(Db::parseParam('elements_sites.siteId', $siteId))->all();
         return $results;
     }
@@ -100,8 +99,8 @@ class Redirects extends Component
     public function registerHitById(int $redirectId, $destinationUrl = ''): bool
     {
         // simple update to keep it fast
-        if($redirectId<1) {
-          return false;
+        if ($redirectId<1) {
+            return false;
         }
         $res = \Yii::$app->db->createCommand()
           ->update(
@@ -116,5 +115,4 @@ class Redirects extends Component
 
         return true;
     }
-
 }

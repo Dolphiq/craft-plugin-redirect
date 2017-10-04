@@ -46,32 +46,26 @@ class m171003_120604_createmultisiteurls extends Migration
                 ->all();
 
             foreach ($oldRedirects as $oldRedirect) {
-               // insert new redirect (element) into the database
+                // insert new redirect (element) into the database
 
               $redirect = new Redirect();
-              $redirect->sourceUrl = $oldRedirect['sourceUrl'];
-              $redirect->destinationUrl = $oldRedirect['destinationUrl'];
-              $redirect->statusCode = $oldRedirect['statusCode'];
+                $redirect->sourceUrl = $oldRedirect['sourceUrl'];
+                $redirect->destinationUrl = $oldRedirect['destinationUrl'];
+                $redirect->statusCode = $oldRedirect['statusCode'];
 
-              if($oldRedirect['siteId'] == null) {
-                $redirect->siteId = Craft::$app->getSites()->currentSite->id;
-              } else {
-                $redirect->siteId = $oldRedirect['siteId'];
-              }
-              $redirect->hitCount = $oldRedirect['hitCount'];
-              $redirect->hitAt = $oldRedirect['hitAt'];
-              $redirect->dateCreated = $oldRedirect['dateCreated'];
-              $redirect->dateUpdated = $oldRedirect['dateUpdated'];
+                if ($oldRedirect['siteId'] == null) {
+                    $redirect->siteId = Craft::$app->getSites()->currentSite->id;
+                } else {
+                    $redirect->siteId = $oldRedirect['siteId'];
+                }
+                $redirect->hitCount = $oldRedirect['hitCount'];
+                $redirect->hitAt = $oldRedirect['hitAt'];
+                $redirect->dateCreated = $oldRedirect['dateCreated'];
+                $redirect->dateUpdated = $oldRedirect['dateUpdated'];
 
-              $res = Craft::$app->getElements()->saveElement($redirect, true, false);
-
-
+                $res = Craft::$app->getElements()->saveElement($redirect, true, false);
             }
-
-
         }
-
-
     }
 
     /**
@@ -80,7 +74,6 @@ class m171003_120604_createmultisiteurls extends Migration
     public function safeDown()
     {
         if ($this->db->tableExists('{{%dolphiq_redirects_old}}')) {
-
             $this->dropForeignKey('dolphiq_redirects_id_fk', '{{%dolphiq_redirects}}');
             $this->dropTable('{{%dolphiq_redirects}}');
             MigrationHelper::renameTable('{{%dolphiq_redirects_old}}', '{{%dolphiq_redirects}}', $this);

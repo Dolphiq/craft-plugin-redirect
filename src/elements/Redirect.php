@@ -19,7 +19,6 @@ use craft\helpers\UrlHelper;
 use craft\validators\DateTimeValidator;
 use dolphiq\redirect\records\Redirect as RedirectRecord;
 
-
 class Redirect extends Element
 {
     // Static
@@ -54,9 +53,7 @@ class Redirect extends Element
      */
     public static function hasTitles(): bool
     {
-
         return false;
-
     }
     /**
      * @inheritdoc
@@ -95,11 +92,9 @@ class Redirect extends Element
 
     public function getSupportedSites(): array
     {
-
-
-      $supportedSites = [];
+        $supportedSites = [];
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
-          //if($this->siteId < 1 || $this->siteId == $site->id) {
+            //if($this->siteId < 1 || $this->siteId == $site->id) {
             $supportedSites[] = ['siteId' => $site->id, 'enabledByDefault' => false];
           //}
         }
@@ -121,7 +116,6 @@ class Redirect extends Element
      */
     public function getEditorHtml(): string
     {
-
         $statusCodesOptions = [
           '301' => 'Permanent redirect (301)',
           '302' => 'Temporarily redirect (302)',
@@ -155,11 +149,8 @@ class Redirect extends Element
      */
     protected static function defineSources(string $context = null): array
     {
-
-
-
         if ($context === 'index') {
-          $sources = [
+            $sources = [
               [
                   'key' => '*',
                   'label' => Craft::t('redirect', 'All redirects'),
@@ -209,8 +200,6 @@ class Redirect extends Element
      */
     protected static function defineTableAttributes(): array
     {
-
-
         $attributes = [
             'sourceUrl' => ['label' => Craft::t('redirect', 'Source URL')],
             'destinationUrl' => ['label' => Craft::t('redirect', 'Destination URL')],
@@ -230,8 +219,6 @@ class Redirect extends Element
      */
     protected function tableAttributeHtml(string $attribute): string
     {
-
-
         switch ($attribute) {
             case 'statusCode':
 
@@ -290,22 +277,21 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
-    public function formatUrl(string $url): string {
-      $resultUrl = $url;
+    public function formatUrl(string $url): string
+    {
+        $resultUrl = $url;
       // trim spaces
       $resultUrl = trim($resultUrl);
 
-      if(stripos($resultUrl, '://') !== false) {
-        // complete url
+        if (stripos($resultUrl, '://') !== false) {
+            // complete url
         // check if the base url is there and strip if it does
         $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
-
-      } else {
-        // strip leading slash
-        $resultUrl = ltrim($resultUrl,'/');
-
-      }
-      return $resultUrl;
+        } else {
+            // strip leading slash
+        $resultUrl = ltrim($resultUrl, '/');
+        }
+        return $resultUrl;
     }
 
 
@@ -314,7 +300,6 @@ class Redirect extends Element
      */
     public function beforeSave(bool $isNew): bool
     {
-
         return parent::beforeSave($isNew);
     }
 
@@ -335,16 +320,16 @@ class Redirect extends Element
             $record = new RedirectRecord();
             $record->id = $this->id;
 
-            if($this->hitCount > 0) {
-              $record->hitCount = $this->hitCount;
+            if ($this->hitCount > 0) {
+                $record->hitCount = $this->hitCount;
             } else {
-              $record->hitCount = 0;
+                $record->hitCount = 0;
             }
 
-             if($record->hitAt != null) {
-              $record->hitAt = $this->hitAt;
+            if ($record->hitAt != null) {
+                $record->hitAt = $this->hitAt;
             } else {
-              $record->hitAt = null;
+                $record->hitAt = null;
             }
         }
 
@@ -385,7 +370,6 @@ class Redirect extends Element
     public function init()
     {
         parent::init();
-
     }
 
     /**
@@ -447,5 +431,4 @@ class Redirect extends Element
      */
 
     public $siteId;
-
 }
