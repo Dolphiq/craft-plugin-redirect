@@ -45,11 +45,11 @@ class RedirectController extends Controller
           $sourceParameters = $parseRule->parseRequestParams($request);
           // insert the parameters into the destination url
           foreach ($matches[1] as $name) {
-            if (isset($sourceParameters[$name])) {
-              $destinationUrl = str_ireplace("<$name>", $sourceParameters[$name], $destinationUrl);
-            } elseif (isset($_GET[$name])) {
-                $destinationUrl = str_ireplace("<$name>", $_GET[$name], $destinationUrl);
-            }
+              if (isset($sourceParameters[$name])) {
+                  $destinationUrl = str_ireplace("<$name>", $sourceParameters[$name], $destinationUrl);
+              } elseif (isset($_GET[$name])) {
+                  $destinationUrl = str_ireplace("<$name>", $_GET[$name], $destinationUrl);
+              }
           }
       }
 
@@ -59,8 +59,8 @@ class RedirectController extends Controller
       }
 
       // register the hit to the database
-      RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId,$destinationUrl);
+      RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId, $destinationUrl);
 
-     $this->redirect($destinationUrl, $statusCode);
+        $this->redirect($destinationUrl, $statusCode);
     }
 }

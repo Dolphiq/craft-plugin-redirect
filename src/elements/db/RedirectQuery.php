@@ -15,7 +15,6 @@ use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 use yii\db\Connection;
 
-
 class RedirectQuery extends ElementQuery
 {
     // Properties
@@ -38,6 +37,11 @@ class RedirectQuery extends ElementQuery
      * @var string|string[]|null The handle(s) that the resulting global sets must have.
      */
     public $destinationUrl;
+
+    /**
+     * @var string|string[]|null The handle(s) that the resulting global sets must have.
+     */
+    public $statusCode;
 
     // Public Methods
     // =========================================================================
@@ -96,6 +100,8 @@ class RedirectQuery extends ElementQuery
 
         return $this;
     }
+
+
     // Protected Methods
     // =========================================================================
 
@@ -104,7 +110,6 @@ class RedirectQuery extends ElementQuery
      */
     protected function beforePrepare(): bool
     {
-
         Craft::info('dolphiq/redirect beforePrepare', __METHOD__);
         $this->joinElementTable('dolphiq_redirects');
 
@@ -128,7 +133,9 @@ class RedirectQuery extends ElementQuery
         if ($this->destinationUrl) {
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.destinationUrl', $this->destinationUrl));
         }
-
+        if ($this->statusCode) {
+            $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.statusCode', $this->statusCode));
+        }
 
 
        // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));
@@ -153,5 +160,4 @@ class RedirectQuery extends ElementQuery
             $this->subQuery->andWhere(['elements.id' => $editableSetIds]);
         }
     }
-
 }

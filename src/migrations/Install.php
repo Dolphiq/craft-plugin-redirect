@@ -44,7 +44,7 @@ class Install extends Migration
      */
     protected function createTables()
     {
-      // new table!!
+        // new table!!
 
         $this->createTable('{{%dolphiq_redirects}}', [
             'id' => $this->primaryKey(),
@@ -60,5 +60,4 @@ class Install extends Migration
 
         $this->addForeignKey(null, '{{%dolphiq_redirects}}', ['id'], '{{%elements}}', ['id'], 'CASCADE', null);
     }
-
 }

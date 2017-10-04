@@ -14,5 +14,13 @@
     "Temporarily redirect (302)" => "Tijdelijke doorverwijzing (302)",
     "Are you sure you want to delete the selected redirects?" => "Weet je zeker dat je de geselecteerde doorverwijzingen wilt verwijderen?",
     "Redirecs deleted." => "Doorverwijzing(en) verwijderd",
+    "The URL to be redirected" => "De bron URL die doorverwezen dient te worden",
+    "The final URL" => "De URL van de doorverwijzing",
+    "Redirect status code" => "Doorverwijscode",
+    "Site" => "Website",
+    "Permanent redirects" => "Permanente doorverwijzingen",
+    "Temporarily redirects" => "Tijdelijke doorverwijzingen",
+    "Couldn’t save the redirect." => "Opslaan van de doorverwijzing mislukt!",
+    "Redirect saved." => "Doorverwijzing opgeslagen."
 
 ];
