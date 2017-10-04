@@ -295,8 +295,10 @@ class Redirect extends Element
       // trim spaces
       $resultUrl = trim($resultUrl);
 
-      if(stripos($url, '://') !== false) {
+      if(stripos($resultUrl, '://') !== false) {
         // complete url
+        // check if the base url is there and strip if it does
+        $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
 
       } else {
         // strip leading slash
