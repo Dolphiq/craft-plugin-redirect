@@ -224,13 +224,11 @@ class SettingsController extends Controller
         $res = Craft::$app->getElements()->saveElement($redirect, true, false);
 
         if (!$res) {
-
-          if ($request->getAcceptsJson()) {
-
+            if ($request->getAcceptsJson()) {
                 return $this->asJson([
                   'success' => false
               ]);
-          }
+            }
           // else, normal result
             Craft::$app->getSession()->setError(Craft::t('redirect', 'Couldn’t save the redirect.'));
 
@@ -239,23 +237,19 @@ class SettingsController extends Controller
             ]);
 
             return null;
-
         } else {
-
-          if ($request->getAcceptsJson()) {
-
-          return $this->asJson([
+            if ($request->getAcceptsJson()) {
+                return $this->asJson([
                   'success' => true,
                   'id' => $redirect->id
               ]);
-        }
+            }
         // else, normal result
         Craft::$app->getSession()->setNotice(Craft::t('redirect', 'Redirect saved.'));
         // return $this->redirectToPostedUrl($category);
 
         $url = $request->getBodyParam('redirectUrl');
-        return $this->redirect($url);
-
+            return $this->redirect($url);
         }
     }
 
