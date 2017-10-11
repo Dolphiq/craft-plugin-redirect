@@ -1,5 +1,10 @@
 # Redirect Changelog
 
+## 1.0.5 - 2017-10-11
+
+### Fixed
+- Fixed a bug resulted in a query exception when using the plugin with Postgres.
+
 ## 1.0.4 - 2017-10-04
 
 ### Fixed
