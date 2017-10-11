@@ -337,14 +337,12 @@ class Redirect extends Element
         $record->sourceUrl = $this->formatUrl($this->sourceUrl);
         $record->destinationUrl = $this->formatUrl($this->destinationUrl);
         $record->statusCode = $this->statusCode;
-
-
-        //$record->groupId = $this->groupId;
+        
         $record->save(false);
 
         // remove form other sites
         Craft::$app->getDb()->createCommand()
-            ->delete('{{%elements_sites}}', 'elementId = :elementId AND siteId != :siteId', [':elementId' => $record->id, ':siteId' => $this->siteId])
+            ->delete('{{%elements_sites}}', '"elementId" = :elementId AND "siteId" != :siteId', [':elementId' => $record->id, ':siteId' => $this->siteId])
             ->execute();
         parent::afterSave($isNew);
     }
