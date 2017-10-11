@@ -337,7 +337,7 @@ class Redirect extends Element
         $record->sourceUrl = $this->formatUrl($this->sourceUrl);
         $record->destinationUrl = $this->formatUrl($this->destinationUrl);
         $record->statusCode = $this->statusCode;
-        
+
         $record->save(false);
 
         // remove form other sites
