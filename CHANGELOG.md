@@ -1,4 +1,8 @@
 # Redirect Changelog
+## 1.0.6 - 2017-10-19
+
+### Fixed
+- The introduced fix in version 1.0.5 created an error in some other database environments.
 
 ## 1.0.5 - 2017-10-11
 
