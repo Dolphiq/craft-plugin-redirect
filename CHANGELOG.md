@@ -1,4 +1,9 @@
 # Redirect Changelog
+## 1.0.7 - 2017-10-22
+
+### Fixed
+- The branch was not merged correctly last build, we fixed it.
+
 ## 1.0.6 - 2017-10-19
 
 ### Fixed
