@@ -1,4 +1,10 @@
 # Redirect Changelog
+## 1.0.8 - 2017-11-06
+
+### Fixed
+- validateCustomFields was removed from the last Craft version. We changed the settings controller for that.
+
+# Redirect Changelog
 ## 1.0.7 - 2017-10-22
 
 ### Fixed
