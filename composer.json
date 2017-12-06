@@ -13,6 +13,10 @@
         "craft3"
     ],
     "license": "MIT",
+    "support": {
+        "docs": "https://github.com/Dolphiq/craft3-plugin-redirect/blob/master/README.md",
+        "issues": "https://github.com/Dolphiq/craft3-plugin-redirect/"
+    },
     "authors": [
         {
             "name": "Dolphiq",
