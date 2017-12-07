@@ -1,10 +1,14 @@
 # Redirect Changelog
+## 1.0.9 - 2017-12-07
+
+### Fixed
+- Fixed a bug resulted in a query exception when using the plugin with Postgres and visiting a redirect url.
+
 ## 1.0.8 - 2017-11-06
 
 ### Fixed
 - validateCustomFields was removed from the last Craft version. We changed the settings controller for that.
 
-# Redirect Changelog
 ## 1.0.7 - 2017-10-22
 
 ### Fixed
