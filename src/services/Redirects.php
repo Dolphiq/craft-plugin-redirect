@@ -107,7 +107,7 @@ class Redirects extends Component
             'dolphiq_redirects',
             [
               'hitAt'=>new \yii\db\Expression('now()'),
-              'hitCount'=>new \yii\db\Expression('hitCount + 1'),
+              'hitCount'=>new \yii\db\Expression('{{hitCount}} + 1'),
             ],
             ['id' => $redirectId]
           )
