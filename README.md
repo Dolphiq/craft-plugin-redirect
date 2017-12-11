@@ -13,7 +13,7 @@ This plugin requires Craft CMS 3.0.0-RC1 or later.
 
 ## Installation
 
-[INSTALL.md Click here] for the installation notes.
+![Click here](INSTALL.md) for the installation readme.
 
 ### Example of the redirect overview
 ![Screenshot](resources/screenshots/redirects_overview_example_rc1.png)
