@@ -1,4 +1,10 @@
 # Redirect Changelog
+## 1.0.10 - 2017-12-11
+
+### Fixed
+- The Add new button dissapeared in Craft RC1 due to changes in the craft template. We fixed this! NOTE: RC1 is required now.
+
+# Redirect Changelog
 ## 1.0.9 - 2017-12-07
 
 ### Fixed

@@ -9,8 +9,7 @@ The plugin also registers and shows the last hit date and hit count per visited 
 **Note**: This plugin may become a paid add-on when the Craft Plugin store becomes available.
 
 ## Requirements
-* Craft 3.0 (beta 23)+
-* PHP 7.0+
+This plugin requires Craft CMS 3.0.0-RC1 or later.
 
 ## Installation
 
