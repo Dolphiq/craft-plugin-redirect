@@ -29,7 +29,7 @@ To install the plugin, follow these instructions.
 
 
 ### Example of the redirect overview
-![Screenshot](resources/screenshots/sire_redirects_overview_example.png)
+![Screenshot](resources/screenshots/redirects_overview_example_rc1.png)
 
 ## Using the Redirect plugin
 
