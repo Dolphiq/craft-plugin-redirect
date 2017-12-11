@@ -5,10 +5,6 @@
 {% set docsUrl = 'https://github.com/Dolphiq/craft3-plugin-redirect' %}
 
 
-    {% set extraPageHeaderHtml %}
-        <div class="buttons right">
-          <a href="{{ url( pathPrefix ~ 'redirect/new') }}" class="btn submit add icon">{{ "New redirect"|t('redirect') }}</a>
-        </div>
-    {% endset %}
-
-
+{% block actionButton %}
+        <a href="{{ url( pathPrefix ~ 'redirect/new') }}" class="submit btn add icon">{{ "New redirect"|t('redirect') }}</a>
+{% endblock %}
