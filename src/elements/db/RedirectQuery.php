@@ -117,24 +117,24 @@ class RedirectQuery extends ElementQuery
      //   $this->joinElementTable('elements_sites');
 
         $this->query->select([
-            '{{%elements_sites}}.siteId',
-            '{{%dolphiq_redirects}}.sourceUrl',
-            '{{%dolphiq_redirects}}.destinationUrl',
-            '{{%dolphiq_redirects}}.hitAt',
-            '{{%dolphiq_redirects}}.hitCount',
-            '{{%dolphiq_redirects}}.statusCode',
+            'elements_sites.siteId',
+            'dolphiq_redirects.sourceUrl',
+            'dolphiq_redirects.destinationUrl',
+            'dolphiq_redirects.hitAt',
+            'dolphiq_redirects.hitCount',
+            'dolphiq_redirects.statusCode',
         ]);
 
         // $this->subQuery->andWhere(Db::parseParam('status', null));
 
         if ($this->sourceUrl) {
-            $this->subQuery->andWhere(Db::parseParam('{{%dolphiq_redirects}}.sourceUrl', $this->sourceUrl));
+            $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.sourceUrl', $this->sourceUrl));
         }
         if ($this->destinationUrl) {
-            $this->subQuery->andWhere(Db::parseParam('{{%dolphiq_redirects}}.destinationUrl', $this->destinationUrl));
+            $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.destinationUrl', $this->destinationUrl));
         }
         if ($this->statusCode) {
-            $this->subQuery->andWhere(Db::parseParam('{{%dolphiq_redirects}}.statusCode', $this->statusCode));
+            $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.statusCode', $this->statusCode));
         }
 
 
@@ -157,7 +157,7 @@ class RedirectQuery extends ElementQuery
         if ($this->editable) {
             // Limit the query to only the global sets the user has permission to edit
             $editableSetIds = Craft::$app->getGlobals()->getEditableSetIds();
-            $this->subQuery->andWhere(['{{%elements}}.id' => $editableSetIds]);
+            $this->subQuery->andWhere(['elements.id' => $editableSetIds]);
         }
     }
 }
