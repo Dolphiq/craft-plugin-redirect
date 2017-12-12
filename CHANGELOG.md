@@ -1,4 +1,10 @@
 # Redirect Changelog
+## 1.0.11 - 2017-12-12
+
+### Changed
+- Changed hardcoded tablenames to accept table prefix settings
+- New icon
+
 ## 1.0.10 - 2017-12-11
 
 ### Fixed

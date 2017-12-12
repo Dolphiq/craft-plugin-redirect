@@ -2,7 +2,7 @@
     "name": "dolphiq/redirect",
     "description": "Craft redirect plugin provides an easy way to enter and maintain 301 and 302 redirects.",
     "type": "craft-plugin",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "keywords": [
         "craft",
         "cms",
@@ -25,7 +25,7 @@
         }
     ],
     "require": {
-        "craftcms/cms": "~3.0.0-beta.23"
+        "craftcms/cms": "^3.0.0-RC1"
     },
     "autoload": {
         "psr-4": {

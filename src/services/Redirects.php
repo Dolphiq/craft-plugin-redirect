@@ -104,7 +104,7 @@ class Redirects extends Component
         }
         $res = \Yii::$app->db->createCommand()
           ->update(
-            'dolphiq_redirects',
+            '{{%dolphiq_redirects}}',
             [
               'hitAt'=>new \yii\db\Expression('now()'),
               'hitCount'=>new \yii\db\Expression('{{hitCount}} + 1'),
