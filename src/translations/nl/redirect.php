@@ -20,7 +20,10 @@
     "Site" => "Website",
     "Permanent redirects" => "Permanente doorverwijzingen",
     "Temporarily redirects" => "Tijdelijke doorverwijzingen",
+    "Inactive redirects" => "Inactive doorverwijzingen",
     "Couldn’t save the redirect." => "Opslaan van de doorverwijzing mislukt!",
-    "Redirect saved." => "Doorverwijzing opgeslagen."
+    "Redirect saved." => "Doorverwijzing opgeslagen.",
+    "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters" => "De Redirect plugin kan gebruikt worden voor eenvoudige routes maar ook voor geavanceerdere routes met parameters",
+    "See some examples and instrutions here" => "Voorbeelden en instructies over het gebruik zijn hier te vinden (engels)"
 
 ];
