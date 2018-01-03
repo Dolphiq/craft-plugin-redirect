@@ -58,9 +58,45 @@ class SettingsController extends Controller
             throw new ForbiddenHttpException('User not permitted to edit content in any sites');
         }
 
-        return $this->renderTemplate('redirect/index', $variables);
+        return $this->renderTemplate('redirect/dashboard', $variables);
     }
 
+    /**
+     * Called before displaying the redirect settings index page.
+     *
+     * @return Response
+     */
+    public function actionRedirects(): craft\web\Response
+    {
+        $this->requireLogin();
+
+        //  $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
+
+        $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
+
+        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+
+        $variables = [
+            'settings' => RedirectPlugin::$plugin->getSettings(),
+            'source' => $source,
+            'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
+            // 'allRedirects' => $allRedirects
+        ];
+
+        // Get the site
+        // ---------------------------------------------------------------------
+        if (Craft::$app->getIsMultiSite()) {
+            // Only use the sites that the user has access to
+            $variables['siteIds'] = Craft::$app->getSites()->getEditableSiteIds();
+        } else {
+            $variables['siteIds'] = [Craft::$app->getSites()->getPrimarySite()->id];
+        }
+        if (!$variables['siteIds']) {
+            throw new ForbiddenHttpException('User not permitted to edit content in any sites');
+        }
+
+        return $this->renderTemplate('redirect/index', $variables);
+    }
 
     /**
      * Called before displaying the plugin settings section.
@@ -69,13 +105,34 @@ class SettingsController extends Controller
      */
     public function actionSettings(): craft\web\Response
     {
+
         $this->requireAdmin();
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
         $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
         $settings = RedirectPlugin::$plugin->getSettings();
+
+        $navItems = [
+            'settings' => [
+                'label' => "Settings",
+                'url' => UrlHelper::url( ($source == 'CpSettings' ? 'settings/': '') . 'redirect/settings')
+            ],
+            'redirects' => [
+                'label' => "Redirect entries",
+                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/redirects')
+            ]
+        ];
+
+        if ($settings['catchAllActive']) {
+            $navItems['missedurls'] = [
+                'label' => "Registered catch all urls",
+                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/missedurls')
+            ];
+        }
+
         return $this->renderTemplate('redirect/settings', [
           'settings' => $settings,
+          'navItems' => $navItems,
           'source' => $source,
           'pathPrefix' => ($source == 'CpSettings' ? 'settings/': '')
        ]);
@@ -100,8 +157,11 @@ class SettingsController extends Controller
         }
 
         $newSettings = [
-        'redirectsActive' => (bool)$request->getBodyParam('redirectsActive'),
-      ];
+            'redirectsActive' => (bool)$request->getBodyParam('redirectsActive'),
+            'catchAllActive' => (bool)$request->getBodyParam('catchAllActive'),
+            'catchAllTemplate' => (string)$request->getBodyParam('catchAllTemplate'),
+
+        ];
 
         if (!Craft::$app->getPlugins()->savePluginSettings($plugin, $newSettings)) {
             Craft::$app->getSession()->setError(Craft::t('app', 'Couldn’t save plugin settings.'));

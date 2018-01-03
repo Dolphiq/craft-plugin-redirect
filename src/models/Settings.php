@@ -17,7 +17,8 @@ class Settings extends Model
      * @var bool
      */
     public $redirectsActive = true;
-
+    public $catchAllActive = false;
+    public $catchAllTemplate = '';
 
     /**
      * @inheritdoc
@@ -33,7 +34,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['redirectsActive'], 'required'],
+            [['redirectsActive', 'catchAllActive'], 'required'],
         ];
     }
 }

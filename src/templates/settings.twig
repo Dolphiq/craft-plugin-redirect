@@ -1,4 +1,5 @@
 {% extends "_layouts/cp" %}
+
 {% set title = "Redirect settings"|t('redirect') %}
 
 {% set fullPageForm = true %}
@@ -8,12 +9,15 @@
 ] %}
 
 {% block sidebar %}
-  {% if source == "CpSettings" %}
+
+  {% if pathPrefix is not defined %}
+      {%  set pathPrefix = '' %}
+  {%  endif %}
 
   {% set selectedNavItem = "settings" %}
     {% include "redirect/nav" %}
 
-  {% endif %}
+
 {% endblock %}
 
 {% set docsUrl = 'https://github.com/Dolphiq/craft3-plugin-redirect' %}
@@ -36,6 +40,26 @@
     on:           settings.redirectsActive,
     errors:       settings.getErrors('redirectsActive')
 }) }}
+
+{{ forms.lightswitchField({
+    label:        "Use a Catch All page template"|t('redirect'),
+    instructions: "All the not existing urls are redirected to this page. We also register the missed urls."|t('redirect'),
+    id:           'catchAllActive',
+    name:         'catchAllActive',
+    on:           settings.catchAllActive,
+    errors:       settings.getErrors('catchAllActive')
+}) }}
+
+    {{ forms.textField({
+        label: "Catch all template"|t('redirect'),
+        instructions: "The catch all template file name within the craft template folder"|t('redirect'),
+        id: 'catchAllTemplate',
+        class: 'ltr',
+        name: 'catchAllTemplate',
+        value: settings.catchAllTemplate,
+        errors: settings.getErrors('catchAllTemplate'),
+
+    }) }}
 
 
 {% endblock content %}

@@ -1,0 +1,23 @@
+{% extends "_layouts/cp" %}
+{% set title = "Redirect settings"|t('redirect') %}
+
+{% set fullPageForm = false %}
+
+{% set crumbs = [
+{ label: "Settings"|t('app'), url: url('settings') },
+{ label: "Redirects"|t('redirect'), url: url('settings/redirect') }
+] %}
+
+{% block sidebar %}
+
+
+        {% set selectedNavItem = "settings" %}
+        {% include "redirect/nav" %}
+
+
+{% endblock %}
+
+{% set docsUrl = 'https://github.com/Dolphiq/craft3-plugin-redirect' %}
+
+
+<h1>Redirects plugin Dashboard</h1>
