@@ -65,10 +65,11 @@ class RedirectController extends Controller
       } else {
           // this is a not existing page, please load the temolate
           $settings = RedirectPlugin::$plugin->getSettings();
+          Craft::$app->response->statusCode = $statusCode;
           if ($settings->catchAllTemplate != '') {
               return $this->renderTemplate($settings->catchAllTemplate);
           } else {
-              die('this page does not exists');
+              return ('this page does not exists');
           }
       }
     }
