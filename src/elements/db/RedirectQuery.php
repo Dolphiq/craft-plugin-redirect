@@ -42,6 +42,10 @@ class RedirectQuery extends ElementQuery
      * @var string|string[]|null The handle(s) that the resulting global sets must have.
      */
     public $statusCode;
+    /**
+     * @var string|null hitAt
+     */
+    public $hitAt;
 
     // Public Methods
     // =========================================================================
@@ -136,7 +140,12 @@ class RedirectQuery extends ElementQuery
         if ($this->statusCode) {
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.statusCode', $this->statusCode));
         }
+        if ($this->hitAt && $this->hitAt > 0) {
+            $inactiveDate = new \DateTime();
+            $inactiveDate->modify("-60 days");
 
+            $this->subQuery->andWhere('(dolphiq_redirects.hitAt < :calculatedDate AND dolphiq_redirects.hitAt IS NOT NULL)', [':calculatedDate' => $inactiveDate->format("Y-m-d H:m:s")]);
+        }
 
        // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));
        // $this->_applyEditableParam();

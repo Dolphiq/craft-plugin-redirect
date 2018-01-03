@@ -1,4 +1,16 @@
 # Redirect Changelog
+
+
+## 1.0.12 - 2018-01-03
+
+### Added
+- Inactive redirects filter (show the redirects not visited for 60 days)
+
+### Changed
+- The required minimal Craft version and checked the compatibility
+- New screenshot
+- Added a link to the URL rules in the edit screen
+
 ## 1.0.11 - 2017-12-12
 
 ### Changed

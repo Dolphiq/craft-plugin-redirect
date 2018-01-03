@@ -16,7 +16,7 @@ This plugin requires Craft CMS 3.0.0-RC4 or later.
 [Click here](INSTALL.md) for the installation readme.
 
 ### Example of the redirect overview
-![Screenshot](resources/screenshots/redirects_overview_example_rc1.png)
+![Screenshot](resources/screenshots/redirects_overview_example_rc4.png)
 
 ## Using the Redirect plugin
 
@@ -58,7 +58,6 @@ overview/category/<catname>/index.html
 Potential features:
 
 * Dashboard with statistics
-* Inactive redirects filter (show the redirects not visited for 60 days)
 * Create a 404 page and show/register the missed urls
 * CSV import/export of the redirects
 * Add a priority property for (partly) overlapping urls
