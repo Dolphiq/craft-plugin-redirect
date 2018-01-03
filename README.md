@@ -58,9 +58,11 @@ overview/category/<catname>/index.html
 Potential features:
 
 * Dashboard with statistics
-* Inactive filter (show the redirects not visited for 60 days)
-* Create a 404 page and show/register the missed url's
+* Inactive redirects filter (show the redirects not visited for 60 days)
+* Create a 404 page and show/register the missed urls
 * CSV import/export of the redirects
+* Add a priority property for (partly) overlapping urls
+
 
 ### Contributors & Developers
 Johan Zandstra - info@dolphiq.nl
