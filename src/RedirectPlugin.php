@@ -84,7 +84,7 @@ class RedirectPlugin extends \craft\base\Plugin
 
     public function getSettingsResponse()
     {
-        $url = \craft\helpers\UrlHelper::cpUrl('settings/redirect');
+        $url = \craft\helpers\UrlHelper::cpUrl('settings/redirect/settings');
         return \Craft::$app->controller->redirect($url);
     }
 
@@ -98,16 +98,22 @@ class RedirectPlugin extends \craft\base\Plugin
     {
         $rules = [
             // register routes for the sub nav
-            'redirect' => 'redirect/settings',
+            'redirect' => 'redirect/settings/redirects',
+            'redirect/settings' => 'redirect/settings/settings',
+            'redirect/redirects' => 'redirect/settings/redirects',
             'redirect/new' => 'redirect/settings/edit-redirect',
             'redirect/<redirectId:\d+>' => 'redirect/settings/edit-redirect',
 
             // register routes for the settings tab
+
             'settings/redirect' => [
                 'route'=>'redirect/settings',
                 'params'=>['source' => 'CpSettings']],
             'settings/redirect/settings' => [
                 'route'=>'redirect/settings/settings',
+                'params'=>['source' => 'CpSettings']],
+            'settings/redirect/redirects' => [
+                'route'=>'redirect/settings/redirects',
                 'params'=>['source' => 'CpSettings']],
             'settings/redirect/new' => [
                 'route'=>'redirect/settings/edit-redirect',
@@ -133,23 +139,39 @@ class RedirectPlugin extends \craft\base\Plugin
 
         $settings = RedirectPlugin::$plugin->getSettings();
         if ($settings->redirectsActive) {
-            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) {
+            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) use ($settings) {
 
             // get rules from db!
-            // please only if we are on the site
-            $siteId = Craft::$app->getSites()->currentSite->id;
-                $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
-                foreach ($allRedirects as $redirect) {
-                    $event->rules[$redirect['sourceUrl']] = [
-                'route'=>'redirect/redirect/index',
-                'params'=>[
-                  'sourceUrl' => $redirect['sourceUrl'],
-                  'destinationUrl' => $redirect['destinationUrl'],
-                  'statusCode' => $redirect['statusCode'],
-                  'redirectId' => $redirect['id']
-                ]
-              ];
+            // please only if we are on the site and the redirects are active in the plugin settings
+                if ($settings->redirectsActive) {
+                    $siteId = Craft::$app->getSites()->currentSite->id;
+                    $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
+                    foreach ($allRedirects as $redirect) {
+                        $event->rules[$redirect['sourceUrl']] = [
+                            'route' => 'redirect/redirect/index',
+                            'params' => [
+                                'sourceUrl' => $redirect['sourceUrl'],
+                                'destinationUrl' => $redirect['destinationUrl'],
+                                'statusCode' => $redirect['statusCode'],
+                                'redirectId' => $redirect['id']
+                            ]
+                        ];
+                    }
                 }
+                // 404?
+
+                if ($settings->catchAllActive) {
+                    $event->rules['<all:.+>'] = [
+                        'route' => 'redirect/redirect/index',
+                        'params' => [
+                            'sourceUrl' => $redirect['sourceUrl'],
+                            'destinationUrl' => '/test/',
+                            'statusCode' => 404,
+                            'redirectId' => null
+                        ]
+                    ];
+                }
+
             });
         }
 

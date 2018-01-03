@@ -59,8 +59,17 @@ class RedirectController extends Controller
       }
 
       // register the hit to the database
-      RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId, $destinationUrl);
-
-        $this->redirect($destinationUrl, $statusCode);
+      if ($redirectId != null && $statusCode != 404) {
+          RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId, $destinationUrl);
+          $this->redirect($destinationUrl, $statusCode);
+      } else {
+          // this is a not existing page, please load the temolate
+          $settings = RedirectPlugin::$plugin->getSettings();
+          if ($settings->catchAllTemplate != '') {
+              return $this->renderTemplate($settings->catchAllTemplate);
+          } else {
+              die('this page does not exists');
+          }
+      }
     }
 }
