@@ -9,7 +9,7 @@ The plugin also registers and shows the last hit date and hit count per visited 
 **Note**: This plugin may become a paid add-on when the Craft Plugin store becomes available.
 
 ## Requirements
-This plugin requires Craft CMS 3.0.0-RC1 or later.
+This plugin requires Craft CMS 3.0.0-RC2 or later.
 
 ## Installation
 
@@ -51,60 +51,16 @@ Destination URL:
 ```
 overview/category/<catname>/index.html
 ```
+![Click here](RULES.md) for the complete overview of rule examples.
 
-### Multiple parameters mixed
-Source URL:
-```
-cars/<brand>/<dontusepart>/<color>/index.html
-```
-Destination URL:
-```
-overview/cars/<brand>/colors/<color>
-```
-*note: it is not required to use all the source parameters in the destination URL
+## Redirect Manager Roadmap
 
-### Replace a uri parameter in de source string to a new path
+Potential features:
 
-Source URL:
-```
-books/detail
-```
-Destination URL:
-```
-book-detail/<bookId>/index.html
-```
-
-Example: the original url looks like:
-```
-books/detail?bookId=124
-```
-
-After the redirect, the url will look like:
-```
-book-detail/124/index.html
-```
-
-### Replace a long path with unknown amount of segments for an other url
-
-Source URL:
-```
-wholepath/<options:.+>
-```
-Destination URL:
-```
-otherpath/index.html?cat=<a>&subcat=<b>
-```
-
-Example: the original url looks like:
-```
-wholepath/this/is/a/long/path/with/params?a=1&b=2&c=4
-```
-
-After the redirect, the url will look like:
-```
-/otherpath/index.html?cat=1&subcat=2
-```
-
+* Dashboard with statistics
+* Inactive filter (show the redirects not visited for 60 days)
+* Create a 404 page and show/register the missed url's
+* CSV import/export of the redirects
 
 ### Contributors & Developers
 Johan Zandstra - info@dolphiq.nl
