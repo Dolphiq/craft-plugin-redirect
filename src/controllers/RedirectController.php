@@ -32,7 +32,7 @@ class RedirectController extends Controller
         $redirectId = $routeParameters['redirectId'];
 
       // are there parameters in the destination url?
-      if (strpos($destinationUrl, '<') !== false && preg_match_all('/<([\w._-]+)>/', $destinationUrl, $matches)) {
+      if ($statusCode != 404 && strpos($destinationUrl, '<') !== false && preg_match_all('/<([\w._-]+)>/', $destinationUrl, $matches)) {
 
           // a bug in Craft cms overwrites the parameters parsed by Yii-UrlRule.
           // Please get them again
@@ -67,7 +67,9 @@ class RedirectController extends Controller
           $settings = RedirectPlugin::$plugin->getSettings();
           Craft::$app->response->statusCode = $statusCode;
           if ($settings->catchAllTemplate != '') {
-              return $this->renderTemplate($settings->catchAllTemplate);
+              return $this->renderTemplate($settings->catchAllTemplate, ['request' => [
+                  'requestUri' => $_SERVER['REQUEST_URI']
+              ]]);
           } else {
               return ('this page does not exists');
           }
