@@ -13,7 +13,7 @@ This plugin requires Craft CMS 3.0.0-RC2 or later.
 
 ## Installation
 
-![Click here](INSTALL.md) for the installation readme.
+[Click here](INSTALL.md) for the installation readme.
 
 ### Example of the redirect overview
 ![Screenshot](resources/screenshots/redirects_overview_example_rc1.png)
@@ -51,7 +51,7 @@ Destination URL:
 ```
 overview/category/<catname>/index.html
 ```
-![Click here](RULES.md) for the complete overview of rule examples.
+[Click here](RULES.md) for the complete overview of rule examples.
 
 ## Redirect Manager Roadmap
 
