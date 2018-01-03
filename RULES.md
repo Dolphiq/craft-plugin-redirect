@@ -84,3 +84,5 @@ After the redirect, the url will look like:
 ```
 /otherpath/index.html?cat=1&subcat=2
 ```
+
+[Click here](README.md) for the main readme.
