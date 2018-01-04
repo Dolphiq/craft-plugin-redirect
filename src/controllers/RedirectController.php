@@ -14,6 +14,7 @@ use craft\web\Controller;
 use craft\helpers\UrlHelper;
 
 use dolphiq\redirect\RedirectPlugin;
+use dolphiq\redirect\elements\CatchAllUrl;
 
 use \dolphiq\redirect\helpers\UrlRule;
 
@@ -63,12 +64,24 @@ class RedirectController extends Controller
           RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId, $destinationUrl);
           $this->redirect($destinationUrl, $statusCode);
       } else {
-          // this is a not existing page, please load the temolate
+          // this is a not existing page, please register the hit to a catch all element
+
+          $uri = $_SERVER['REQUEST_URI'];
+
+          $catchAll = new CatchAllUrl();
+
+          $catchAll->catchedUri = $uri;
+          $catchAll->siteId = Craft::$app->getSites()->currentSite->id;
+
+          // ElementInterface $element, bool $runValidation = true, bool $propagate = true): bool
+          $res = Craft::$app->getElements()->saveElement($catchAll, true, false);
+
           $settings = RedirectPlugin::$plugin->getSettings();
           Craft::$app->response->statusCode = $statusCode;
           if ($settings->catchAllTemplate != '') {
               return $this->renderTemplate($settings->catchAllTemplate, ['request' => [
-                  'requestUri' => $_SERVER['REQUEST_URI']
+                  'requestUri' => $_SERVER['REQUEST_URI'],
+                  'res' => $res
               ]]);
           } else {
               return ('this page does not exists');

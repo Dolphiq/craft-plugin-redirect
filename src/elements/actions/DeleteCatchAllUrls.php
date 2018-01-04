@@ -4,15 +4,16 @@ namespace dolphiq\redirect\elements\actions;
 
 use Craft;
 use craft\base\ElementAction;
-use dolphiq\redirect\elements\Redirect;
+use dolphiq\redirect\elements\CatchAllUrl;
+use dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
 use craft\elements\db\ElementQueryInterface;
 use yii\base\Exception;
 
 /**
- * DeleteRedirects represents a Delete Redirect element action.
+ * DeleteRedirects represents a Delete URL element action.
  *
  */
-class DeleteRedirects extends ElementAction
+class DeleteCatchAllUrls extends ElementAction
 {
     // Public Methods
     // =========================================================================
@@ -38,7 +39,7 @@ class DeleteRedirects extends ElementAction
      */
     public function getConfirmationMessage()
     {
-        return Craft::t('redirect', 'Are you sure you want to delete the selected redirects?');
+        return Craft::t('redirect', 'Are you sure you want to delete the selected registered urls?');
     }
 
     /**
@@ -51,9 +52,17 @@ class DeleteRedirects extends ElementAction
     public function performAction(ElementQueryInterface $query): bool
     {
         try {
-            foreach ($query->all() as $redirect) {
+            foreach ($query->all() as $url) {
 
-            Craft::$app->getElements()->deleteElement($redirect);
+                $res = Craft::$app->getElements()->deleteElement($url);
+
+                if ($res) {
+                    $record = CatchAllUrlRecord::findOne($url->id);
+                    if($record) {
+                        $record->delete();
+                    }
+
+                }
 
             }
         } catch (Exception $exception) {
@@ -62,7 +71,7 @@ class DeleteRedirects extends ElementAction
             return false;
         }
 
-        $this->setMessage(Craft::t('redirect', 'Redirecs deleted.'));
+        $this->setMessage(Craft::t('redirect', 'Registered urls deleted.'));
 
         return true;
     }

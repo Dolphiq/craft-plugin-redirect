@@ -101,6 +101,7 @@ class RedirectPlugin extends \craft\base\Plugin
             'redirect' => 'redirect/settings/redirects',
             'redirect/settings' => 'redirect/settings/settings',
             'redirect/redirects' => 'redirect/settings/redirects',
+            'redirect/registered-catch-all-urls' => 'redirect/settings/registered-catch-all-urls',
             'redirect/new' => 'redirect/settings/edit-redirect',
             'redirect/<redirectId:\d+>' => 'redirect/settings/edit-redirect',
 
@@ -114,6 +115,9 @@ class RedirectPlugin extends \craft\base\Plugin
                 'params'=>['source' => 'CpSettings']],
             'settings/redirect/redirects' => [
                 'route'=>'redirect/settings/redirects',
+                'params'=>['source' => 'CpSettings']],
+            'settings/redirect/registered-catch-all-urls' => [
+                'route'=>'redirect/settings/registered-catch-all-urls',
                 'params'=>['source' => 'CpSettings']],
             'settings/redirect/new' => [
                 'route'=>'redirect/settings/edit-redirect',

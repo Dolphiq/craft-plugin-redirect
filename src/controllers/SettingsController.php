@@ -32,42 +32,19 @@ class SettingsController extends Controller
     public function actionIndex(): craft\web\Response
     {
         $this->requireLogin();
-
-      //  $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
-
-         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
-
-        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
-
-        $variables = [
-          'settings' => RedirectPlugin::$plugin->getSettings(),
-           'source' => $source,
-           'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
-          // 'allRedirects' => $allRedirects
-        ];
-
-        // Get the site
-        // ---------------------------------------------------------------------
-        if (Craft::$app->getIsMultiSite()) {
-            // Only use the sites that the user has access to
-            $variables['siteIds'] = Craft::$app->getSites()->getEditableSiteIds();
-        } else {
-            $variables['siteIds'] = [Craft::$app->getSites()->getPrimarySite()->id];
-        }
-        if (!$variables['siteIds']) {
-            throw new ForbiddenHttpException('User not permitted to edit content in any sites');
-        }
-
+        $variables = [];
         return $this->renderTemplate('redirect/dashboard', $variables);
     }
 
+
     /**
-     * Called before displaying the redirect settings index page.
+     * Called before displaying the redirect settings registered-catch-all-urls  page.
      *
      * @return Response
      */
-    public function actionRedirects(): craft\web\Response
+    public function actionRegisteredCatchAllUrls(): craft\web\Response
     {
+
         $this->requireLogin();
 
         //  $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
@@ -75,9 +52,12 @@ class SettingsController extends Controller
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
 
         $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+        $navItems = $this->getMenuItems();
 
+        unset($navItems['registeredcatchall']);
         $variables = [
             'settings' => RedirectPlugin::$plugin->getSettings(),
+            'navItems' => $navItems,
             'source' => $source,
             'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
             // 'allRedirects' => $allRedirects
@@ -95,7 +75,76 @@ class SettingsController extends Controller
             throw new ForbiddenHttpException('User not permitted to edit content in any sites');
         }
 
-        return $this->renderTemplate('redirect/index', $variables);
+        return $this->renderTemplate('redirect/registeredcatchallurls', $variables);
+    }
+
+    /**
+     * Called before displaying the redirect settings index page.
+     *
+     * @return Response
+     */
+    public function actionRedirects(): craft\web\Response
+    {
+        $this->requireLogin();
+
+        //  $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
+
+        $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
+
+        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+        $navItems = $this->getMenuItems();
+
+        unset($navItems['redirects']);
+        $variables = [
+            'settings' => RedirectPlugin::$plugin->getSettings(),
+            'navItems' => $navItems,
+            'source' => $source,
+            'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
+            // 'allRedirects' => $allRedirects
+        ];
+
+        // Get the site
+        // ---------------------------------------------------------------------
+        if (Craft::$app->getIsMultiSite()) {
+            // Only use the sites that the user has access to
+            $variables['siteIds'] = Craft::$app->getSites()->getEditableSiteIds();
+        } else {
+            $variables['siteIds'] = [Craft::$app->getSites()->getPrimarySite()->id];
+        }
+        if (!$variables['siteIds']) {
+            throw new ForbiddenHttpException('User not permitted to edit content in any sites');
+        }
+
+        return $this->renderTemplate('redirect/redirects', $variables);
+    }
+
+
+    private function getMenuItems()
+    {
+        $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
+
+        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+
+        $settings = RedirectPlugin::$plugin->getSettings();
+
+        $navItems = [
+            'settings' => [
+                'label' => "Settings",
+                'url' => UrlHelper::url( ($source == 'CpSettings' ? 'settings/': '') . 'redirect/settings')
+            ],
+            'redirects' => [
+                'label' => "Redirect entries",
+                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/redirects')
+            ]
+        ];
+
+        if ($settings['catchAllActive']) {
+            $navItems['registeredcatchall'] = [
+                'label' => "Registered catch all urls",
+                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/registered-catch-all-urls')
+            ];
+        }
+        return $navItems;
     }
 
     /**
@@ -112,23 +161,7 @@ class SettingsController extends Controller
         $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
         $settings = RedirectPlugin::$plugin->getSettings();
 
-        $navItems = [
-            'settings' => [
-                'label' => "Settings",
-                'url' => UrlHelper::url( ($source == 'CpSettings' ? 'settings/': '') . 'redirect/settings')
-            ],
-            'redirects' => [
-                'label' => "Redirect entries",
-                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/redirects')
-            ]
-        ];
-
-        if ($settings['catchAllActive']) {
-            $navItems['missedurls'] = [
-                'label' => "Registered catch all urls",
-                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/missedurls')
-            ];
-        }
+        $navItems = $this->getMenuItems();
 
         return $this->renderTemplate('redirect/settings', [
           'settings' => $settings,

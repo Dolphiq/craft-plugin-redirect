@@ -1,13 +1,10 @@
 
-{% set title = "Redirect entries"|t('redirect') %}
-{% set elementType = 'dolphiq\\redirect\\elements\\Redirect' %}
+{% set title = "Registered catch all urls"|t('redirect') %}
+{% set elementType = 'dolphiq\\redirect\\elements\\CatchAllUrl' %}
 
 {% set docsUrl = 'https://github.com/Dolphiq/craft3-plugin-redirect' %}
 
 
-{% block actionButton %}
-        <a href="{{ url( pathPrefix ~ 'redirect/new') }}" class="submit btn add icon">{{ "New redirect"|t('redirect') }}</a>
-{% endblock %}
 
 {% extends "_layouts/cp" %}
 
@@ -35,9 +32,7 @@
 
 {% block sidebar %}
     <nav>
-        {% set navItems = {
-        settings: { label: "Settings"|t('app'), url: url(pathPrefix ~ 'redirect/settings') }
-        } %}
+
 
         {% for itemId, item in navItems %}
             {% if item %}
@@ -50,10 +45,10 @@
 
 
 
-    {% if sources is not empty %}
-        <li class="heading"><span>Redirect entries</span></li>
-        {% include "_elements/sources" %}
-    {% endif %}
+            {% if sources is not empty %}
+                <li class="heading"><span>Catch all urls</span></li>
+                {% include "_elements/sources" %}
+            {% endif %}
         </ul>
     </nav>
 
@@ -61,20 +56,20 @@
 
 
 {% block content %}
-        <div class="elementindex">
-            {% include "_elements/indexcontainer" with {
-            showSiteMenu: false
-            } %}
-        </div>
+    <div class="elementindex">
+        {% include "_elements/indexcontainer" with {
+        showSiteMenu: false
+        } %}
+    </div>
 {% endblock %}
 
 
 {% block initJs %}
-        Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#main'), {
-        context:        '{{ context }}',
-        storageKey:     'elementindex.{{ elementType }}',
-        criteria:       Craft.defaultIndexCriteria
-        });
+    Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#main'), {
+    context:        '{{ context }}',
+    storageKey:     'elementindex.{{ elementType }}',
+    criteria:       Craft.defaultIndexCriteria
+    });
 {% endblock %}
 
 {% js block('initJs') %}
