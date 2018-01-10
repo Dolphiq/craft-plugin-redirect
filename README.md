@@ -67,7 +67,6 @@ overview/category/<catname>/index.html
 Potential features:
 
 * Dashboard with statistics
-* Create a 404 page and show/register the missed urls
 * CSV import/export of the redirects
 * Add a priority property for (partly) overlapping urls
 
