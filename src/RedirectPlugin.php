@@ -14,6 +14,7 @@ use Craft;
 use craft\base\Plugin;
 use dolphiq\redirect\models\Settings;
 use dolphiq\redirect\services\Redirects;
+use dolphiq\redirect\services\CatchAll;
 
 use craft\events\RegisterCpNavItemsEvent;
 use craft\web\twig\variables\Cp;
@@ -32,7 +33,7 @@ class RedirectPlugin extends \craft\base\Plugin
     public static $plugin;
 
     private $_redirectsService;
-
+    private $_catchAallService;
     /**
      * Returns the Redirects service.
      *
@@ -47,6 +48,15 @@ class RedirectPlugin extends \craft\base\Plugin
         return $this->_redirectsService;
     }
 
+    public function getCatchAll()
+    {
+        if ($this->_catchAallService == null) {
+            $this->_catchAallService = new CatchAll();
+        }
+        /** @var WebApplication|ConsoleApplication $this */
+        return $this->_catchAallService;
+    }
+
     public $controllerMap = [
      // 'redirect' => RedirectController::class,
     ];
@@ -55,7 +65,7 @@ class RedirectPlugin extends \craft\base\Plugin
     public $hasCpSettings = true;
 
     // table schema version
-    public $schemaVersion = '1.0.3';
+    public $schemaVersion = '1.0.4';
 
     /*
     *
@@ -84,7 +94,7 @@ class RedirectPlugin extends \craft\base\Plugin
 
     public function getSettingsResponse()
     {
-        $url = \craft\helpers\UrlHelper::cpUrl('settings/redirect');
+        $url = \craft\helpers\UrlHelper::cpUrl('settings/redirect/settings');
         return \Craft::$app->controller->redirect($url);
     }
 
@@ -98,16 +108,26 @@ class RedirectPlugin extends \craft\base\Plugin
     {
         $rules = [
             // register routes for the sub nav
-            'redirect' => 'redirect/settings',
+            'redirect' => 'redirect/settings/redirects',
+            'redirect/settings' => 'redirect/settings/settings',
+            'redirect/redirects' => 'redirect/settings/redirects',
+            'redirect/registered-catch-all-urls' => 'redirect/settings/registered-catch-all-urls',
             'redirect/new' => 'redirect/settings/edit-redirect',
             'redirect/<redirectId:\d+>' => 'redirect/settings/edit-redirect',
 
             // register routes for the settings tab
+
             'settings/redirect' => [
                 'route'=>'redirect/settings',
                 'params'=>['source' => 'CpSettings']],
             'settings/redirect/settings' => [
                 'route'=>'redirect/settings/settings',
+                'params'=>['source' => 'CpSettings']],
+            'settings/redirect/redirects' => [
+                'route'=>'redirect/settings/redirects',
+                'params'=>['source' => 'CpSettings']],
+            'settings/redirect/registered-catch-all-urls' => [
+                'route'=>'redirect/settings/registered-catch-all-urls',
                 'params'=>['source' => 'CpSettings']],
             'settings/redirect/new' => [
                 'route'=>'redirect/settings/edit-redirect',
@@ -133,23 +153,39 @@ class RedirectPlugin extends \craft\base\Plugin
 
         $settings = RedirectPlugin::$plugin->getSettings();
         if ($settings->redirectsActive) {
-            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) {
+            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) use ($settings) {
 
             // get rules from db!
-            // please only if we are on the site
-            $siteId = Craft::$app->getSites()->currentSite->id;
-                $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
-                foreach ($allRedirects as $redirect) {
-                    $event->rules[$redirect['sourceUrl']] = [
-                'route'=>'redirect/redirect/index',
-                'params'=>[
-                  'sourceUrl' => $redirect['sourceUrl'],
-                  'destinationUrl' => $redirect['destinationUrl'],
-                  'statusCode' => $redirect['statusCode'],
-                  'redirectId' => $redirect['id']
-                ]
-              ];
+            // please only if we are on the site and the redirects are active in the plugin settings
+                if ($settings->redirectsActive) {
+                    $siteId = Craft::$app->getSites()->currentSite->id;
+                    $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
+                    foreach ($allRedirects as $redirect) {
+                        $event->rules[$redirect['sourceUrl']] = [
+                            'route' => 'redirect/redirect/index',
+                            'params' => [
+                                'sourceUrl' => $redirect['sourceUrl'],
+                                'destinationUrl' => $redirect['destinationUrl'],
+                                'statusCode' => $redirect['statusCode'],
+                                'redirectId' => $redirect['id']
+                            ]
+                        ];
+                    }
                 }
+                // 404?
+
+                if ($settings->catchAllActive) {
+                    $event->rules['<all:.+>'] = [
+                        'route' => 'redirect/redirect/index',
+                        'params' => [
+                            'sourceUrl' => $redirect['sourceUrl'],
+                            'destinationUrl' => '/test/',
+                            'statusCode' => 404,
+                            'redirectId' => null
+                        ]
+                    ];
+                }
+
             });
         }
 

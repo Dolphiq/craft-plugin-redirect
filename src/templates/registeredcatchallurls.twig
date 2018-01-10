@@ -1,0 +1,68 @@
+
+{% extends "_layouts/cp" %}
+{% set title = "Registered catch all urls"|t('redirect') %}
+{% set showSiteMenu = true %}
+{% set urlFormat = "/admin/redirect/registered-catch-all-urls?siteId={id}" %}
+{% set selectedItem  = "registeredcatchall" %}
+{% block contextMenu %}
+    {% if showSiteMenu %}
+        {% include "_elements/sitemenu" %}
+    {% endif %}
+{% endblock %}
+
+{% set crumbs = [
+{ label: "Settings"|t('app'), url: url('settings') }
+] %}
+
+{% block sidebar %}
+
+    {% if pathPrefix is not defined %}
+        {%  set pathPrefix = '' %}
+    {%  endif %}
+
+    {% set selectedNavItem = "settings" %}
+    {% include "redirect/nav" %}
+
+
+{% endblock %}
+
+
+{% block content %}
+    <div id="nourlitems"{% if urlItems|length %} class="hidden"{% endif %}>
+        <p>{{ "No registered catch url's exist yet."|t('redirect') }}</p>
+    </div>
+
+    {% if urlItems|length %}
+        <table id="urlitems" class="data fullwidth collapsible">
+            <thead>
+            <th scope="col">{{ "Url"|t('redirect') }}</th>
+            <th scope="col">{{ "Hits"|t('redirect') }}</th>
+            <th scope="col">{{ "Last hit"|t('redirect') }}</th>
+            <td class="thin"></td>
+            </thead>
+            <tbody>
+            {% for urlItem in urlItems %}
+                <tr data-id="{{ urlItem.id }}" data-name="{{ urlItem.uri }}">
+                    <th scope="row" data-title="{{ 'Url'|t('redirect') }}"><a href="{{ url('redirect/new/?sourceCatchAllUrlId=' ~ urlItem.uid) }}">{{ urlItem.uri }}</a></th>
+                    <td data-title="{{ 'Hits'|t('redirect') }}"><code>{{ urlItem.hitCount }}</code></td>
+                    <td data-title="{{ 'Last hit'|t('redirect') }}"><code>{{ urlItem.dateUpdated|datetime('short') }}</code></td>
+                    <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}" role="button"></a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
+
+
+{% js %}
+new Craft.AdminTable({
+tableSelector: '#urlitems',
+noItemsSelector: '#nourlitems',
+deleteAction: 'redirect/settings/delete-catch-all-urls',
+sortable: false,
+allowDeleteAll: true,
+confirmDeleteMessage: '{{ "Are you sure you want to delete “{name}”?"|t('redirect') }}'
+});
+{% endjs %}
+

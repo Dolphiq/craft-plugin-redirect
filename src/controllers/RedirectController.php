@@ -16,6 +16,7 @@ use craft\helpers\UrlHelper;
 use dolphiq\redirect\RedirectPlugin;
 
 use \dolphiq\redirect\helpers\UrlRule;
+use \dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
 
 class RedirectController extends Controller
 {
@@ -32,7 +33,7 @@ class RedirectController extends Controller
         $redirectId = $routeParameters['redirectId'];
 
       // are there parameters in the destination url?
-      if (strpos($destinationUrl, '<') !== false && preg_match_all('/<([\w._-]+)>/', $destinationUrl, $matches)) {
+      if ($statusCode != 404 && strpos($destinationUrl, '<') !== false && preg_match_all('/<([\w._-]+)>/', $destinationUrl, $matches)) {
 
           // a bug in Craft cms overwrites the parameters parsed by Yii-UrlRule.
           // Please get them again
@@ -59,8 +60,26 @@ class RedirectController extends Controller
       }
 
       // register the hit to the database
-      RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId, $destinationUrl);
+      if ($redirectId != null && $statusCode != 404) {
+          RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId, $destinationUrl);
+          $this->redirect($destinationUrl, $statusCode);
+      } else {
+          // this is a not existing page, please register the hit to a catch all element
 
-        $this->redirect($destinationUrl, $statusCode);
+          $uri = $_SERVER['REQUEST_URI'];
+
+          RedirectPlugin::$plugin->getCatchAll()->registerHitByUri($uri);
+
+
+          $settings = RedirectPlugin::$plugin->getSettings();
+          Craft::$app->response->statusCode = $statusCode;
+          if ($settings->catchAllTemplate != '') {
+              return $this->renderTemplate($settings->catchAllTemplate, ['request' => [
+                  'requestUri' => $_SERVER['REQUEST_URI']
+              ]]);
+          } else {
+              return ('this page does not exists');
+          }
+      }
     }
 }

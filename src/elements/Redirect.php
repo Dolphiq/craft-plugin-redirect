@@ -25,32 +25,6 @@ class Redirect extends Element
     // =========================================================================
 
     /**
-     * @var string|null sourceUrl
-     */
-    public $sourceUrl;
-    /**
-     * @var string|null destinationUrl
-     */
-    public $destinationUrl;
-    /**
-     * @var string|null hitAt
-     */
-    public $hitAt;
-    /**
-     * @var string|null hitCount
-     */
-    public $hitCount;
-    /**
-     * @var string|null statusCode
-     */
-    public $statusCode;
-    /**
-     * @var int|null siteId
-     */
-
-    public $siteId;
-
-    /**
      * @inheritdoc
      */
     public static function displayName(): string
@@ -81,7 +55,6 @@ class Redirect extends Element
     {
         return false;
     }
-
     /**
      * @inheritdoc
      */
@@ -111,32 +84,95 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
+    public function getIsEditable(): bool
+    {
+        return false;
+    }
+
+
+    public function getSupportedSites(): array
+    {
+        $supportedSites = [];
+        foreach (Craft::$app->getSites()->getAllSites() as $site) {
+            //if($this->siteId < 1 || $this->siteId == $site->id) {
+            $supportedSites[] = ['siteId' => $site->id, 'enabledByDefault' => false];
+          //}
+        }
+        return $supportedSites;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCpEditUrl()
+    {
+        return UrlHelper::cpUrl('redirect/' . $this->id . '?siteId=' . $this->siteId);
+
+        return $url;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getEditorHtml(): string
+    {
+        $statusCodesOptions = [
+          '301' => 'Permanent redirect (301)',
+          '302' => 'Temporarily redirect (302)',
+        ];
+
+        $html = Craft::$app->getView()->renderTemplate('redirect/_redirectfields', [
+            'redirect' => $this,
+            'isNewRedirect' => false,
+            'meta' => false,
+            'statusCodeOptions' => $statusCodesOptions,
+
+        ]);
+
+        $html .= parent::getEditorHtml();
+
+        return $html;
+    }
+
+    /**
+     * Returns the name.
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return (string)$this->sourceUrl;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected static function defineSources(string $context = null): array
     {
         if ($context === 'index') {
             $sources = [
-                [
-                    'key' => '*',
-                    'label' => Craft::t('redirect', 'All redirects'),
-                    'criteria' => []
-                ],
-                [
-                    'key' => 'permanent',
-                    'label' => Craft::t('redirect', 'Permanent redirects'),
-                    'criteria' => ['statusCode' => 301]
-                ],
-                [
-                    'key' => 'temporarily',
-                    'label' => Craft::t('redirect', 'Temporarily redirects'),
-                    'criteria' => ['statusCode' => 302]
-                ],
-                [
-                    'key' => 'inactive',
-                    'label' => Craft::t('redirect', 'Inactive redirects'),
-                    'criteria' => ['hitAt' => 60]
-                ],
+              [
+                  'key' => '*',
+                  'label' => Craft::t('redirect', 'All redirects'),
+                  'criteria' => []
+              ],
+              [
+                'key' => 'permanent',
+                'label' => Craft::t('redirect', 'Permanent redirects'),
+                'criteria' => ['statusCode' => 301]
+              ],
+              [
+                'key' => 'temporarily',
+                'label' => Craft::t('redirect', 'Temporarily redirects'),
+                'criteria' => ['statusCode' => 302]
+              ],
+              [
+                'key' => 'inactive',
+                'label' => Craft::t('redirect', 'Inactive redirects'),
+                'criteria' => ['hitAt' => 60]
 
-            ];
+              ],
+          ];
         }
         return $sources;
     }
@@ -187,6 +223,32 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
+    protected function tableAttributeHtml(string $attribute): string
+    {
+        switch ($attribute) {
+            case 'statusCode':
+
+              $statusCodesOptions = [
+                '301' => 'Permanent redirect (301)',
+                '302' => 'Temporarily redirect (302)',
+              ];
+
+              return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('redirect', $statusCodesOptions[$this->statusCode])]) : '';
+
+            case 'baseUrl':
+
+              return Html::encodeParams('<a href="{baseUrl}" target="_blank">test</a>', ['baseUrl' => $this->getSite()->baseUrl . $this->sourceUrl]);
+
+        }
+
+        return parent::tableAttributeHtml($attribute);
+    }
+
+
+
+    /**
+     * @inheritdoc
+     */
     protected static function defineActions(string $source = null): array
     {
         $actions = [];
@@ -208,72 +270,6 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
-    protected static function defineDefaultTableAttributes(string $source): array
-    {
-        $attributes = ['sourceUrl', 'destinationUrl', 'statusCode', 'hitAt', 'hitCount', 'dateCreated'];
-
-        return $attributes;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getIsEditable(): bool
-    {
-        return false;
-    }
-
-    public function getSupportedSites(): array
-    {
-        $supportedSites = [];
-        foreach (Craft::$app->getSites()->getAllSites() as $site) {
-            //if($this->siteId < 1 || $this->siteId == $site->id) {
-            $supportedSites[] = ['siteId' => $site->id, 'enabledByDefault' => false];
-            //}
-        }
-        return $supportedSites;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getCpEditUrl()
-    {
-        return UrlHelper::cpUrl('redirect/' . $this->id . '?siteId=' . $this->siteId);
-
-        return $url;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getEditorHtml(): string
-    {
-        $statusCodesOptions = [
-            '301' => 'Permanent redirect (301)',
-            '302' => 'Temporarily redirect (302)',
-        ];
-
-        $html = Craft::$app->getView()->renderTemplate('redirect/_redirectfields', [
-            'redirect' => $this,
-            'isNewRedirect' => false,
-            'meta' => false,
-            'statusCodeOptions' => $statusCodesOptions,
-
-        ]);
-
-        $html .= parent::getEditorHtml();
-
-        return $html;
-    }
-
-
-    // Public Methods
-    // =========================================================================
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         $rules = parent::rules();
@@ -285,10 +281,25 @@ class Redirect extends Element
     }
 
     /**
-     * Use the sourceUrl as the string representation.
-     *
-     * @return string
+     * @inheritdoc
      */
+    public function formatUrl(string $url): string
+    {
+        $resultUrl = $url;
+      // trim spaces
+      $resultUrl = trim($resultUrl);
+
+        if (stripos($resultUrl, '://') !== false) {
+            // complete url
+        // check if the base url is there and strip if it does
+        $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
+        } else {
+            // strip leading slash
+        $resultUrl = ltrim($resultUrl, '/');
+        }
+        return $resultUrl;
+    }
+
 
     /**
      * @inheritdoc
@@ -309,7 +320,7 @@ class Redirect extends Element
             $record = RedirectRecord::findOne($this->id);
 
             if (!$record) {
-                throw new Exception('Invalid redirect ID: ' . $this->id);
+                throw new Exception('Invalid redirect ID: '.$this->id);
             }
         } else {
             $record = new RedirectRecord();
@@ -347,28 +358,19 @@ class Redirect extends Element
     }
 
 
-    // Properties
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
-    public function formatUrl(string $url): string
+    protected static function defineDefaultTableAttributes(string $source): array
     {
-        $resultUrl = $url;
-        // trim spaces
-        $resultUrl = trim($resultUrl);
+        $attributes = ['sourceUrl', 'destinationUrl', 'statusCode', 'hitAt', 'hitCount', 'dateCreated'];
 
-        if (stripos($resultUrl, '://') !== false) {
-            // complete url
-            // check if the base url is there and strip if it does
-            $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
-        } else {
-            // strip leading slash
-            $resultUrl = ltrim($resultUrl, '/');
-        }
-        return $resultUrl;
+        return $attributes;
     }
+
+
+    // Public Methods
+    // =========================================================================
 
     /**
      * @inheritdoc
@@ -378,6 +380,11 @@ class Redirect extends Element
         parent::init();
     }
 
+    /**
+     * Use the sourceUrl as the string representation.
+     *
+     * @return string
+     */
     /** @noinspection PhpInconsistentReturnPointsInspection */
     public function __toString()
     {
@@ -386,16 +393,6 @@ class Redirect extends Element
         } catch (\Throwable $e) {
             ErrorHandler::convertExceptionToError($e);
         }
-    }
-
-    /**
-     * Returns the name.
-     *
-     * @return string
-     */
-    public function getName(): string
-    {
-        return (string)$this->sourceUrl;
     }
 
     /**
@@ -408,27 +405,38 @@ class Redirect extends Element
         return $names;
     }
 
+
+    // Properties
+    // =========================================================================
+
     /**
-     * @inheritdoc
+     * @var string|null sourceUrl
      */
-    protected function tableAttributeHtml(string $attribute): string
-    {
-        switch ($attribute) {
-            case 'statusCode':
+    public $sourceUrl;
 
-                $statusCodesOptions = [
-                    '301' => 'Permanent redirect (301)',
-                    '302' => 'Temporarily redirect (302)',
-                ];
+    /**
+     * @var string|null destinationUrl
+     */
+    public $destinationUrl;
 
-                return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('redirect', $statusCodesOptions[$this->statusCode])]) : '';
+    /**
+     * @var string|null hitAt
+     */
+    public $hitAt;
 
-            case 'baseUrl':
+    /**
+     * @var string|null hitCount
+     */
+    public $hitCount;
 
-                return Html::encodeParams('<a href="{baseUrl}" target="_blank">test</a>', ['baseUrl' => $this->getSite()->baseUrl . $this->sourceUrl]);
+    /**
+     * @var string|null statusCode
+     */
+    public $statusCode;
 
-        }
+    /**
+     * @var int|null siteId
+     */
 
-        return parent::tableAttributeHtml($attribute);
-    }
+    public $siteId;
 }

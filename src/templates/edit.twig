@@ -15,9 +15,11 @@
     {{ redirectInput('settings/redirect') }}
 
     {% if redirect.id %}<input type="hidden" name="redirectId" value="{{ redirect.id }}">{% endif %}
-
-    <div id="categorygroup-settings">
+    <div class="readable">
         <p>{{ "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters"|t('redirect') }}.<br><a target="_blank" href="https://github.com/Dolphiq/craft3-plugin-redirect/blob/master/RULES.md">{{ "See some examples and instrutions here"|t('redirect') }}</a>.</p>
+    <br>
+    </div>
+    <div id="categorygroup-settings">
           {% if craft.app.getIsMultiSite() %}
               {{ forms.selectField({
                 label: "Site"|t('redirect'),
