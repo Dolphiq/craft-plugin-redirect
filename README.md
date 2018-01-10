@@ -6,7 +6,7 @@ This is particularly useful if you are migrating pages from an old website and w
 
 The plugin registers and shows the last hit date and hit count per visited redirect.
 
-As a new feature, the redirect also give you the ability to enable a catch all page to handle all the missed urls. The plugin will register and count the hits on this pages in a different section and makes it easy to create new redirect rules directly from missed / not existing URLs by simply clicking on the URL.
+As a new (expirimental) feature the redirect also give you the ability to enable a catch all page to handle all the not existing urls. The plugin will register and count the hits on this not existing pages in a different section and makes it easy to create new redirect rules directly from missed / not existing URLs by simply clicking on the URL.
 
 **Note**: This plugin may become a paid add-on when the Craft Plugin store becomes available.
 
