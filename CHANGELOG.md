@@ -1,5 +1,13 @@
 # Redirect Changelog
 
+## 1.0.13 - 2018-01-10
+### Added
+- Added settings screen to enable / disable all the redirects with one click
+- Added a catch all setting to catch all the other url's (404) and define a twig template to enable you to create a good stylish 404 page with the correct http code
+- Register the catched (not existing) url's in the database and show the last 100 in an interface. The plugin let you create new redirect rules directly from this overview by simply clicking on it.
+
+### Changed
+- The required minimal Craft version and checked the compatibility
 
 ## 1.0.12 - 2018-01-03
 

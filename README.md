@@ -4,19 +4,28 @@ Craft plugin that provides an easy way to enter and maintain 301 and 302 redirec
 
 This is particularly useful if you are migrating pages from an old website and want to avoid dead links and want to keep the page ranks for the SEO. But also useful if you are making (big) changes in the site (url) structure.
 
-The plugin also registers and shows the last hit date and hit count per visited redirect.
+The plugin registers and shows the last hit date and hit count per visited redirect.
+
+As a new feature, the redirect also give you the ability to enable a catch all page to handle all the missed urls. The plugin will register and count the hits on this pages in a different section and makes it easy to create new redirect rules directly from missed / not existing URLs by simply clicking on the URL.
 
 **Note**: This plugin may become a paid add-on when the Craft Plugin store becomes available.
 
 ## Requirements
-This plugin requires Craft CMS 3.0.0-RC4 or later.
+This plugin requires Craft CMS 3.0.0-RC5 or later.
 
 ## Installation
 
 [Click here](INSTALL.md) for the installation readme.
 
 ### Example of the redirect overview
-![Screenshot](resources/screenshots/redirects_overview_example_rc4.png)
+![Screenshot](resources/screenshots/redirects_overview_example_rc5.png)
+
+### Example of the missed URLs overview
+![Screenshot](resources/screenshots/catchall_overview_example_rc5.png)
+
+### Settings screen
+![Screenshot](resources/screenshots/settings_overview_example_rc5.png)
+
 
 ## Using the Redirect plugin
 

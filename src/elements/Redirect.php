@@ -165,7 +165,13 @@ class Redirect extends Element
                 'key' => 'temporarily',
                 'label' => Craft::t('redirect', 'Temporarily redirects'),
                 'criteria' => ['statusCode' => 302]
-              ]
+              ],
+              [
+                'key' => 'inactive',
+                'label' => Craft::t('redirect', 'Inactive redirects'),
+                'criteria' => ['hitAt' => 60]
+
+              ],
           ];
         }
         return $sources;
