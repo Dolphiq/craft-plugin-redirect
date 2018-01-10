@@ -36,6 +36,22 @@ class SettingsController extends Controller
         return $this->renderTemplate('redirect/dashboard', $variables);
     }
 
+    /**
+     * Called before displaying the redirect settings registered-catch-all-urls  page.
+     *
+     * @return Response
+     */
+    public function actionDeleteCatchAllUrls(): craft\web\Response
+    {
+
+        $this->requireLogin();
+        $urlId = Craft::$app->getRequest()->getRequiredBodyParam('id');
+
+        //Craft::$app->getTags()->deleteTagGroupById($sectionId);
+        RedirectPlugin::$plugin->getCatchAll()->DeleteUrlById($urlId);
+
+        return $this->asJson(['success' => true]);
+    }
 
     /**
      * Called before displaying the redirect settings registered-catch-all-urls  page.
@@ -54,11 +70,15 @@ class SettingsController extends Controller
         $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
         $navItems = $this->getMenuItems();
 
-        unset($navItems['registeredcatchall']);
+        $siteId = Craft::$app->getRequest()->getQueryParam('siteId', Craft::$app->getSites()->currentSite->id);
+
+
         $variables = [
             'settings' => RedirectPlugin::$plugin->getSettings(),
+            'urlItems' => RedirectPlugin::$plugin->getCatchAll()->getLastUrls(100, $siteId),
             'navItems' => $navItems,
             'source' => $source,
+            'selectedSiteId' => $siteId,
             'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
             // 'allRedirects' => $allRedirects
         ];
@@ -131,10 +151,6 @@ class SettingsController extends Controller
             'settings' => [
                 'label' => "Settings",
                 'url' => UrlHelper::url( ($source == 'CpSettings' ? 'settings/': '') . 'redirect/settings')
-            ],
-            'redirects' => [
-                'label' => "Redirect entries",
-                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/redirects')
             ]
         ];
 
@@ -144,6 +160,11 @@ class SettingsController extends Controller
                 'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/registered-catch-all-urls')
             ];
         }
+        $navItems['redirects'] = [
+            'label' => "Redirect entries",
+            'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/redirects')
+        ];
+
         return $navItems;
     }
 
@@ -271,6 +292,19 @@ class SettingsController extends Controller
         } else {
             if ($redirect === null) {
                 $redirect = new Redirect;
+
+                // is there a sourceCatchALlUrlID ?
+
+                $sourceCatchAllUrlId = Craft::$app->getRequest()->getQueryParam('sourceCatchAllUrlId', '');
+                if ($sourceCatchAllUrlId !== '') {
+                    // load some settings from the url
+                    $url = RedirectPlugin::$plugin->getCatchAll()->getUrlByUid($sourceCatchAllUrlId);
+                    if ($url !== null) {
+                        $redirect->sourceUrl = $url->uri;
+                        $redirect->siteId = $url->siteId;
+                    }
+                }
+
                 $variables['brandNewRedirect'] = true;
             }
 

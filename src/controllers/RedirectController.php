@@ -14,9 +14,9 @@ use craft\web\Controller;
 use craft\helpers\UrlHelper;
 
 use dolphiq\redirect\RedirectPlugin;
-use dolphiq\redirect\elements\CatchAllUrl;
 
 use \dolphiq\redirect\helpers\UrlRule;
+use \dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
 
 class RedirectController extends Controller
 {
@@ -68,20 +68,14 @@ class RedirectController extends Controller
 
           $uri = $_SERVER['REQUEST_URI'];
 
-          $catchAll = new CatchAllUrl();
+          RedirectPlugin::$plugin->getCatchAll()->registerHitByUri($uri);
 
-          $catchAll->catchedUri = $uri;
-          $catchAll->siteId = Craft::$app->getSites()->currentSite->id;
-
-          // ElementInterface $element, bool $runValidation = true, bool $propagate = true): bool
-          $res = Craft::$app->getElements()->saveElement($catchAll, true, false);
 
           $settings = RedirectPlugin::$plugin->getSettings();
           Craft::$app->response->statusCode = $statusCode;
           if ($settings->catchAllTemplate != '') {
               return $this->renderTemplate($settings->catchAllTemplate, ['request' => [
-                  'requestUri' => $_SERVER['REQUEST_URI'],
-                  'res' => $res
+                  'requestUri' => $_SERVER['REQUEST_URI']
               ]]);
           } else {
               return ('this page does not exists');

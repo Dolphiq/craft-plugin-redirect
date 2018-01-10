@@ -14,6 +14,7 @@ use Craft;
 use craft\base\Plugin;
 use dolphiq\redirect\models\Settings;
 use dolphiq\redirect\services\Redirects;
+use dolphiq\redirect\services\CatchAll;
 
 use craft\events\RegisterCpNavItemsEvent;
 use craft\web\twig\variables\Cp;
@@ -32,7 +33,7 @@ class RedirectPlugin extends \craft\base\Plugin
     public static $plugin;
 
     private $_redirectsService;
-
+    private $_catchAallService;
     /**
      * Returns the Redirects service.
      *
@@ -45,6 +46,15 @@ class RedirectPlugin extends \craft\base\Plugin
         }
         /** @var WebApplication|ConsoleApplication $this */
         return $this->_redirectsService;
+    }
+
+    public function getCatchAll()
+    {
+        if ($this->_catchAallService == null) {
+            $this->_catchAallService = new CatchAll();
+        }
+        /** @var WebApplication|ConsoleApplication $this */
+        return $this->_catchAallService;
     }
 
     public $controllerMap = [
