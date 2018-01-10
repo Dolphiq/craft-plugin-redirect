@@ -11,14 +11,13 @@ use craft\db\ActiveRecord;
 use yii\db\ActiveQueryInterface;
 
 /**
- * Class TagGroup record.
+ * Class Redirect record.
  *
  * @property int         $id            ID
  * @property int         $fieldLayoutId Field layout ID
  * @property string      $name          Name
  * @property string      $handle        Handle
  * @property FieldLayout $fieldLayout   Field layout
- * @property Tag[]       $tags          Tags
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since  3.0
@@ -39,7 +38,7 @@ class RedirectGroup extends ActiveRecord
     }
 
     /**
-     * Returns the tag group’s fieldLayout.
+     * Returns the redirect fieldLayout.
      *
      * @return ActiveQueryInterface The relational query object.
      */

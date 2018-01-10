@@ -47,7 +47,6 @@ class SettingsController extends Controller
         $this->requireLogin();
         $urlId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
-        //Craft::$app->getTags()->deleteTagGroupById($sectionId);
         RedirectPlugin::$plugin->getCatchAll()->DeleteUrlById($urlId);
 
         return $this->asJson(['success' => true]);

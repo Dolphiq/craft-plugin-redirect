@@ -27,7 +27,7 @@ class Redirect extends ActiveRecord
     }
 
     /**
-     * Returns the tag’s element.
+     * Returns the redirect’s element.
      *
      * @return ActiveQueryInterface The relational query object.
      */
