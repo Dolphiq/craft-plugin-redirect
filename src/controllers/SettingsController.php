@@ -32,8 +32,36 @@ class SettingsController extends Controller
     public function actionIndex(): craft\web\Response
     {
         $this->requireLogin();
-        $variables = [];
-        return $this->renderTemplate('redirect/dashboard', $variables);
+
+        //  $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
+
+        $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
+
+        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+        $navItems = $this->getMenuItems();
+
+        unset($navItems['redirects']);
+        $variables = [
+            'settings' => RedirectPlugin::$plugin->getSettings(),
+            'navItems' => $navItems,
+            'source' => $source,
+            'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
+            // 'allRedirects' => $allRedirects
+        ];
+
+        // Get the site
+        // ---------------------------------------------------------------------
+        if (Craft::$app->getIsMultiSite()) {
+            // Only use the sites that the user has access to
+            $variables['siteIds'] = Craft::$app->getSites()->getEditableSiteIds();
+        } else {
+            $variables['siteIds'] = [Craft::$app->getSites()->getPrimarySite()->id];
+        }
+        if (!$variables['siteIds']) {
+            throw new ForbiddenHttpException('User not permitted to edit content in any sites');
+        }
+
+        return $this->renderTemplate('redirect/redirects', $variables);
     }
 
     /**
@@ -97,46 +125,6 @@ class SettingsController extends Controller
         return $this->renderTemplate('redirect/registeredcatchallurls', $variables);
     }
 
-    /**
-     * Called before displaying the redirect settings index page.
-     *
-     * @return Response
-     */
-    public function actionRedirects(): craft\web\Response
-    {
-        $this->requireLogin();
-
-        //  $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
-
-        $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
-
-        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
-        $navItems = $this->getMenuItems();
-
-        unset($navItems['redirects']);
-        $variables = [
-            'settings' => RedirectPlugin::$plugin->getSettings(),
-            'navItems' => $navItems,
-            'source' => $source,
-            'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
-            // 'allRedirects' => $allRedirects
-        ];
-
-        // Get the site
-        // ---------------------------------------------------------------------
-        if (Craft::$app->getIsMultiSite()) {
-            // Only use the sites that the user has access to
-            $variables['siteIds'] = Craft::$app->getSites()->getEditableSiteIds();
-        } else {
-            $variables['siteIds'] = [Craft::$app->getSites()->getPrimarySite()->id];
-        }
-        if (!$variables['siteIds']) {
-            throw new ForbiddenHttpException('User not permitted to edit content in any sites');
-        }
-
-        return $this->renderTemplate('redirect/redirects', $variables);
-    }
-
 
     private function getMenuItems()
     {
@@ -161,7 +149,7 @@ class SettingsController extends Controller
         }
         $navItems['redirects'] = [
             'label' => "Redirect entries",
-            'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/redirects')
+            'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect')
         ];
 
         return $navItems;

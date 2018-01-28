@@ -1,5 +1,13 @@
 # Redirect Changelog
 
+## 1.0.14 - 2018-01-28
+### Added
+- Ignore not existing static files like fonts, images or video files from the catch all functionality
+
+### Fixed
+- Fixed the error "Cannot use craft\base\Object because 'Object' is a special class name" in some environments
+- Fixed a not working back link in the plugin
+
 ## 1.0.13 - 2018-01-10
 ### Added
 - Added settings screen to enable / disable all the redirects with one click
