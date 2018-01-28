@@ -22,11 +22,7 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 use yii\base\Event;
 
-use dolphiq\redirect\controllers\RedirectController;
 
-
-use craft\web\UrlRuleInterface;
-use craft\base\Object;
 
 class RedirectPlugin extends \craft\base\Plugin
 {
@@ -108,7 +104,7 @@ class RedirectPlugin extends \craft\base\Plugin
     {
         $rules = [
             // register routes for the sub nav
-            'redirect' => 'redirect/settings/redirects',
+            'redirect' => 'redirect/settings/',
             'redirect/settings' => 'redirect/settings/settings',
             'redirect/redirects' => 'redirect/settings/redirects',
             'redirect/registered-catch-all-urls' => 'redirect/settings/registered-catch-all-urls',
@@ -179,7 +175,7 @@ class RedirectPlugin extends \craft\base\Plugin
                         'route' => 'redirect/redirect/index',
                         'params' => [
                             'sourceUrl' => $redirect['sourceUrl'],
-                            'destinationUrl' => '/test/',
+                            'destinationUrl' => '/404/',
                             'statusCode' => 404,
                             'redirectId' => null
                         ]

@@ -32,9 +32,7 @@ class CatchAll extends Component
      */
     public function registerHitByUri(string $uri, int $siteId = 0): bool
     {
-        // strip the uri
-        $uri = current(explode('?', $uri)); // split the uri on a ? to ignore parameters
-        $uri = current(explode('#', $uri)); // archer links
+
         if ($siteId == 0) {
             $siteId = Craft::$app->getSites()->currentSite->id;
         }
@@ -66,7 +64,7 @@ class CatchAll extends Component
 
         $query = CatchAllUrlRecord::find()->where([
             'siteId' => $siteId,
-        ])->limit($limit);
+        ])->orderBy('dateUpdated DESC')->limit($limit);
         return $query->all();
 
 

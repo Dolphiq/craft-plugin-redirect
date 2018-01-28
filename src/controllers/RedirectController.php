@@ -68,18 +68,37 @@ class RedirectController extends Controller
 
           $uri = $_SERVER['REQUEST_URI'];
 
-          RedirectPlugin::$plugin->getCatchAll()->registerHitByUri($uri);
+          // check if the url is a known file type
+          // strip the uri
+          $uri = current(explode('?', $uri)); // split the uri on a ? to ignore parameters
+          $uriParts = pathinfo (  $uri );
 
-
-          $settings = RedirectPlugin::$plugin->getSettings();
           Craft::$app->response->statusCode = $statusCode;
-          if ($settings->catchAllTemplate != '') {
-              return $this->renderTemplate($settings->catchAllTemplate, ['request' => [
-                  'requestUri' => $_SERVER['REQUEST_URI']
-              ]]);
+
+          if (is_array($uriParts) && isset($uriParts['extension']) && $uriParts['extension'] !== '' && in_array($uriParts['extension'], [
+              'gif', 'jpg', 'jpeg', 'png', 'tiff', 'svg', 'ttf', 'woff', 'woff2', 'otf', 'ico', 'js', 'css',
+              ])) {
+              // this is a known extention, please don't handle but trow an exception
+              throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'), 404, $e);
           } else {
-              return ('this page does not exists');
+              // register the url and go to the template!
+
+              RedirectPlugin::$plugin->getCatchAll()->registerHitByUri($uri);
+
+
+              $settings = RedirectPlugin::$plugin->getSettings();
+              if ($settings->catchAllTemplate != '') {
+                  return $this->renderTemplate($settings->catchAllTemplate, ['request' => [
+                      'requestUri' => $_SERVER['REQUEST_URI'],
+                      'uriParts' => $uriParts
+                  ]]);
+              } else {
+                  return ('this page does not exists');
+              }
           }
+
+
+
       }
     }
 }
