@@ -11,7 +11,7 @@ As a new (experimental) feature the redirect also give you the ability to enable
 **Note**: This plugin may become a paid add-on when the Craft Plugin store becomes available.
 
 ## Requirements
-This plugin requires Craft CMS 3.0.0-RC7.1 or later.
+This plugin requires Craft CMS 3.0.0-RC11 or later.
 
 ## Installation
 

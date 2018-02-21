@@ -1,5 +1,9 @@
 # Redirect Changelog
 
+## 1.0.15 - 2018-02-21
+### Fixed
+- Fixed a bug causing the settings routes and section not available in with Craft CMS 3.0.0-RC11
+
 ## 1.0.14 - 2018-01-28
 ### Added
 - Ignore not existing static files like fonts, images or video files from the catch all functionality
