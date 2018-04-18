@@ -31,6 +31,7 @@ class Install extends Migration
     public function safeDown()
     {
         $this->dropTableIfExists('{{%dolphiq_redirects}}');
+        $this->dropTableIfExists('{{%dolphiq_redirects_catch_all_urls}}');
         return true;
     }
 
@@ -57,6 +58,24 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid()
         ]);
+
+        if (!$this->db->tableExists('{{%dolphiq_redirects_catch_all_urls}}')) {
+
+            $this->createTable(
+                '{{%dolphiq_redirects_catch_all_urls%}}',
+                [
+                    'id' => $this->primaryKey(),
+                    'uri' => $this->string(255)->notNull()->defaultValue(''),
+                    // 'firstHitAt' => $this->dateTime()->notNull(),
+                    // 'lastHitAt' => $this->dateTime()->notNull(),
+                    'uid' => $this->uid(),
+                    'siteId' => $this->integer()->unsigned()->notNull()->defaultValue(0),
+                    'dateCreated' => $this->dateTime()->notNull(),
+                    'dateUpdated' => $this->dateTime()->notNull(),
+                    'hitCount' => $this->integer()->unsigned()->notNull()->defaultValue(0),
+                ]
+            );
+        }
 
         $this->addForeignKey(null, '{{%dolphiq_redirects}}', ['id'], '{{%elements}}', ['id'], 'CASCADE', null);
     }

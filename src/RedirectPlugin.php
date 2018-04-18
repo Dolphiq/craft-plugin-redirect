@@ -102,6 +102,9 @@ class RedirectPlugin extends \craft\base\Plugin
 
     public function registerCpUrlRules(RegisterUrlRulesEvent $event)
     {
+        // only register CP URLs if the user is logged in
+        if (!\Craft::$app->user->identity)
+            return;
         $rules = [
             // register routes for the sub nav
             'redirect' => 'redirect/settings/',

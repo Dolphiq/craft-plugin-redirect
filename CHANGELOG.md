@@ -1,4 +1,8 @@
 # Redirect Changelog
+## 1.0.16 - 2018-04-18
+### Fixed
+- Fixed migration scripts to create all tables on first install
+- Small text changes
 
 ## 1.0.15 - 2018-02-21
 ### Fixed
