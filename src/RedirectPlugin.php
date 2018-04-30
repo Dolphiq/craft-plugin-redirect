@@ -74,7 +74,7 @@ class RedirectPlugin extends \craft\base\Plugin
         return [
         'url'=> 'redirect',
         'label'=>Craft::t('redirect', 'Site redirects'),
-        'icon' => 'share-alt'
+        'icon' => 'share'
       ];
     }
 
