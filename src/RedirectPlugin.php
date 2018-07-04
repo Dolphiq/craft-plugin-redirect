@@ -74,9 +74,10 @@ class RedirectPlugin extends \craft\base\Plugin
         return [
         'url'=> 'redirect',
         'label'=>Craft::t('redirect', 'Site redirects'),
-        'icon' => 'share-alt'
+        'fontIcon' => 'share'
       ];
     }
+
 
     protected function createSettingsModel(): Settings
     {
@@ -178,7 +179,7 @@ class RedirectPlugin extends \craft\base\Plugin
                     $event->rules['<all:.+>'] = [
                         'route' => 'redirect/redirect/index',
                         'params' => [
-                            'sourceUrl' => $redirect['sourceUrl'],
+                            'sourceUrl' => '',
                             'destinationUrl' => '/404/',
                             'statusCode' => 404,
                             'redirectId' => null
