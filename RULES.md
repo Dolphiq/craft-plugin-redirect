@@ -43,7 +43,7 @@ overview/cars/<brand>/colors/<color>
 ```
 *note: it is not required to use all the source parameters in the destination URL
 
-### Replace a uri parameter in de source string to a new path
+### Replace a uri parameter in the source string to a new path
 
 Source URL:
 ```
