@@ -16,3 +16,4 @@
 .DS_Store
 .DQ
 .php_cs.cache
+.idea/

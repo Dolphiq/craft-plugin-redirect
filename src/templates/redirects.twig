@@ -35,8 +35,6 @@
 
 {% block sidebar %}
     <nav>
-
-
         {% for itemId, item in navItems %}
             {% if item %}
                 {% set itemIsSelected = false %}
@@ -44,15 +42,11 @@
             {% endif %}
         {% endfor %}
     </nav>
-    <nav><ul>
 
-
-
-    {% if sources is not empty %}
-        <li class="heading"><span>Redirect entries</span></li>
-        {% include "_elements/sources" %}
-    {% endif %}
-        </ul>
+    <nav>
+        {% if sources is not empty %}
+            {% include "_elements/sources" %}
+        {% endif %}
     </nav>
 
 {% endblock %}
