@@ -1,5 +1,10 @@
 # Redirect Changelog
 
+## 1.0.18 - 2018-08-17
+### Fixed
+- Fixed navigation to work properly in Craft 3.0.20.
+
+
 ## 1.0.17 - 2018-07-04
 ### Fixed
 - Fixed icon not shown in newer Craft CMS 3 release
