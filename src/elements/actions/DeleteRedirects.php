@@ -62,7 +62,7 @@ class DeleteRedirects extends ElementAction
             return false;
         }
 
-        $this->setMessage(Craft::t('redirect', 'Redirecs deleted.'));
+        $this->setMessage(Craft::t('redirect', 'Redirects deleted.'));
 
         return true;
     }
