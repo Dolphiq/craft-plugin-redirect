@@ -156,9 +156,11 @@ class RedirectPlugin extends \craft\base\Plugin
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
         // Register FeedMe ElementType
-        Event::on(Elements::class, Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(RegisterFeedMeElementsEvent $e) {
-            $e->elements[] = FeedMeRedirect::class;
-        });
+        if (\Craft::$app->plugins->isPluginEnabled('feed-me')) {
+            Event::on(Elements::class, Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(RegisterFeedMeElementsEvent $e) {
+                $e->elements[] = FeedMeRedirect::class;
+            });
+        }
 
         $settings = RedirectPlugin::$plugin->getSettings();
         if ($settings->redirectsActive) {
