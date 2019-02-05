@@ -1,5 +1,9 @@
 # Redirect Changelog
 
+## 1.0.19 - 2018-10-05
+### Added
+- Added german translation file
+
 ## 1.0.18 - 2018-08-17
 ### Fixed
 - Fixed navigation to work properly in Craft 3.0.20.
