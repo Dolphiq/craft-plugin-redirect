@@ -32,6 +32,7 @@ class Install extends Migration
     {
         $this->dropTableIfExists('{{%dolphiq_redirects}}');
         $this->dropTableIfExists('{{%dolphiq_redirects_catch_all_urls}}');
+        $this->removeRedirectsFromElementsTable();
         return true;
     }
 
@@ -78,5 +79,15 @@ class Install extends Migration
         }
 
         $this->addForeignKey(null, '{{%dolphiq_redirects}}', ['id'], '{{%elements}}', ['id'], 'CASCADE', null);
+    }
+
+    /**
+     * Remove the redirect elements from the Craft elements table.
+     *
+     * @return void
+     */
+    protected function removeRedirectsFromElementsTable()
+    {
+        $this->delete('{{%elements}}', ['type' => 'dolphiq\redirect\elements\Redirect']);
     }
 }
