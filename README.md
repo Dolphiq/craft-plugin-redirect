@@ -72,5 +72,11 @@ Potential features:
 
 
 ### Contributors & Developers
-Johan Zandstra - info@dolphiq.nl
+- Johan Zandstra - info@dolphiq.nl
+- 24hoursmedia
+- Mosnar
+- boscho87
+- HelgeSverre
+- ohlincik
+
 Brought to you by [Dolphiq](https://dolphiq.nl)

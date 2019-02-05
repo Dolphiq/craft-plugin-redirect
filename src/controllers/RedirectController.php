@@ -26,6 +26,19 @@ class RedirectController extends Controller
     public function actionIndex()
     {
         // var_dump(Craft::$app->getRequest());
+
+        // first check if there is a static template.. it should be rendered by the Templates controller.
+        /* @see \craft\controllers\TemplatesController */
+        $tplController = craft::$app->createControllerByID('templates');
+        if ($tplController) {
+            $tplcView = $tplController->getView();
+            $tplPath = Craft::$app->request->getFullPath();
+            if ($tplcView->doesTemplateExist($tplPath)) {
+                return $tplController->actionRender($tplPath);
+            }
+        }
+
+
       $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
         $sourceUrl = $routeParameters['sourceUrl'];
         $destinationUrl = $routeParameters['destinationUrl'];

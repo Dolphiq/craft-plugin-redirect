@@ -1,5 +1,22 @@
 # Redirect Changelog
 
+## 1.0.20 - 2019-02-05
+### Added
+- Add Feed Me support
+
+### Fixed
+- Verify static template before redirecting
+- Fix typo in translations
+
+## 1.0.19 - 2018-10-05
+### Added
+- Added german translation file
+
+## 1.0.18 - 2018-08-17
+### Fixed
+- Fixed navigation to work properly in Craft 3.0.20.
+
+
 ## 1.0.17 - 2018-07-04
 ### Fixed
 - Fixed icon not shown in newer Craft CMS 3 release
