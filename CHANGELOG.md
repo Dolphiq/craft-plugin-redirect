@@ -1,5 +1,13 @@
 # Redirect Changelog
 
+## 1.0.20 - 2019-02-05
+### Added
+- Add Feed Me support
+
+### Fixed
+- Verify static template before redirecting
+- Fix typo in translations
+
 ## 1.0.19 - 2018-10-05
 ### Added
 - Added german translation file
