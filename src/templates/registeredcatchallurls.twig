@@ -15,15 +15,12 @@
 ] %}
 
 {% block sidebar %}
-
     {% if pathPrefix is not defined %}
         {%  set pathPrefix = '' %}
     {%  endif %}
 
     {% set selectedNavItem = "settings" %}
-    {% include "redirect/nav" %}
-
-
+    {% include "vredirect/nav" %}
 {% endblock %}
 
 

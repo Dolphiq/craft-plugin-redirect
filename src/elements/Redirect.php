@@ -10,13 +10,14 @@ namespace venveo\redirect\elements;
 
 use Craft;
 use craft\base\Element;
-use venveo\redirect\elements\db\RedirectQuery;
-use craft\elements\db\ElementQueryInterface;
 use craft\elements\actions\Edit;
-use venveo\redirect\elements\actions\DeleteRedirects;
+use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\validators\DateTimeValidator;
+use craft\web\ErrorHandler;
+use venveo\redirect\elements\actions\DeleteRedirects;
+use venveo\redirect\elements\db\RedirectQuery;
 use venveo\redirect\records\Redirect as RedirectRecord;
 
 class Redirect extends Element
@@ -55,6 +56,7 @@ class Redirect extends Element
     {
         return false;
     }
+
     /**
      * @inheritdoc
      */
@@ -74,7 +76,7 @@ class Redirect extends Element
     /**
      * @inheritdoc
      *
-     * @return UserQuery The newly created [[UserQuery]] instance.
+     * @return RedirectQuery The newly created [[RedirectQuery]] instance.
      */
     public static function find(): ElementQueryInterface
     {
@@ -96,7 +98,7 @@ class Redirect extends Element
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
             //if($this->siteId < 1 || $this->siteId == $site->id) {
             $supportedSites[] = ['siteId' => $site->id, 'enabledByDefault' => false];
-          //}
+            //}
         }
         return $supportedSites;
     }
@@ -106,7 +108,7 @@ class Redirect extends Element
      */
     public function getCpEditUrl()
     {
-        return UrlHelper::cpUrl('redirect/' . $this->id . '?siteId=' . $this->siteId);
+        return UrlHelper::cpUrl('redirect/'.$this->id.'?siteId='.$this->siteId);
 
         return $url;
     }
@@ -117,11 +119,11 @@ class Redirect extends Element
     public function getEditorHtml(): string
     {
         $statusCodesOptions = [
-          '301' => 'Permanent redirect (301)',
-          '302' => 'Temporarily redirect (302)',
+            '301' => 'Permanent redirect (301)',
+            '302' => 'Temporarily redirect (302)',
         ];
 
-        $html = Craft::$app->getView()->renderTemplate('redirect/_redirectfields', [
+        $html = Craft::$app->getView()->renderTemplate('vredirect/_redirectfields', [
             'redirect' => $this,
             'isNewRedirect' => false,
             'meta' => false,
@@ -149,30 +151,31 @@ class Redirect extends Element
      */
     protected static function defineSources(string $context = null): array
     {
+        $sources = [];
         if ($context === 'index') {
             $sources = [
-              [
-                  'key' => '*',
-                  'label' => Craft::t('vredirect', 'All redirects'),
-                  'criteria' => []
-              ],
-              [
-                'key' => 'permanent',
-                'label' => Craft::t('vredirect', 'Permanent redirects'),
-                'criteria' => ['statusCode' => 301]
-              ],
-              [
-                'key' => 'temporarily',
-                'label' => Craft::t('vredirect', 'Temporarily redirects'),
-                'criteria' => ['statusCode' => 302]
-              ],
-              [
-                'key' => 'inactive',
-                'label' => Craft::t('vredirect', 'Inactive redirects'),
-                'criteria' => ['hitAt' => 60]
+                [
+                    'key' => '*',
+                    'label' => Craft::t('vredirect', 'All redirects'),
+                    'criteria' => []
+                ],
+                [
+                    'key' => 'permanent',
+                    'label' => Craft::t('vredirect', 'Permanent redirects'),
+                    'criteria' => ['statusCode' => 301]
+                ],
+                [
+                    'key' => 'temporarily',
+                    'label' => Craft::t('vredirect', 'Temporarily redirects'),
+                    'criteria' => ['statusCode' => 302]
+                ],
+                [
+                    'key' => 'inactive',
+                    'label' => Craft::t('vredirect', 'Inactive redirects'),
+                    'criteria' => ['hitAt' => 60]
 
-              ],
-          ];
+                ],
+            ];
         }
         return $sources;
     }
@@ -227,22 +230,20 @@ class Redirect extends Element
         switch ($attribute) {
             case 'statusCode':
 
-              $statusCodesOptions = [
-                '301' => 'Permanent redirect (301)',
-                '302' => 'Temporarily redirect (302)',
-              ];
+                $statusCodesOptions = [
+                    '301' => 'Permanent redirect (301)',
+                    '302' => 'Temporarily redirect (302)',
+                ];
 
-              return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('vredirect', $statusCodesOptions[$this->statusCode])]) : '';
+                return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('vredirect', $statusCodesOptions[$this->statusCode])]) : '';
 
             case 'baseUrl':
 
-              return Html::encodeParams('<a href="{baseUrl}" target="_blank">test</a>', ['baseUrl' => $this->getSite()->baseUrl . $this->sourceUrl]);
-
+                return Html::encodeParams('<a href="{baseUrl}" target="_blank">test</a>', ['baseUrl' => $this->getSite()->baseUrl.$this->sourceUrl]);
         }
 
         return parent::tableAttributeHtml($attribute);
     }
-
 
 
     /**
@@ -285,16 +286,16 @@ class Redirect extends Element
     public function formatUrl(string $url): string
     {
         $resultUrl = $url;
-      // trim spaces
-      $resultUrl = trim($resultUrl);
+        // trim spaces
+        $resultUrl = trim($resultUrl);
 
         if (stripos($resultUrl, '://') !== false) {
             // complete url
-        // check if the base url is there and strip if it does
-        $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
+            // check if the base url is there and strip if it does
+            $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
         } else {
             // strip leading slash
-        $resultUrl = ltrim($resultUrl, '/');
+            $resultUrl = ltrim($resultUrl, '/');
         }
         return $resultUrl;
     }

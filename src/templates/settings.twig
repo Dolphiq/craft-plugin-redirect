@@ -10,56 +10,36 @@
 
 {% block sidebar %}
 
-  {% if pathPrefix is not defined %}
-      {%  set pathPrefix = '' %}
-  {%  endif %}
+    {% if pathPrefix is not defined %}
+        {% set pathPrefix = '' %}
+    {% endif %}
 
-  {% set selectedNavItem = "settings" %}
-    {% include "redirect/nav" %}
-
+    {% set selectedNavItem = "settings" %}
+    {% include "vredirect/nav" %}
 
 {% endblock %}
 
-{% set docsUrl = 'https://github.com/Dolphiq/craft3-plugin-redirect' %}
-
-
 {% import "_includes/forms" as forms %}
 
-
 {% block content %}
-
-    <input type="hidden" name="action" value="redirect/settings/save-settings">
-		<input type="hidden" name="pluginHandle" value="redirect">
-
-
-{{ forms.lightswitchField({
-    label:        "Activate redirects"|t('vredirect'),
-    instructions: "This switch activate/de-activate all the entered redirects without removing them."|t('vredirect'),
-    id:           'redirectsActive',
-    name:         'redirectsActive',
-    on:           settings.redirectsActive,
-    errors:       settings.getErrors('redirectsActive')
-}) }}
-
-{{ forms.lightswitchField({
-    label:        "Use a Catch All page template"|t('vredirect'),
-    instructions: "All the not existing urls are redirected to this page. We also register the missed urls."|t('vredirect'),
-    id:           'catchAllActive',
-    name:         'catchAllActive',
-    on:           settings.catchAllActive,
-    errors:       settings.getErrors('catchAllActive')
-}) }}
-
-    {{ forms.textField({
-        label: "Catch all template"|t('vredirect'),
-        instructions: "The catch all template file name within the craft template folder"|t('vredirect'),
-        id: 'catchAllTemplate',
-        class: 'ltr',
-        name: 'catchAllTemplate',
-        value: settings.catchAllTemplate,
-        errors: settings.getErrors('catchAllTemplate'),
-
+    {{ actionInput('vredirect/settings/save-settings') }}
+    <input type="hidden" name="action" value="">
+    {{ forms.lightswitchField({
+        label:        "Activate redirects"|t('vredirect'),
+        instructions: "This switch activate/de-activate all the entered redirects without removing them."|t('vredirect'),
+        id:           'redirectsActive',
+        name:         'redirectsActive',
+        on:           settings.redirectsActive,
+        errors:       settings.getErrors('redirectsActive')
     }) }}
 
+    {{ forms.lightswitchField({
+        label:        "Use a Catch All page template"|t('vredirect'),
+        instructions: "All the not existing urls are redirected to this page. We also register the missed urls."|t('vredirect'),
+        id:           'catchAllActive',
+        name:         'catchAllActive',
+        on:           settings.catchAllActive,
+        errors:       settings.getErrors('catchAllActive')
+    }) }}
 
 {% endblock content %}

@@ -32,8 +32,6 @@
 
 {% block sidebar %}
     <nav>
-
-
         {% for itemId, item in navItems %}
             {% if item %}
                 {% set itemIsSelected = false %}
@@ -42,18 +40,13 @@
         {% endfor %}
     </nav>
     <nav><ul>
-
-
-
     {% if sources is not empty %}
         <li class="heading"><span>Redirect entries</span></li>
         {% include "_elements/sources" %}
     {% endif %}
         </ul>
     </nav>
-
 {% endblock %}
-
 
 {% block content %}
         <div class="elementindex">
@@ -62,7 +55,6 @@
             } %}
         </div>
 {% endblock %}
-
 
 {% block initJs %}
         Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#main'), {
