@@ -22,9 +22,6 @@ use venveo\redirect\records\Redirect as RedirectRecord;
 
 class Redirect extends Element
 {
-    // Static
-    // =========================================================================
-
     /**
      * @inheritdoc
      */

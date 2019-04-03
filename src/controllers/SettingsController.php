@@ -338,7 +338,7 @@ class SettingsController extends Controller
                 ]);
             }
             // else, normal result
-            Craft::$app->getSession()->setError(Craft::t('redirect', 'Couldn’t save the redirect.'));
+            Craft::$app->getSession()->setError(Craft::t('vredirect', 'Couldn’t save the redirect.'));
 
             Craft::$app->getUrlManager()->setRouteParams([
                 'redirect' => $redirect
