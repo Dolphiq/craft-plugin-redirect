@@ -9,11 +9,11 @@
 namespace venveo\redirect\services;
 
 use Craft;
+use craft\helpers\DateTimeHelper;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use venveo\redirect\elements\db\RedirectQuery;
 use venveo\redirect\elements\Redirect;
-use venveo\redirect\Plugin;
 use yii\base\Component;
 use yii\base\ExitException;
 use yii\web\HttpException;
@@ -157,21 +157,40 @@ class Redirects extends Component
 //        }
     }
 
-    public function doRedirect(Redirect $redirect, $uri) {
+    /**
+     * Performs the actual redirect
+     * @param Redirect $redirect
+     * @param $uri
+     */
+    public function doRedirect(Redirect $redirect, $uri)
+    {
         $destinationUrl = null;
-        if ($redirect->type == Redirect::TYPE_STATIC) {
+        if ($redirect->type === Redirect::TYPE_STATIC) {
             $processedUrl = $redirect->destinationUrl;
-        } else {
+        } elseif ($redirect->type === Redirect::TYPE_DYNAMIC) {
             $sourceUrl = $redirect->sourceUrl;
-            if(!starts_with($redirect->sourceUrl, '/')) {
-                $sourceUrl = '/' . $sourceUrl;
+            if (!starts_with($redirect->sourceUrl, '/')) {
+                $sourceUrl = '/'.$sourceUrl;
             }
-            if(!ends_with($redirect->sourceUrl, '/')) {
+            if (!ends_with($redirect->sourceUrl, '/')) {
                 $sourceUrl .= '/';
             }
             // Ignore case
             $sourceUrl .= 'i';
             $processedUrl = preg_replace($sourceUrl, $redirect->destinationUrl, $uri);
+        } else {
+            return;
+        }
+
+        // Saving elements takes a while - we're going to do our incrementing
+        // directly on the record instead.
+        /** @var \venveo\redirect\records\Redirect $redirect */
+        $redirectRecord = \venveo\redirect\records\Redirect::findOne($redirect->id);
+
+        if ($redirectRecord) {
+            $redirectRecord->hitCount++;
+            $redirectRecord->hitAt = Db::prepareDateForDb(new \DateTime());
+            $redirectRecord->save();
         }
 
         Craft::$app->response->redirect(UrlHelper::url($processedUrl), $redirect->statusCode)->send();
