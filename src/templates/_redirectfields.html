@@ -4,8 +4,8 @@
 
 
 {{ forms.textField({
-    label: "Source URL"|t('redirect'),
-    instructions: "The URL to be redirected"|t('redirect'),
+    label: "Source URL"|t('vredirect'),
+    instructions: "The URL to be redirected"|t('vredirect'),
     id: 'source-url',
     class: 'ltr',
     name: 'sourceUrl',
@@ -16,8 +16,8 @@
 }) }}
 
 {{ forms.textField({
-    label: "Destination URL"|t('redirect'),
-    instructions: "The final URL"|t('redirect'),
+    label: "Destination URL"|t('vredirect'),
+    instructions: "The final URL"|t('vredirect'),
     id: 'destination-url',
     class: 'ltr',
     name: 'destinationUrl',
@@ -26,8 +26,8 @@
     required: true
 }) }}
 {{ forms.selectField({
-  label: "Redirect type"|t('redirect'),
-  instructions: "Redirect status code"|t('redirect'),
+  label: "Redirect type"|t('vredirect'),
+  instructions: "Redirect status code"|t('vredirect'),
   id: 'status-code',
   name: 'statusCode',
   options: statusCodeOptions,

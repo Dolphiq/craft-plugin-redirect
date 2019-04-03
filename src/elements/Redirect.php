@@ -29,7 +29,7 @@ class Redirect extends Element
      */
     public static function displayName(): string
     {
-        return Craft::t('redirect', 'Redirect');
+        return Craft::t('vredirect', 'Redirect');
     }
 
     /**
@@ -153,22 +153,22 @@ class Redirect extends Element
             $sources = [
               [
                   'key' => '*',
-                  'label' => Craft::t('redirect', 'All redirects'),
+                  'label' => Craft::t('vredirect', 'All redirects'),
                   'criteria' => []
               ],
               [
                 'key' => 'permanent',
-                'label' => Craft::t('redirect', 'Permanent redirects'),
+                'label' => Craft::t('vredirect', 'Permanent redirects'),
                 'criteria' => ['statusCode' => 301]
               ],
               [
                 'key' => 'temporarily',
-                'label' => Craft::t('redirect', 'Temporarily redirects'),
+                'label' => Craft::t('vredirect', 'Temporarily redirects'),
                 'criteria' => ['statusCode' => 302]
               ],
               [
                 'key' => 'inactive',
-                'label' => Craft::t('redirect', 'Inactive redirects'),
+                'label' => Craft::t('vredirect', 'Inactive redirects'),
                 'criteria' => ['hitAt' => 60]
 
               ],
@@ -191,11 +191,11 @@ class Redirect extends Element
     protected static function defineSortOptions(): array
     {
         $attributes = [
-            'sourceUrl' => Craft::t('redirect', 'Source URL'),
-            'destinationUrl' => Craft::t('redirect', 'Destination URL'),
-            'hitAt' => Craft::t('redirect', 'Last hit'),
-            'statusCode' => Craft::t('redirect', 'Redirect type'),
-            'hitCount' => Craft::t('redirect', 'Hit count'),
+            'sourceUrl' => Craft::t('vredirect', 'Source URL'),
+            'destinationUrl' => Craft::t('vredirect', 'Destination URL'),
+            'hitAt' => Craft::t('vredirect', 'Last hit'),
+            'statusCode' => Craft::t('vredirect', 'Redirect type'),
+            'hitCount' => Craft::t('vredirect', 'Hit count'),
             'elements.dateCreated' => Craft::t('app', 'Date Created'),
         ];
         return $attributes;
@@ -207,13 +207,12 @@ class Redirect extends Element
     protected static function defineTableAttributes(): array
     {
         $attributes = [
-            'sourceUrl' => ['label' => Craft::t('redirect', 'Source URL')],
-            'destinationUrl' => ['label' => Craft::t('redirect', 'Destination URL')],
-            'hitAt' => ['label' => Craft::t('redirect', 'Last hit')],
-            'hitCount' => ['label' => Craft::t('redirect', 'Hit count')],
+            'sourceUrl' => ['label' => Craft::t('vredirect', 'Source URL')],
+            'destinationUrl' => ['label' => Craft::t('vredirect', 'Destination URL')],
+            'hitAt' => ['label' => Craft::t('vredirect', 'Last hit')],
+            'hitCount' => ['label' => Craft::t('vredirect', 'Hit count')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
-            'statusCode' => ['label' => Craft::t('redirect', 'Redirect type')],
-            // 'baseUrl' => ['label' => Craft::t('redirect', '')],
+            'statusCode' => ['label' => Craft::t('vredirect', 'Redirect type')],
 
         ];
 
@@ -233,7 +232,7 @@ class Redirect extends Element
                 '302' => 'Temporarily redirect (302)',
               ];
 
-              return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('redirect', $statusCodesOptions[$this->statusCode])]) : '';
+              return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('vredirect', $statusCodesOptions[$this->statusCode])]) : '';
 
             case 'baseUrl':
 
@@ -257,7 +256,7 @@ class Redirect extends Element
         $actions[] = Craft::$app->getElements()->createAction(
             [
                 'type' => Edit::class,
-                'label' => Craft::t('redirect', 'Edit redirect'),
+                'label' => Craft::t('vredirect', 'Edit redirect'),
             ]
         );
 

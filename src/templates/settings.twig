@@ -1,6 +1,6 @@
 {% extends "_layouts/cp" %}
 
-{% set title = "Redirect settings"|t('redirect') %}
+{% set title = "Redirect settings"|t('vredirect') %}
 
 {% set fullPageForm = true %}
 
@@ -33,8 +33,8 @@
 
 
 {{ forms.lightswitchField({
-    label:        "Activate redirects"|t('redirect'),
-    instructions: "This switch activate/de-activate all the entered redirects without removing them."|t('redirect'),
+    label:        "Activate redirects"|t('vredirect'),
+    instructions: "This switch activate/de-activate all the entered redirects without removing them."|t('vredirect'),
     id:           'redirectsActive',
     name:         'redirectsActive',
     on:           settings.redirectsActive,
@@ -42,8 +42,8 @@
 }) }}
 
 {{ forms.lightswitchField({
-    label:        "Use a Catch All page template"|t('redirect'),
-    instructions: "All the not existing urls are redirected to this page. We also register the missed urls."|t('redirect'),
+    label:        "Use a Catch All page template"|t('vredirect'),
+    instructions: "All the not existing urls are redirected to this page. We also register the missed urls."|t('vredirect'),
     id:           'catchAllActive',
     name:         'catchAllActive',
     on:           settings.catchAllActive,
@@ -51,8 +51,8 @@
 }) }}
 
     {{ forms.textField({
-        label: "Catch all template"|t('redirect'),
-        instructions: "The catch all template file name within the craft template folder"|t('redirect'),
+        label: "Catch all template"|t('vredirect'),
+        instructions: "The catch all template file name within the craft template folder"|t('vredirect'),
         id: 'catchAllTemplate',
         class: 'ltr',
         name: 'catchAllTemplate',

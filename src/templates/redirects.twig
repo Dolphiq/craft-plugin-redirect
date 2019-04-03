@@ -1,12 +1,9 @@
 
-{% set title = "Redirect entries"|t('redirect') %}
+{% set title = "Redirect entries"|t('vredirect') %}
 {% set elementType = 'venveo\\redirect\\elements\\Redirect' %}
 
-{% set docsUrl = 'https://github.com/Dolphiq/craft3-plugin-redirect' %}
-
-
 {% block actionButton %}
-        <a href="{{ url( pathPrefix ~ 'redirect/new') }}" class="submit btn add icon">{{ "New redirect"|t('redirect') }}</a>
+        <a href="{{ url( pathPrefix ~ 'redirect/new') }}" class="submit btn add icon">{{ "New redirect"|t('vredirect') }}</a>
 {% endblock %}
 
 {% extends "_layouts/cp" %}

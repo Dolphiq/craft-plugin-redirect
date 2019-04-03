@@ -31,13 +31,11 @@ class SettingsController extends Controller
      */
     public function actionIndex(): craft\web\Response
     {
-        $this->requireLogin();
-
         //  $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
 
-        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+        $source = ($routeParameters['source'] ?? 'CpSection');
         $navItems = $this->getMenuItems();
 
         unset($navItems['redirects']);
@@ -45,7 +43,7 @@ class SettingsController extends Controller
             'settings' => Plugin::$plugin->getSettings(),
             'navItems' => $navItems,
             'source' => $source,
-            'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
+            'pathPrefix' => $source == 'CpSettings' ? 'settings/': '',
             // 'allRedirects' => $allRedirects
         ];
 
@@ -61,7 +59,7 @@ class SettingsController extends Controller
             throw new ForbiddenHttpException('User not permitted to edit content in any sites');
         }
 
-        return $this->renderTemplate('redirect/redirects', $variables);
+        return $this->renderTemplate('vredirect/redirects', $variables);
     }
 
     /**
@@ -122,7 +120,7 @@ class SettingsController extends Controller
             throw new ForbiddenHttpException('User not permitted to edit content in any sites');
         }
 
-        return $this->renderTemplate('redirect/registeredcatchallurls', $variables);
+        return $this->renderTemplate('vredirect/registeredcatchallurls', $variables);
     }
 
 
@@ -171,7 +169,7 @@ class SettingsController extends Controller
 
         $navItems = $this->getMenuItems();
 
-        return $this->renderTemplate('redirect/settings', [
+        return $this->renderTemplate('vredirect/settings', [
           'settings' => $settings,
           'navItems' => $navItems,
           'source' => $source,
@@ -240,7 +238,7 @@ class SettingsController extends Controller
                 'url' => UrlHelper::url('settings')
             ],
             [
-                'label' => Craft::t('redirect', 'Redirects'),
+                'label' => Craft::t('vredirect', 'Redirects'),
                 'url' => UrlHelper::url('settings/redirect')
             ]
         ];
@@ -306,7 +304,7 @@ class SettingsController extends Controller
         $variables['source'] = $source;
         $variables['pathPrefix'] = ($source == 'CpSettings' ? 'settings/': '');
         $variables['currentSiteId'] = $redirect->siteId;
-        return $this->renderTemplate('redirect/edit', $variables);
+        return $this->renderTemplate('vredirect/edit', $variables);
     }
 
 

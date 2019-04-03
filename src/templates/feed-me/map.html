@@ -5,7 +5,7 @@
   {
     name: 'Source',
     handle: 'sourceUrl',
-    instructions: 'The source URL' | t('redirect'),
+    instructions: 'The source URL' | t('vredirect'),
     required: true,
     default: {
     type: 'text',
@@ -14,7 +14,7 @@
   {
     name: 'Destination',
     handle: 'destinationUrl',
-    instructions: 'The destination URL' | t('redirect'),
+    instructions: 'The destination URL' | t('vredirect'),
     required: true,
     default: {
     type: 'text',
@@ -23,7 +23,7 @@
   {
     name: 'Type',
     handle: 'statusCode',
-    instructions: 'Redirect status code: 301 or 302' | t('redirect'),
+    instructions: 'Redirect status code: 301 or 302' | t('vredirect'),
     default: {
     type: 'select',
     options: [
@@ -34,13 +34,13 @@
   }, {
     name: 'Redirect ID',
     handle: 'id',
-    instructions: '<strong class="error">Warning: </strong>This should only be used for an existing Redirect ID.' | t('redirect'),
+    instructions: '<strong class="error">Warning: </strong>This should only be used for an existing Redirect ID.' | t('vredirect'),
     default: {
       type: 'text',
     },
   }] %}
 
-<h2>{{ 'Redirect Fields' | t('redirect') }}</h2>
+<h2>{{ 'Redirect Fields' | t('vredirect') }}</h2>
 
 <table class="feedme-mapping data fullwidth collapsible">
   <thead>

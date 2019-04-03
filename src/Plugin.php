@@ -12,28 +12,22 @@ namespace venveo\redirect;
 
 use Craft;
 use craft\base\Plugin as BasePlugin;
-use venveo\redirect\elements\FeedMeRedirect;
-use venveo\redirect\elements\Redirect as RedirectElement;
-use venveo\redirect\models\Settings;
-use venveo\redirect\services\Redirects;
-use venveo\redirect\services\CatchAll;
-
-use craft\events\RegisterCpNavItemsEvent;
-use craft\web\twig\variables\Cp;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
+use venveo\redirect\elements\FeedMeRedirect;
+use venveo\redirect\models\Settings;
+use venveo\redirect\services\CatchAll;
+use venveo\redirect\services\Redirects;
 use verbb\feedme\events\RegisterFeedMeElementsEvent;
 use verbb\feedme\services\Elements;
 use yii\base\Event;
 
 
-
 class Plugin extends BasePlugin
 {
+    /** @var self $plugin */
     public static $plugin;
 
-    private $_redirectsService;
-    private $_catchAallService;
     /**
      * Returns the Redirects service.
      *
@@ -50,16 +44,12 @@ class Plugin extends BasePlugin
 
     public function getCatchAll()
     {
-        if ($this->_catchAallService == null) {
-            $this->_catchAallService = new CatchAll();
+        if ($this->_catchAllService == null) {
+            $this->_catchAllService = new CatchAll();
         }
-        /** @var WebApplication|ConsoleApplication $this */
-        return $this->_catchAallService;
-    }
 
-    public $controllerMap = [
-     // 'redirect' => RedirectController::class,
-    ];
+        return $this->_catchAllService;
+    }
 
     public $hasCpSection = true;
     public $hasCpSettings = true;
@@ -73,10 +63,10 @@ class Plugin extends BasePlugin
     public function getCpNavItem()
     {
         return [
-        'url'=> 'redirect',
-        'label'=>Craft::t('vredirect', 'Site redirects'),
-        'fontIcon' => 'share'
-      ];
+            'url' => 'redirect',
+            'label' => Craft::t('vredirect', 'Site redirects'),
+            'fontIcon' => 'share'
+        ];
     }
 
 
@@ -104,38 +94,40 @@ class Plugin extends BasePlugin
 
     public function registerCpUrlRules(RegisterUrlRulesEvent $event)
     {
-        // only register CP URLs if the user is logged in
-        if (!\Craft::$app->user->identity)
-            return;
         $rules = [
             // register routes for the sub nav
-            'redirect' => 'redirect/settings/',
-            'redirect/settings' => 'redirect/settings/settings',
-            'redirect/redirects' => 'redirect/settings/redirects',
-            'redirect/registered-catch-all-urls' => 'redirect/settings/registered-catch-all-urls',
-            'redirect/new' => 'redirect/settings/edit-redirect',
-            'redirect/<redirectId:\d+>' => 'redirect/settings/edit-redirect',
+            'redirect' => 'vredirect/settings/',
+            'redirect/settings' => 'vredirect/settings/settings',
+            'redirect/redirects' => 'vredirect/settings/redirects',
+            'redirect/registered-catch-all-urls' => 'vredirect/settings/registered-catch-all-urls',
+            'redirect/new' => 'vredirect/settings/edit-redirect',
+            'redirect/<redirectId:\d+>' => 'vredirect/settings/edit-redirect',
 
             // register routes for the settings tab
-
-            'settings/redirect' => [
-                'route'=>'redirect/settings',
-                'params'=>['source' => 'CpSettings']],
-            'settings/redirect/settings' => [
-                'route'=>'redirect/settings/settings',
-                'params'=>['source' => 'CpSettings']],
-            'settings/redirect/redirects' => [
-                'route'=>'redirect/settings/redirects',
-                'params'=>['source' => 'CpSettings']],
-            'settings/redirect/registered-catch-all-urls' => [
-                'route'=>'redirect/settings/registered-catch-all-urls',
-                'params'=>['source' => 'CpSettings']],
-            'settings/redirect/new' => [
-                'route'=>'redirect/settings/edit-redirect',
-                'params'=>['source' => 'CpSettings']],
-            'settings/redirect/<redirectId:\d+>' => [
-                'route'=>'redirect/settings/edit-redirect',
-                'params'=>['source' => 'CpSettings']],
+            'settings/vredirect' => [
+                'route' => 'vredirect/settings',
+                'params' => ['source' => 'CpSettings']
+            ],
+            'settings/vredirect/settings' => [
+                'route' => 'vredirect/settings/settings',
+                'params' => ['source' => 'CpSettings']
+            ],
+            'settings/vredirect/redirects' => [
+                'route' => 'vredirect/settings/redirects',
+                'params' => ['source' => 'CpSettings']
+            ],
+            'settings/vredirect/registered-catch-all-urls' => [
+                'route' => 'vredirect/settings/registered-catch-all-urls',
+                'params' => ['source' => 'CpSettings']
+            ],
+            'settings/vredirect/new' => [
+                'route' => 'vredirect/settings/edit-redirect',
+                'params' => ['source' => 'CpSettings']
+            ],
+            'settings/vredirect/<redirectId:\d+>' => [
+                'route' => 'vredirect/settings/edit-redirect',
+                'params' => ['source' => 'CpSettings']
+            ],
         ];
         $event->rules = array_merge($event->rules, $rules);
     }
@@ -147,30 +139,27 @@ class Plugin extends BasePlugin
 
         self::$plugin = $this;
 
-        // only register CP URLs if the user is logged in
-
-
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
         // Register FeedMe ElementType
-        if (\Craft::$app->plugins->isPluginEnabled('feed-me')) {
+        if (Craft::$app->plugins->isPluginEnabled('feed-me')) {
             Event::on(Elements::class, Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(RegisterFeedMeElementsEvent $e) {
                 $e->elements[] = FeedMeRedirect::class;
             });
         }
 
-        $settings = Plugin::$plugin->getSettings();
+        $settings = self::$plugin->getSettings();
         if ($settings->redirectsActive) {
-            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) use ($settings) {
+            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) use ($settings) {
 
-            // get rules from db!
-            // please only if we are on the site and the redirects are active in the plugin settings
+                // get rules from db!
+                // please only if we are on the site and the redirects are active in the plugin settings
                 if ($settings->redirectsActive) {
                     $siteId = Craft::$app->getSites()->currentSite->id;
                     $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
                     foreach ($allRedirects as $redirect) {
                         $event->rules[$redirect['sourceUrl']] = [
-                            'route' => 'redirect/redirect/index',
+                            'route' => 'vredirect/redirect/index',
                             'params' => [
                                 'sourceUrl' => $redirect['sourceUrl'],
                                 'destinationUrl' => $redirect['destinationUrl'],
@@ -184,7 +173,7 @@ class Plugin extends BasePlugin
 
                 if ($settings->catchAllActive) {
                     $event->rules['<all:.+>'] = [
-                        'route' => 'redirect/redirect/index',
+                        'route' => 'vredirect/redirect/index',
                         'params' => [
                             'sourceUrl' => '',
                             'destinationUrl' => '/404/',
@@ -193,7 +182,6 @@ class Plugin extends BasePlugin
                         ]
                     ];
                 }
-
             });
         }
 
