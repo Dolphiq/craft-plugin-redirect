@@ -22,6 +22,9 @@ use venveo\redirect\records\Redirect as RedirectRecord;
 
 class Redirect extends Element
 {
+    public const TYPE_STATIC = 'static';
+    public const TYPE_DYNAMIC = 'dynamic';
+
     /**
      * @inheritdoc
      */
@@ -130,7 +133,7 @@ class Redirect extends Element
 
         $typeOptions = [
             'static' => 'Static',
-            'dynamic' => 'Dynamic',
+            'dynamic' => 'Dynamic (RegExp)',
         ];
 
         $html = Craft::$app->getView()->renderTemplate('vredirect/_redirectfields', [

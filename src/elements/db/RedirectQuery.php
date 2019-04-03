@@ -50,6 +50,12 @@ class RedirectQuery extends ElementQuery
      */
     public $type;
 
+    /**
+     * @var string|null A URI you're trying to match against
+     */
+    public $matchingUri;
+
+
     // Public Methods
     // =========================================================================
 
@@ -141,10 +147,20 @@ class RedirectQuery extends ElementQuery
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.type', $this->type));
         }
         if ($this->hitAt && $this->hitAt > 0) {
+            // TODO: Refactor...
             $inactiveDate = new \DateTime();
             $inactiveDate->modify("-60 days");
-
-            $this->subQuery->andWhere('(dolphiq_redirects.hitAt < :calculatedDate AND dolphiq_redirects.hitAt IS NOT NULL)', [':calculatedDate' => $inactiveDate->format("Y-m-d H:m:s")]);
+            $this->subQuery->andWhere('([[dolphiq_redirects.hitAt]] < :calculatedDate AND [[dolphiq_redirects.hitAt]] IS NOT NULL)', [':calculatedDate' => $inactiveDate->format("Y-m-d H:m:s")]);
+        }
+        if($this->matchingUri) {
+            $this->subQuery->andWhere(['and',
+                ['[[dolphiq_redirects.type]]' => 'static'],
+                ['[[dolphiq_redirects.sourceUrl]]' => $this->matchingUri]
+                ]);
+            $this->subQuery->orWhere(['and',
+                ['[[dolphiq_redirects.type]]' => 'dynamic'],
+                ':uri RLIKE [[dolphiq_redirects.sourceUrl]]'
+            ], ['uri' => $this->matchingUri]);
         }
 
         // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));

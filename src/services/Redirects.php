@@ -10,10 +10,12 @@ namespace venveo\redirect\services;
 
 use Craft;
 use craft\helpers\Db;
+use craft\helpers\UrlHelper;
 use venveo\redirect\elements\db\RedirectQuery;
 use venveo\redirect\elements\Redirect;
 use venveo\redirect\Plugin;
 use yii\base\Component;
+use yii\base\ExitException;
 use yii\web\HttpException;
 
 /**
@@ -116,30 +118,30 @@ class Redirects extends Component
         return true;
     }
 
-    public function handle404(HttpException $exception): void
+    public function handle404(HttpException $exception)
     {
-        $request = Craft::$app->request;
         $siteId = Craft::$app->getSites()->currentSite->id;
-        $allRedirects = Plugin::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
 
         $matchedRedirect = null;
 
         // Just the URI
         $path = Craft::$app->request->fullPath;
         // Path with query params
-        $fullPath = Craft::$app->request->getUrl();
+        $fullPath = ltrim(Craft::$app->request->getUrl(), '/');
 
         $query = new RedirectQuery(Redirect::class);
-
-
-        var_dump($allRedirects);
-        die();
-        foreach ($allRedirects as $redirect) {
-
-        }
+        $query->matchingUri = $fullPath;
+        $matchedRedirect = $query->one();
         if (!$matchedRedirect) {
             return;
         }
+        try {
+            $this->doRedirect($matchedRedirect, $fullPath);
+        } catch (\Exception $e) {
+            return;
+        }
+
+
         // 404?
 //
 //        if ($settings->catchAllActive) {
@@ -153,5 +155,31 @@ class Redirects extends Component
 //                ]
 //            ];
 //        }
+    }
+
+    public function doRedirect(Redirect $redirect, $uri) {
+        $destinationUrl = null;
+        if ($redirect->type == Redirect::TYPE_STATIC) {
+            $processedUrl = $redirect->destinationUrl;
+        } else {
+            $sourceUrl = $redirect->sourceUrl;
+            if(!starts_with($redirect->sourceUrl, '/')) {
+                $sourceUrl = '/' . $sourceUrl;
+            }
+            if(!ends_with($redirect->sourceUrl, '/')) {
+                $sourceUrl .= '/';
+            }
+            // Ignore case
+            $sourceUrl .= 'i';
+            $processedUrl = preg_replace($sourceUrl, $redirect->destinationUrl, $uri);
+        }
+
+        Craft::$app->response->redirect(UrlHelper::url($processedUrl), $redirect->statusCode)->send();
+
+        try {
+            Craft::$app->end();
+        } catch (ExitException $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        }
     }
 }

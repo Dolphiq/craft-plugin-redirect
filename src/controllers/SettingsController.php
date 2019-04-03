@@ -40,8 +40,7 @@ class SettingsController extends Controller
             'settings' => Plugin::$plugin->getSettings(),
             'navItems' => $navItems,
             'source' => $source,
-            'pathPrefix' => $source == 'CpSettings' ? 'settings/' : '',
-            // 'allRedirects' => $allRedirects
+            'pathPrefix' => $source == 'CpSettings' ? 'settings/' : ''
         ];
 
         // Get the site
@@ -253,7 +252,7 @@ class SettingsController extends Controller
 
         $typeOptions = [
             'static' => 'Static',
-            'dynamic' => 'Dynamic',
+            'dynamic' => 'Dynamic (RegExp)',
         ];
 
         $variables['statusCodeOptions'] = $statusCodesOptions;
