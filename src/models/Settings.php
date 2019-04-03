@@ -7,7 +7,7 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\models;
+namespace venveo\redirect\models;
 
 use craft\base\Model;
 

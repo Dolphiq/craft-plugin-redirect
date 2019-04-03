@@ -6,7 +6,7 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\services;
+namespace venveo\redirect\services;
 
 use Craft;
 use craft\db\Query;
@@ -14,7 +14,7 @@ use craft\helpers\Json;
 use yii\web\NotFoundHttpException;
 use yii\base\Component;
 use craft\helpers\Db;
-use dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
+use venveo\redirect\records\CatchAllUrl as CatchAllUrlRecord;
 
 /**
  * Class Redirects service.

@@ -1,5 +1,5 @@
 <?php
-namespace dolphiq\redirect\elements;
+namespace venveo\redirect\elements;
 
 use verbb\feedme\FeedMe;
 use verbb\feedme\base\Element;
@@ -12,7 +12,7 @@ use craft\elements\User as UserElement;
 use craft\helpers\Db;
 
 use Cake\Utility\Hash;
-use dolphiq\redirect\elements\Redirect as RedirectElement;
+use venveo\redirect\elements\Redirect as RedirectElement;
 
 class FeedMeRedirect extends Element implements ElementInterface
 {

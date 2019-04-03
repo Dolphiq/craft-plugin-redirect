@@ -1,6 +1,6 @@
 <?php
 
-namespace dolphiq\redirect\migrations;
+namespace venveo\redirect\migrations;
 
 use Craft;
 use craft\db\Migration;
@@ -22,8 +22,6 @@ class m180104_143118_c_redirects_catch_all_urls extends Migration
                 [
                     'id' => $this->primaryKey(),
                     'uri' => $this->string(255)->notNull()->defaultValue(''),
-                    // 'firstHitAt' => $this->dateTime()->notNull(),
-                    // 'lastHitAt' => $this->dateTime()->notNull(),
                     'uid' => $this->uid(),
                     'siteId' => $this->integer()->unsigned()->notNull()->defaultValue(0),
                     'dateCreated' => $this->dateTime()->notNull(),

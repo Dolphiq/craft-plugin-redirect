@@ -6,11 +6,24 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\records;
+namespace venveo\redirect\records;
 
 use craft\db\ActiveRecord;
+use craft\records\Element;
 use yii\db\ActiveQueryInterface;
 
+/**
+ *
+ * @property \yii\db\ActiveQueryInterface $element
+ * @property \yii\db\ActiveQueryInterface $group
+ * @property integer|null hitAt
+ * @property integer|null hitCount
+ * @property int|null id
+ * @property string sourceUrl
+ * @property string destinationUrl
+ * @property string statusCode
+ * @property string type
+ */
 class Redirect extends ActiveRecord
 {
     // Public Methods
@@ -34,16 +47,5 @@ class Redirect extends ActiveRecord
     public function getElement(): ActiveQueryInterface
     {
         return $this->hasOne(Element::class, ['id' => 'id']);
-    }
-
-
-    /**
-     * Returns the redirect group.
-     *
-     * @return ActiveQueryInterface The relational query object.
-     */
-    public function getGroup(): ActiveQueryInterface
-    {
-        return $this->hasOne(RedirectGroup::class, ['id' => 'groupId']);
     }
 }

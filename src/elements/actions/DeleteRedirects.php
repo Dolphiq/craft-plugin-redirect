@@ -1,10 +1,10 @@
 <?php
 
-namespace dolphiq\redirect\elements\actions;
+namespace venveo\redirect\elements\actions;
 
 use Craft;
 use craft\base\ElementAction;
-use dolphiq\redirect\elements\Redirect;
+use venveo\redirect\elements\Redirect;
 use craft\elements\db\ElementQueryInterface;
 use yii\base\Exception;
 
@@ -38,7 +38,7 @@ class DeleteRedirects extends ElementAction
      */
     public function getConfirmationMessage()
     {
-        return Craft::t('redirect', 'Are you sure you want to delete the selected redirects?');
+        return Craft::t('vredirect', 'Are you sure you want to delete the selected redirects?');
     }
 
     /**
@@ -62,7 +62,7 @@ class DeleteRedirects extends ElementAction
             return false;
         }
 
-        $this->setMessage(Craft::t('redirect', 'Redirecs deleted.'));
+        $this->setMessage(Craft::t('vredirect', 'Redirect deleted.'));
 
         return true;
     }

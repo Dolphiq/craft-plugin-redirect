@@ -1,12 +1,12 @@
 <?php
 
-namespace dolphiq\redirect\migrations;
+namespace venveo\redirect\migrations;
 
 use Craft;
 use craft\db\Migration;
 use craft\db\Query;
 use craft\helpers\MigrationHelper;
-use dolphiq\redirect\elements\Redirect;
+use venveo\redirect\elements\Redirect;
 
 /**
  * m171003_120604_createmultisiteurls migration.

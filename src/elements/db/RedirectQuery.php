@@ -6,14 +6,12 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\elements\db;
+namespace venveo\redirect\elements\db;
 
 use Craft;
 use craft\db\QueryAbortedException;
-use dolphiq\redirect\elements\Redirect;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
-use yii\db\Connection;
 
 class RedirectQuery extends ElementQuery
 {
@@ -46,6 +44,17 @@ class RedirectQuery extends ElementQuery
      * @var string|null hitAt
      */
     public $hitAt;
+
+    /**
+     * @var string|null The type of redirect (static/dynamic)
+     */
+    public $type;
+
+    /**
+     * @var string|null A URI you're trying to match against
+     */
+    public $matchingUri;
+
 
     // Public Methods
     // =========================================================================
@@ -105,31 +114,25 @@ class RedirectQuery extends ElementQuery
         return $this;
     }
 
-
-    // Protected Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
     protected function beforePrepare(): bool
     {
-        Craft::info('dolphiq/redirect beforePrepare', __METHOD__);
         $this->joinElementTable('dolphiq_redirects');
 
 
-     //   $this->joinElementTable('elements_sites');
+        //   $this->joinElementTable('elements_sites');
 
         $this->query->select([
             'elements_sites.siteId',
+            'dolphiq_redirects.type',
             'dolphiq_redirects.sourceUrl',
             'dolphiq_redirects.destinationUrl',
             'dolphiq_redirects.hitAt',
             'dolphiq_redirects.hitCount',
             'dolphiq_redirects.statusCode',
         ]);
-
-        // $this->subQuery->andWhere(Db::parseParam('status', null));
 
         if ($this->sourceUrl) {
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.sourceUrl', $this->sourceUrl));
@@ -140,15 +143,28 @@ class RedirectQuery extends ElementQuery
         if ($this->statusCode) {
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.statusCode', $this->statusCode));
         }
+        if ($this->type) {
+            $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.type', $this->type));
+        }
         if ($this->hitAt && $this->hitAt > 0) {
+            // TODO: Refactor...
             $inactiveDate = new \DateTime();
             $inactiveDate->modify("-60 days");
-
-            $this->subQuery->andWhere('(dolphiq_redirects.hitAt < :calculatedDate AND dolphiq_redirects.hitAt IS NOT NULL)', [':calculatedDate' => $inactiveDate->format("Y-m-d H:m:s")]);
+            $this->subQuery->andWhere('([[dolphiq_redirects.hitAt]] < :calculatedDate AND [[dolphiq_redirects.hitAt]] IS NOT NULL)', [':calculatedDate' => $inactiveDate->format("Y-m-d H:m:s")]);
+        }
+        if($this->matchingUri) {
+            $this->subQuery->andWhere(['and',
+                ['[[dolphiq_redirects.type]]' => 'static'],
+                ['[[dolphiq_redirects.sourceUrl]]' => $this->matchingUri]
+                ]);
+            $this->subQuery->orWhere(['and',
+                ['[[dolphiq_redirects.type]]' => 'dynamic'],
+                ':uri RLIKE [[dolphiq_redirects.sourceUrl]]'
+            ], ['uri' => $this->matchingUri]);
         }
 
-       // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));
-       // $this->_applyEditableParam();
+        // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));
+        // $this->_applyEditableParam();
 
         return parent::beforePrepare();
     }

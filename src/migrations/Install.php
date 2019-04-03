@@ -7,7 +7,7 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\migrations;
+namespace venveo\redirect\migrations;
 
 use Craft;
 use craft\config\DbConfig;

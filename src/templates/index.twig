@@ -4,13 +4,13 @@
 {% set fullPageForm = false %}
 
 {% set crumbs = [
-{ label: "Settings"|t('app'), url: url('settings') },
-{ label: "Redirects"|t('vredirect'), url: url('settings/redirect') }
+    { label: "Settings"|t('app'), url: url('settings') },
+    { label: "Redirects"|t('vredirect'), url: url('settings/vredirect') }
 ] %}
 
 {% block sidebar %}
-        {% set selectedNavItem = "settings" %}
-        {% include "vredirect/nav" %}
+    {% set selectedNavItem = "settings" %}
+    {% include "vredirect/nav" %}
 {% endblock %}
 
 

@@ -6,30 +6,39 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\elements;
+namespace venveo\redirect\elements;
 
 use Craft;
 use craft\base\Element;
-use dolphiq\redirect\elements\db\RedirectQuery;
-use craft\elements\db\ElementQueryInterface;
 use craft\elements\actions\Edit;
-use dolphiq\redirect\elements\actions\DeleteRedirects;
+use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\validators\DateTimeValidator;
-use dolphiq\redirect\records\Redirect as RedirectRecord;
+use craft\web\ErrorHandler;
+use venveo\redirect\elements\actions\DeleteRedirects;
+use venveo\redirect\elements\db\RedirectQuery;
+use venveo\redirect\records\Redirect as RedirectRecord;
 
 class Redirect extends Element
 {
-    // Static
-    // =========================================================================
+    public const TYPE_STATIC = 'static';
+    public const TYPE_DYNAMIC = 'dynamic';
 
     /**
      * @inheritdoc
      */
     public static function displayName(): string
     {
-        return Craft::t('redirect', 'Redirect');
+        return Craft::t('vredirect', 'Redirect');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralDisplayName(): string
+    {
+        return Craft::t('vredirect', 'Redirects');
     }
 
     /**
@@ -55,6 +64,7 @@ class Redirect extends Element
     {
         return false;
     }
+
     /**
      * @inheritdoc
      */
@@ -74,7 +84,7 @@ class Redirect extends Element
     /**
      * @inheritdoc
      *
-     * @return UserQuery The newly created [[UserQuery]] instance.
+     * @return RedirectQuery The newly created [[RedirectQuery]] instance.
      */
     public static function find(): ElementQueryInterface
     {
@@ -96,7 +106,7 @@ class Redirect extends Element
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
             //if($this->siteId < 1 || $this->siteId == $site->id) {
             $supportedSites[] = ['siteId' => $site->id, 'enabledByDefault' => false];
-          //}
+            //}
         }
         return $supportedSites;
     }
@@ -106,7 +116,7 @@ class Redirect extends Element
      */
     public function getCpEditUrl()
     {
-        return UrlHelper::cpUrl('redirect/' . $this->id . '?siteId=' . $this->siteId);
+        return UrlHelper::cpUrl('redirect/'.$this->id.'?siteId='.$this->siteId);
 
         return $url;
     }
@@ -117,16 +127,21 @@ class Redirect extends Element
     public function getEditorHtml(): string
     {
         $statusCodesOptions = [
-          '301' => 'Permanent redirect (301)',
-          '302' => 'Temporarily redirect (302)',
+            '301' => 'Permanent redirect (301)',
+            '302' => 'Temporarily redirect (302)',
         ];
 
-        $html = Craft::$app->getView()->renderTemplate('redirect/_redirectfields', [
+        $typeOptions = [
+            'static' => 'Static',
+            'dynamic' => 'Dynamic (RegExp)',
+        ];
+
+        $html = Craft::$app->getView()->renderTemplate('vredirect/_redirectfields', [
             'redirect' => $this,
             'isNewRedirect' => false,
             'meta' => false,
             'statusCodeOptions' => $statusCodesOptions,
-
+            'typeOptions' => $typeOptions
         ]);
 
         $html .= parent::getEditorHtml();
@@ -149,30 +164,31 @@ class Redirect extends Element
      */
     protected static function defineSources(string $context = null): array
     {
+        $sources = [];
         if ($context === 'index') {
             $sources = [
-              [
-                  'key' => '*',
-                  'label' => Craft::t('redirect', 'All redirects'),
-                  'criteria' => []
-              ],
-              [
-                'key' => 'permanent',
-                'label' => Craft::t('redirect', 'Permanent redirects'),
-                'criteria' => ['statusCode' => 301]
-              ],
-              [
-                'key' => 'temporarily',
-                'label' => Craft::t('redirect', 'Temporarily redirects'),
-                'criteria' => ['statusCode' => 302]
-              ],
-              [
-                'key' => 'inactive',
-                'label' => Craft::t('redirect', 'Inactive redirects'),
-                'criteria' => ['hitAt' => 60]
+                [
+                    'key' => '*',
+                    'label' => Craft::t('vredirect', 'All redirects'),
+                    'criteria' => []
+                ],
+                [
+                    'key' => 'permanent',
+                    'label' => Craft::t('vredirect', 'Permanent redirects'),
+                    'criteria' => ['statusCode' => 301]
+                ],
+                [
+                    'key' => 'temporarily',
+                    'label' => Craft::t('vredirect', 'Temporarily redirects'),
+                    'criteria' => ['statusCode' => 302]
+                ],
+                [
+                    'key' => 'inactive',
+                    'label' => Craft::t('vredirect', 'Inactive redirects'),
+                    'criteria' => ['hitAt' => 60]
 
-              ],
-          ];
+                ],
+            ];
         }
         return $sources;
     }
@@ -191,11 +207,12 @@ class Redirect extends Element
     protected static function defineSortOptions(): array
     {
         $attributes = [
-            'sourceUrl' => Craft::t('redirect', 'Source URL'),
-            'destinationUrl' => Craft::t('redirect', 'Destination URL'),
-            'hitAt' => Craft::t('redirect', 'Last hit'),
-            'statusCode' => Craft::t('redirect', 'Redirect type'),
-            'hitCount' => Craft::t('redirect', 'Hit count'),
+            'dolphiq_redirects.sourceUrl' => Craft::t('vredirect', 'Source URL'),
+            'dolphiq_redirects.type' => Craft::t('vredirect', 'Type'),
+            'dolphiq_redirects.destinationUrl' => Craft::t('vredirect', 'Destination URL'),
+            'dolphiq_redirects.hitAt' => Craft::t('vredirect', 'Last hit'),
+            'dolphiq_redirects.statusCode' => Craft::t('vredirect', 'Redirect type'),
+            'dolphiq_redirects.hitCount' => Craft::t('vredirect', 'Hit count'),
             'elements.dateCreated' => Craft::t('app', 'Date Created'),
         ];
         return $attributes;
@@ -207,13 +224,13 @@ class Redirect extends Element
     protected static function defineTableAttributes(): array
     {
         $attributes = [
-            'sourceUrl' => ['label' => Craft::t('redirect', 'Source URL')],
-            'destinationUrl' => ['label' => Craft::t('redirect', 'Destination URL')],
-            'hitAt' => ['label' => Craft::t('redirect', 'Last hit')],
-            'hitCount' => ['label' => Craft::t('redirect', 'Hit count')],
+            'sourceUrl' => ['label' => Craft::t('vredirect', 'Source URL')],
+            'type' => ['label' => Craft::t('vredirect', 'Type')],
+            'destinationUrl' => ['label' => Craft::t('vredirect', 'Destination URL')],
+            'hitAt' => ['label' => Craft::t('vredirect', 'Last hit')],
+            'hitCount' => ['label' => Craft::t('vredirect', 'Hit count')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
-            'statusCode' => ['label' => Craft::t('redirect', 'Redirect type')],
-            // 'baseUrl' => ['label' => Craft::t('redirect', '')],
+            'statusCode' => ['label' => Craft::t('vredirect', 'Redirect type')],
 
         ];
 
@@ -228,22 +245,20 @@ class Redirect extends Element
         switch ($attribute) {
             case 'statusCode':
 
-              $statusCodesOptions = [
-                '301' => 'Permanent redirect (301)',
-                '302' => 'Temporarily redirect (302)',
-              ];
+                $statusCodesOptions = [
+                    '301' => 'Permanent redirect (301)',
+                    '302' => 'Temporarily redirect (302)',
+                ];
 
-              return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('redirect', $statusCodesOptions[$this->statusCode])]) : '';
+                return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('vredirect', $statusCodesOptions[$this->statusCode])]) : '';
 
             case 'baseUrl':
 
-              return Html::encodeParams('<a href="{baseUrl}" target="_blank">test</a>', ['baseUrl' => $this->getSite()->baseUrl . $this->sourceUrl]);
-
+                return Html::encodeParams('<a href="{baseUrl}" target="_blank">test</a>', ['baseUrl' => $this->getSite()->baseUrl.$this->sourceUrl]);
         }
 
         return parent::tableAttributeHtml($attribute);
     }
-
 
 
     /**
@@ -257,7 +272,7 @@ class Redirect extends Element
         $actions[] = Craft::$app->getElements()->createAction(
             [
                 'type' => Edit::class,
-                'label' => Craft::t('redirect', 'Edit redirect'),
+                'label' => Craft::t('vredirect', 'Edit redirect'),
             ]
         );
 
@@ -276,7 +291,8 @@ class Redirect extends Element
         $rules[] = [['hitAt'], DateTimeValidator::class];
         $rules[] = [['hitCount'], 'number', 'integerOnly' => true];
         $rules[] = [['sourceUrl', 'destinationUrl'], 'string', 'max' => 255];
-        $rules[] = [['sourceUrl', 'destinationUrl'], 'required'];
+        $rules[] = [['sourceUrl', 'destinationUrl', 'type'], 'required'];
+        $rules[] = [['type'], 'in', 'range' => ['static', 'dynamic']];
         return $rules;
     }
 
@@ -286,16 +302,16 @@ class Redirect extends Element
     public function formatUrl(string $url): string
     {
         $resultUrl = $url;
-      // trim spaces
-      $resultUrl = trim($resultUrl);
+        // trim spaces
+        $resultUrl = trim($resultUrl);
 
-        if (stripos($resultUrl, '://') !== false) {
+        if (strpos($resultUrl, '://') !== false) {
             // complete url
-        // check if the base url is there and strip if it does
-        $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
+            // check if the base url is there and strip if it does
+            $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
         } else {
             // strip leading slash
-        $resultUrl = ltrim($resultUrl, '/');
+            $resultUrl = ltrim($resultUrl, '/');
         }
         return $resultUrl;
     }
@@ -343,6 +359,7 @@ class Redirect extends Element
         $record->sourceUrl = $this->formatUrl($this->sourceUrl);
         $record->destinationUrl = $this->formatUrl($this->destinationUrl);
         $record->statusCode = $this->statusCode;
+        $record->type = $this->type;
 
         $record->save(false);
 
@@ -433,6 +450,11 @@ class Redirect extends Element
      * @var string|null statusCode
      */
     public $statusCode;
+
+    /**
+     * @var string type
+     */
+    public $type;
 
     /**
      * @var int|null siteId
