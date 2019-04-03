@@ -64,9 +64,6 @@ class Plugin extends BasePlugin
     public $hasCpSection = true;
     public $hasCpSettings = true;
 
-    // table schema version
-    public $schemaVersion = '1.0.4';
-
     /*
     *
     *  The Craft plugin documentation points to the EVENT_REGISTER_CP_NAV_ITEMS event to register navigation items.

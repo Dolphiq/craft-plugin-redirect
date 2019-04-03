@@ -8,6 +8,7 @@
 namespace craft\records;
 
 use craft\db\ActiveRecord;
+use venveo\redirect\records\Redirect;
 use yii\db\ActiveQueryInterface;
 
 /**

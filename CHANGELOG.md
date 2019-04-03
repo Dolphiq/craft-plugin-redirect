@@ -1,5 +1,11 @@
 # Redirect Changelog
 
+## Unreleased
+### Changed
+- Forked for Venveo
+- Deleted unused code
+- Improved comments
+
 ## 1.0.17 - 2018-07-04
 ### Fixed
 - Fixed icon not shown in newer Craft CMS 3 release
