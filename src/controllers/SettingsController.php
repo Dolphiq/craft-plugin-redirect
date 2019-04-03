@@ -13,7 +13,7 @@ use Craft;
 use craft\web\Controller;
 use craft\helpers\UrlHelper;
 
-use venveo\redirect\Redirect;
+use venveo\redirect\Plugin;
 use venveo\redirect\elements\Redirect;
 
 use craft\db\Query;
@@ -42,7 +42,7 @@ class SettingsController extends Controller
 
         unset($navItems['redirects']);
         $variables = [
-            'settings' => Redirect::$plugin->getSettings(),
+            'settings' => Plugin::$plugin->getSettings(),
             'navItems' => $navItems,
             'source' => $source,
             'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
@@ -75,7 +75,7 @@ class SettingsController extends Controller
         $this->requireLogin();
         $urlId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
-        Redirect::$plugin->getCatchAll()->DeleteUrlById($urlId);
+        Plugin::$plugin->getCatchAll()->DeleteUrlById($urlId);
 
         return $this->asJson(['success' => true]);
     }
@@ -101,8 +101,8 @@ class SettingsController extends Controller
 
 
         $variables = [
-            'settings' => Redirect::$plugin->getSettings(),
-            'urlItems' => Redirect::$plugin->getCatchAll()->getLastUrls(100, $siteId),
+            'settings' => Plugin::$plugin->getSettings(),
+            'urlItems' => Plugin::$plugin->getCatchAll()->getLastUrls(100, $siteId),
             'navItems' => $navItems,
             'source' => $source,
             'selectedSiteId' => $siteId,
@@ -132,7 +132,7 @@ class SettingsController extends Controller
 
         $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
 
-        $settings = Redirect::$plugin->getSettings();
+        $settings = Plugin::$plugin->getSettings();
 
         $navItems = [
             'settings' => [
@@ -167,7 +167,7 @@ class SettingsController extends Controller
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
         $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
-        $settings = Redirect::$plugin->getSettings();
+        $settings = Plugin::$plugin->getSettings();
 
         $navItems = $this->getMenuItems();
 
@@ -224,12 +224,12 @@ class SettingsController extends Controller
      * Edit a redirect
      *
      * @param int|null  $redirectId The redirect's ID, if editing an existing site
-     * @param Redirect|null $redirect   The redirect being edited, if there were any validation errors
+     * @param Plugin|null $redirect   The redirect being edited, if there were any validation errors
      *
      * @return Response
      * @throws NotFoundHttpException if the requested redirect cannot be found
      */
-    public function actionEditRedirect(int $redirectId = null, Redirect $redirect = null): craft\web\Response
+    public function actionEditRedirect(int $redirectId = null, Plugin $redirect = null): craft\web\Response
     {
         $variables = [];
 
@@ -268,7 +268,7 @@ class SettingsController extends Controller
                 if ($siteId == null) {
                     $siteId = Craft::$app->getSites()->currentSite->id;
                 }
-                $redirect = Redirect::$plugin->getRedirects()->getRedirectById($redirectId, $siteId);
+                $redirect = Plugin::$plugin->getRedirects()->getRedirectById($redirectId, $siteId);
 
                 if (!$redirect) {
                     throw new NotFoundHttpException('Redirect not found');
@@ -278,14 +278,14 @@ class SettingsController extends Controller
             $variables['title'] = $redirect->sourceUrl;
         } else {
             if ($redirect === null) {
-                $redirect = new Redirect;
+                $redirect = new Plugin;
 
                 // is there a sourceCatchALlUrlID ?
 
                 $sourceCatchAllUrlId = Craft::$app->getRequest()->getQueryParam('sourceCatchAllUrlId', '');
                 if ($sourceCatchAllUrlId !== '') {
                     // load some settings from the url
-                    $url = Redirect::$plugin->getCatchAll()->getUrlByUid($sourceCatchAllUrlId);
+                    $url = Plugin::$plugin->getCatchAll()->getUrlByUid($sourceCatchAllUrlId);
                     if ($url !== null) {
                         $redirect->sourceUrl = $url->uri;
                         $redirect->siteId = $url->siteId;
@@ -321,7 +321,7 @@ class SettingsController extends Controller
         $this->requireLogin();
 
         $request = Craft::$app->getRequest();
-        $redirect = new Redirect();
+        $redirect = new Plugin();
         $redirect->id = $request->getBodyParam('redirectId');
         $redirect->sourceUrl = $request->getBodyParam('sourceUrl');
         $redirect->destinationUrl = $request->getBodyParam('destinationUrl');
@@ -380,7 +380,7 @@ class SettingsController extends Controller
         $request = Craft::$app->getRequest();
 
         $redirectId = $request->getRequiredBodyParam('id');
-        Redirect::$plugin->getRedirects()->deleteRedirectById($redirectId);
+        Plugin::$plugin->getRedirects()->deleteRedirectById($redirectId);
 
         return $this->asJson(['success' => true]);
     }

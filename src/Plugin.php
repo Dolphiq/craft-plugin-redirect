@@ -11,7 +11,7 @@
 namespace venveo\redirect;
 
 use Craft;
-use craft\base\Plugin;
+use craft\base\Plugin as BasePlugin;
 use venveo\redirect\elements\FeedMeRedirect;
 use venveo\redirect\elements\Redirect as RedirectElement;
 use venveo\redirect\models\Settings;
@@ -28,7 +28,7 @@ use yii\base\Event;
 
 
 
-class Redirect extends \craft\base\Plugin
+class Plugin extends BasePlugin
 {
     public static $plugin;
 
@@ -162,7 +162,7 @@ class Redirect extends \craft\base\Plugin
             });
         }
 
-        $settings = Redirect::$plugin->getSettings();
+        $settings = Plugin::$plugin->getSettings();
         if ($settings->redirectsActive) {
             Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) use ($settings) {
 
