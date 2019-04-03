@@ -64,15 +64,7 @@ overview/category/<catname>/index.html
 ```
 [Click here](RULES.md) for the complete overview of rule examples.
 
-## Redirect Manager Roadmap
-
-Potential features:
-
-* Dashboard with statistics
-* CSV import/export of the redirects
-* Add a priority property for (partly) overlapping urls
-
-
 ### Contributors & Developers
 Johan Zandstra - info@dolphiq.nl
-Brought to you by [Dolphiq](https://dolphiq.nl)
+
+Venveo - info@venveo.com
