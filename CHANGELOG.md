@@ -10,6 +10,9 @@
 - Added explicit redirect type selection: dynamic or static
 - Dynamic redirects now rely on RegEx rather than Yii routes
 
+### Fixed
+- Fixed potential compatibility issues with PostgreSQL
+
 ## 1.0.17 - 2018-07-04
 ### Fixed
 - Fixed icon not shown in newer Craft CMS 3 release
