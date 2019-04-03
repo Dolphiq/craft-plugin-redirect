@@ -9,6 +9,7 @@
 - Optimized plugin code by bailing out early when possible to avoid additional calls
 - Added explicit redirect type selection: dynamic or static
 - Dynamic redirects now rely on RegEx rather than Yii routes
+- Redirects lookups are now performed as database queries rather than PHP lgoic
 
 ### Fixed
 - Fixed potential compatibility issues with PostgreSQL

@@ -7,16 +7,21 @@
 
 {% block content %}
     {{ actionInput('vredirect/settings/save-redirect') }}
-    {{ redirectInput(cpUrl('settings/redirect')) }}
+    {{ redirectInput(cpUrl('redirect')) }}
 
-    {% if redirect is defined and redirect.id %}<input type="hidden" name="redirectId" value="{{ redirect.id }}">{% endif %}
+    {% if redirect is defined and redirect.id %}<input type="hidden"
+                                                       name="redirectId"
+                                                       value="{{ redirect.id }}">{% endif %}
     <div class="readable">
-        <p>{{ "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters"|t('vredirect') }}.<br><a target="_blank" href="https://github.com/Dolphiq/craft3-plugin-redirect/blob/master/RULES.md">{{ "See some examples and instructions here"|t('vredirect') }}</a>.</p>
-    <br>
+        <p>{{ "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters"|t('vredirect') }}
+            .<br><a target="_blank"
+                    href="https://github.com/Dolphiq/craft3-plugin-redirect/blob/master/RULES.md">{{ "See some examples and instructions here"|t('vredirect') }}</a>.
+        </p>
+        <br>
     </div>
     <div id="categorygroup-settings">
-          {% if craft.app.getIsMultiSite() %}
-              {{ forms.selectField({
+        {% if craft.app.getIsMultiSite() %}
+            {{ forms.selectField({
                 label: "Site"|t('vredirect'),
                 instructions: "Site"|t('vredirect'),
                 id: 'site-id',
@@ -27,7 +32,7 @@
                 targetPrefix: '.siteId-',
                 errors: redirect.getErrors('siteId')
             }) }}
-          {% endif %}
+        {% endif %}
 
         {{ forms.selectField({
             label: "Match Type"|t('vredirect'),
@@ -41,39 +46,39 @@
             errors: redirect.getErrors('type')
         }) }}
 
-            {{ forms.textField({
-                label: "Source URL"|t('vredirect'),
-                instructions: "The URL to be redirected"|t('vredirect'),
-                id: 'source-url',
-                class: 'ltr',
-                name: 'sourceUrl',
-                value: redirect.sourceUrl,
-                errors: redirect.getErrors('sourceUrl'),
-                autofocus: true,
-                required: true
-            }) }}
+        {{ forms.textField({
+            label: "Source URL"|t('vredirect'),
+            instructions: "The URL to be redirected"|t('vredirect'),
+            id: 'source-url',
+            class: 'ltr',
+            name: 'sourceUrl',
+            value: redirect.sourceUrl,
+            errors: redirect.getErrors('sourceUrl'),
+            autofocus: true,
+            required: true
+        }) }}
 
-            {{ forms.textField({
-                label: "Destination URL"|t('vredirect'),
-                instructions: "The final URL"|t('vredirect'),
-                id: 'destination-url',
-                class: 'ltr',
-                name: 'destinationUrl',
-                value: redirect.destinationUrl,
-                errors: redirect.getErrors('destinationUrl'),
-                required: true
-            }) }}
-            {{ forms.selectField({
-              label: "Redirect type"|t('vredirect'),
-              instructions: "Redirect status code"|t('vredirect'),
-              id: 'status-code',
-              name: 'statusCode',
-              options: statusCodeOptions,
-              value: redirect.statusCode,
-              toggle: true,
-              targetPrefix: '.statusCode-',
-              errors: redirect.getErrors('statusCode')
-          }) }}
+        {{ forms.textField({
+            label: "Destination URL"|t('vredirect'),
+            instructions: "The final URL"|t('vredirect'),
+            id: 'destination-url',
+            class: 'ltr',
+            name: 'destinationUrl',
+            value: redirect.destinationUrl,
+            errors: redirect.getErrors('destinationUrl'),
+            required: true
+        }) }}
+        {{ forms.selectField({
+            label: "Redirect type"|t('vredirect'),
+            instructions: "Redirect status code"|t('vredirect'),
+            id: 'status-code',
+            name: 'statusCode',
+            options: statusCodeOptions,
+            value: redirect.statusCode,
+            toggle: true,
+            targetPrefix: '.statusCode-',
+            errors: redirect.getErrors('statusCode')
+        }) }}
     </div>
 
 {% endblock %}

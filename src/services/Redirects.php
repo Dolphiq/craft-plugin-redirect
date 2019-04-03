@@ -9,7 +9,6 @@
 namespace venveo\redirect\services;
 
 use Craft;
-use craft\helpers\DateTimeHelper;
 use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use venveo\redirect\elements\db\RedirectQuery;
@@ -159,6 +158,7 @@ class Redirects extends Component
 
     /**
      * Performs the actual redirect
+     *
      * @param Redirect $redirect
      * @param $uri
      */
