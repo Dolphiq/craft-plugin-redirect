@@ -6,7 +6,7 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\records;
+namespace venveo\redirect\records;
 
 use craft\db\ActiveRecord;
 use yii\db\ActiveQueryInterface;

@@ -8,15 +8,15 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect;
+namespace venveo\redirect;
 
 use Craft;
 use craft\base\Plugin;
-use dolphiq\redirect\elements\FeedMeRedirect;
-use dolphiq\redirect\elements\Redirect;
-use dolphiq\redirect\models\Settings;
-use dolphiq\redirect\services\Redirects;
-use dolphiq\redirect\services\CatchAll;
+use venveo\redirect\elements\FeedMeRedirect;
+use venveo\redirect\elements\Redirect as RedirectElement;
+use venveo\redirect\models\Settings;
+use venveo\redirect\services\Redirects;
+use venveo\redirect\services\CatchAll;
 
 use craft\events\RegisterCpNavItemsEvent;
 use craft\web\twig\variables\Cp;
@@ -28,7 +28,7 @@ use yii\base\Event;
 
 
 
-class RedirectPlugin extends \craft\base\Plugin
+class Redirect extends \craft\base\Plugin
 {
     public static $plugin;
 
@@ -37,7 +37,7 @@ class RedirectPlugin extends \craft\base\Plugin
     /**
      * Returns the Redirects service.
      *
-     * @return \dolphiq\redirect\services\Redirects The Redirects service
+     * @return \venveo\redirect\services\Redirects The Redirects service
      */
     public function getRedirects()
     {
@@ -77,7 +77,7 @@ class RedirectPlugin extends \craft\base\Plugin
     {
         return [
         'url'=> 'redirect',
-        'label'=>Craft::t('redirect', 'Site redirects'),
+        'label'=>Craft::t('vredirect', 'Site redirects'),
         'fontIcon' => 'share'
       ];
     }
@@ -162,7 +162,7 @@ class RedirectPlugin extends \craft\base\Plugin
             });
         }
 
-        $settings = RedirectPlugin::$plugin->getSettings();
+        $settings = Redirect::$plugin->getSettings();
         if ($settings->redirectsActive) {
             Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) use ($settings) {
 

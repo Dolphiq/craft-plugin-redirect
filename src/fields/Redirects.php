@@ -6,10 +6,10 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\fields;
+namespace venveo\redirect\fields;
 
 use Craft;
-use dolphiq\redirect\elements\Redirect;
+use venveo\redirect\elements\Redirect;
 
 /**
  * Users represents a Users field.

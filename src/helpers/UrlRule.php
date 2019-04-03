@@ -3,7 +3,7 @@
  * this file is insipred by the original Yii \yii\web\UrlRule
  */
 
-namespace dolphiq\redirect\helpers;
+namespace venveo\redirect\helpers;
 
 use Craft;
 use craft\helpers\ArrayHelper;

@@ -1,10 +1,10 @@
 <?php
 
-namespace dolphiq\redirect\elements\actions;
+namespace venveo\redirect\elements\actions;
 
 use Craft;
 use craft\base\ElementAction;
-use dolphiq\redirect\elements\Redirect;
+use venveo\redirect\elements\Redirect;
 use craft\elements\db\ElementQueryInterface;
 use yii\base\Exception;
 

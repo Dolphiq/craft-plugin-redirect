@@ -6,11 +6,11 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\elements\db;
+namespace venveo\redirect\elements\db;
 
 use Craft;
 use craft\db\QueryAbortedException;
-use dolphiq\redirect\elements\Redirect;
+use venveo\redirect\elements\Redirect;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 use yii\db\Connection;

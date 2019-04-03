@@ -6,18 +6,18 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\elements;
+namespace venveo\redirect\elements;
 
 use Craft;
 use craft\base\Element;
-use dolphiq\redirect\elements\db\RedirectQuery;
+use venveo\redirect\elements\db\RedirectQuery;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\actions\Edit;
-use dolphiq\redirect\elements\actions\DeleteRedirects;
+use venveo\redirect\elements\actions\DeleteRedirects;
 use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\validators\DateTimeValidator;
-use dolphiq\redirect\records\Redirect as RedirectRecord;
+use venveo\redirect\records\Redirect as RedirectRecord;
 
 class Redirect extends Element
 {

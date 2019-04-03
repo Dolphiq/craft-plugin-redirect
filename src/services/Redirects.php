@@ -6,12 +6,12 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\services;
+namespace venveo\redirect\services;
 
 use Craft;
 use craft\db\Query;
 use craft\helpers\Json;
-use dolphiq\redirect\elements\Redirect;
+use venveo\redirect\elements\Redirect;
 use yii\web\NotFoundHttpException;
 use yii\base\Component;
 use craft\helpers\Db;

@@ -7,16 +7,16 @@
  * @link      https://dolphiq.nl/
  */
 
-namespace dolphiq\redirect\controllers;
+namespace venveo\redirect\controllers;
 
 use Craft;
 use craft\web\Controller;
 use craft\helpers\UrlHelper;
 
-use dolphiq\redirect\RedirectPlugin;
+use venveo\redirect\Redirect;
 
-use \dolphiq\redirect\helpers\UrlRule;
-use \dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
+use \venveo\redirect\helpers\UrlRule;
+use \venveo\redirect\records\CatchAllUrl as CatchAllUrlRecord;
 
 class RedirectController extends Controller
 {
@@ -61,7 +61,7 @@ class RedirectController extends Controller
 
       // register the hit to the database
       if ($redirectId != null && $statusCode != 404) {
-          RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId, $destinationUrl);
+          Redirect::$plugin->getRedirects()->registerHitById($redirectId, $destinationUrl);
           $this->redirect($destinationUrl, $statusCode);
       } else {
           // this is a not existing page, please register the hit to a catch all element
@@ -83,10 +83,10 @@ class RedirectController extends Controller
           } else {
               // register the url and go to the template!
 
-              RedirectPlugin::$plugin->getCatchAll()->registerHitByUri($uri);
+              Redirect::$plugin->getCatchAll()->registerHitByUri($uri);
 
 
-              $settings = RedirectPlugin::$plugin->getSettings();
+              $settings = Redirect::$plugin->getSettings();
               if ($settings->catchAllTemplate != '') {
                   return $this->renderTemplate($settings->catchAllTemplate, ['request' => [
                       'requestUri' => $_SERVER['REQUEST_URI'],

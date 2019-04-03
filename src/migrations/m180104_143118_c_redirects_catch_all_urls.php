@@ -1,6 +1,6 @@
 <?php
 
-namespace dolphiq\redirect\migrations;
+namespace venveo\redirect\migrations;
 
 use Craft;
 use craft\db\Migration;
