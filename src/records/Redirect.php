@@ -17,6 +17,12 @@ use yii\db\ActiveQueryInterface;
  *
  * @property \yii\db\ActiveQueryInterface $element
  * @property \yii\db\ActiveQueryInterface $group
+ * @property integer|null hitAt
+ * @property integer|null hitCount
+ * @property int|null id
+ * @property string sourceUrl
+ * @property string destinationUrl
+ * @property string statusCode
  */
 class Redirect extends ActiveRecord
 {
