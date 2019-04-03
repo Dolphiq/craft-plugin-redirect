@@ -128,12 +128,17 @@ class Redirect extends Element
             '302' => 'Temporarily redirect (302)',
         ];
 
+        $typeOptions = [
+            'static' => 'Static',
+            'dynamic' => 'Dynamic',
+        ];
+
         $html = Craft::$app->getView()->renderTemplate('vredirect/_redirectfields', [
             'redirect' => $this,
             'isNewRedirect' => false,
             'meta' => false,
             'statusCodeOptions' => $statusCodesOptions,
-
+            'typeOptions' => $typeOptions
         ]);
 
         $html .= parent::getEditorHtml();
@@ -199,11 +204,12 @@ class Redirect extends Element
     protected static function defineSortOptions(): array
     {
         $attributes = [
-            'sourceUrl' => Craft::t('vredirect', 'Source URL'),
-            'destinationUrl' => Craft::t('vredirect', 'Destination URL'),
-            'hitAt' => Craft::t('vredirect', 'Last hit'),
-            'statusCode' => Craft::t('vredirect', 'Redirect type'),
-            'hitCount' => Craft::t('vredirect', 'Hit count'),
+            'dolphiq_redirects.sourceUrl' => Craft::t('vredirect', 'Source URL'),
+            'dolphiq_redirects.type' => Craft::t('vredirect', 'Type'),
+            'dolphiq_redirects.destinationUrl' => Craft::t('vredirect', 'Destination URL'),
+            'dolphiq_redirects.hitAt' => Craft::t('vredirect', 'Last hit'),
+            'dolphiq_redirects.statusCode' => Craft::t('vredirect', 'Redirect type'),
+            'dolphiq_redirects.hitCount' => Craft::t('vredirect', 'Hit count'),
             'elements.dateCreated' => Craft::t('app', 'Date Created'),
         ];
         return $attributes;
@@ -216,6 +222,7 @@ class Redirect extends Element
     {
         $attributes = [
             'sourceUrl' => ['label' => Craft::t('vredirect', 'Source URL')],
+            'type' => ['label' => Craft::t('vredirect', 'Type')],
             'destinationUrl' => ['label' => Craft::t('vredirect', 'Destination URL')],
             'hitAt' => ['label' => Craft::t('vredirect', 'Last hit')],
             'hitCount' => ['label' => Craft::t('vredirect', 'Hit count')],
@@ -281,7 +288,8 @@ class Redirect extends Element
         $rules[] = [['hitAt'], DateTimeValidator::class];
         $rules[] = [['hitCount'], 'number', 'integerOnly' => true];
         $rules[] = [['sourceUrl', 'destinationUrl'], 'string', 'max' => 255];
-        $rules[] = [['sourceUrl', 'destinationUrl'], 'required'];
+        $rules[] = [['sourceUrl', 'destinationUrl', 'type'], 'required'];
+        $rules[] = [['type'], 'in', 'range' => ['static', 'dynamic'], 'allowEmpty' => false];
         return $rules;
     }
 
@@ -294,7 +302,7 @@ class Redirect extends Element
         // trim spaces
         $resultUrl = trim($resultUrl);
 
-        if (stripos($resultUrl, '://') !== false) {
+        if (strpos($resultUrl, '://') !== false) {
             // complete url
             // check if the base url is there and strip if it does
             $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
@@ -348,6 +356,7 @@ class Redirect extends Element
         $record->sourceUrl = $this->formatUrl($this->sourceUrl);
         $record->destinationUrl = $this->formatUrl($this->destinationUrl);
         $record->statusCode = $this->statusCode;
+        $record->type = $this->type;
 
         $record->save(false);
 
@@ -438,6 +447,11 @@ class Redirect extends Element
      * @var string|null statusCode
      */
     public $statusCode;
+
+    /**
+     * @var string type
+     */
+    public $type;
 
     /**
      * @var int|null siteId

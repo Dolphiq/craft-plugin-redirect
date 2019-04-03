@@ -45,6 +45,11 @@ class RedirectQuery extends ElementQuery
      */
     public $hitAt;
 
+    /**
+     * @var string|null The type of redirect (static/dynamic)
+     */
+    public $type;
+
     // Public Methods
     // =========================================================================
 
@@ -103,16 +108,11 @@ class RedirectQuery extends ElementQuery
         return $this;
     }
 
-
-    // Protected Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
     protected function beforePrepare(): bool
     {
-        Craft::info('dolphiq/redirect beforePrepare', __METHOD__);
         $this->joinElementTable('dolphiq_redirects');
 
 
@@ -120,14 +120,13 @@ class RedirectQuery extends ElementQuery
 
         $this->query->select([
             'elements_sites.siteId',
+            'dolphiq_redirects.type',
             'dolphiq_redirects.sourceUrl',
             'dolphiq_redirects.destinationUrl',
             'dolphiq_redirects.hitAt',
             'dolphiq_redirects.hitCount',
             'dolphiq_redirects.statusCode',
         ]);
-
-        // $this->subQuery->andWhere(Db::parseParam('status', null));
 
         if ($this->sourceUrl) {
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.sourceUrl', $this->sourceUrl));
@@ -137,6 +136,9 @@ class RedirectQuery extends ElementQuery
         }
         if ($this->statusCode) {
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.statusCode', $this->statusCode));
+        }
+        if ($this->type) {
+            $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.type', $this->type));
         }
         if ($this->hitAt && $this->hitAt > 0) {
             $inactiveDate = new \DateTime();

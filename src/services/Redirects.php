@@ -9,12 +9,12 @@
 namespace venveo\redirect\services;
 
 use Craft;
-use craft\db\Query;
-use craft\helpers\Json;
-use venveo\redirect\elements\Redirect;
-use yii\web\NotFoundHttpException;
-use yii\base\Component;
 use craft\helpers\Db;
+use venveo\redirect\elements\db\RedirectQuery;
+use venveo\redirect\elements\Redirect;
+use venveo\redirect\Plugin;
+use yii\base\Component;
+use yii\web\HttpException;
 
 /**
  * Class Redirects service.
@@ -77,7 +77,7 @@ class Redirects extends Component
     /**
      * Returns a redirect by its ID.
      *
-     * @param int      $redirectId
+     * @param int $redirectId
      * @param int|null $siteId
      *
      * @return Redirect|null
@@ -99,20 +99,59 @@ class Redirects extends Component
     public function registerHitById(int $redirectId, $destinationUrl = ''): bool
     {
         // simple update to keep it fast
-        if ($redirectId<1) {
+        if ($redirectId < 1) {
             return false;
         }
         $res = \Yii::$app->db->createCommand()
-          ->update(
-            '{{%dolphiq_redirects}}',
-            [
-              'hitAt'=>new \yii\db\Expression('now()'),
-              'hitCount'=>new \yii\db\Expression('{{hitCount}} + 1'),
-            ],
-            ['id' => $redirectId]
-          )
-          ->execute();
+            ->update(
+                '{{%dolphiq_redirects}}',
+                [
+                    'hitAt' => new \yii\db\Expression('now()'),
+                    'hitCount' => new \yii\db\Expression('{{hitCount}} + 1'),
+                ],
+                ['id' => $redirectId]
+            )
+            ->execute();
 
         return true;
+    }
+
+    public function handle404(HttpException $exception): void
+    {
+        $request = Craft::$app->request;
+        $siteId = Craft::$app->getSites()->currentSite->id;
+        $allRedirects = Plugin::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
+
+        $matchedRedirect = null;
+
+        // Just the URI
+        $path = Craft::$app->request->fullPath;
+        // Path with query params
+        $fullPath = Craft::$app->request->getUrl();
+
+        $query = new RedirectQuery(Redirect::class);
+
+
+        var_dump($allRedirects);
+        die();
+        foreach ($allRedirects as $redirect) {
+
+        }
+        if (!$matchedRedirect) {
+            return;
+        }
+        // 404?
+//
+//        if ($settings->catchAllActive) {
+//            $event->rules['<all:.+>'] = [
+//                'route' => 'vredirect/redirect/index',
+//                'params' => [
+//                    'sourceUrl' => '',
+//                    'destinationUrl' => '/404/',
+//                    'statusCode' => 404,
+//                    'redirectId' => null
+//                ]
+//            ];
+//        }
     }
 }

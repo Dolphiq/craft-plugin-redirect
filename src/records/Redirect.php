@@ -10,7 +10,6 @@ namespace venveo\redirect\records;
 
 use craft\db\ActiveRecord;
 use craft\records\Element;
-use craft\records\RedirectGroup;
 use yii\db\ActiveQueryInterface;
 
 /**
@@ -23,6 +22,7 @@ use yii\db\ActiveQueryInterface;
  * @property string sourceUrl
  * @property string destinationUrl
  * @property string statusCode
+ * @property string type
  */
 class Redirect extends ActiveRecord
 {
@@ -47,16 +47,5 @@ class Redirect extends ActiveRecord
     public function getElement(): ActiveQueryInterface
     {
         return $this->hasOne(Element::class, ['id' => 'id']);
-    }
-
-
-    /**
-     * Returns the redirect group.
-     *
-     * @return ActiveQueryInterface The relational query object.
-     */
-    public function getGroup(): ActiveQueryInterface
-    {
-        return $this->hasOne(RedirectGroup::class, ['id' => 'groupId']);
     }
 }

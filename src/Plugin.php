@@ -12,8 +12,12 @@ namespace venveo\redirect;
 
 use Craft;
 use craft\base\Plugin as BasePlugin;
+use craft\events\ExceptionEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\helpers\UrlHelper;
+use craft\web\ErrorHandler;
 use craft\web\UrlManager;
+use HttpException;
 use venveo\redirect\elements\FeedMeRedirect;
 use venveo\redirect\models\Settings;
 use venveo\redirect\services\CatchAll;
@@ -23,22 +27,32 @@ use verbb\feedme\services\Elements;
 use yii\base\Event;
 
 
+/**
+ * @property mixed $settingsResponse
+ * @property Redirects $redirects
+ * @property array $cpNavItem
+ * @property CatchAll $catchAll
+ * @property mixed _redirectsService
+ * @property mixed _catchAllService
+ */
 class Plugin extends BasePlugin
 {
     /** @var self $plugin */
     public static $plugin;
 
+    protected $_redirectsService;
+    protected $_catchAllService;
+
     /**
      * Returns the Redirects service.
      *
-     * @return \venveo\redirect\services\Redirects The Redirects service
+     * @return Redirects The Redirects service
      */
-    public function getRedirects()
+    public function getRedirects(): Redirects
     {
         if ($this->_redirectsService == null) {
             $this->_redirectsService = new Redirects();
         }
-        /** @var WebApplication|ConsoleApplication $this */
         return $this->_redirectsService;
     }
 
@@ -82,8 +96,8 @@ class Plugin extends BasePlugin
 
     public function getSettingsResponse()
     {
-        $url = \craft\helpers\UrlHelper::cpUrl('settings/redirect/settings');
-        return \Craft::$app->controller->redirect($url);
+        $url = UrlHelper::cpUrl('settings/redirect/settings');
+        return Craft::$app->controller->redirect($url);
     }
 
     /**
@@ -139,6 +153,7 @@ class Plugin extends BasePlugin
 
         self::$plugin = $this;
 
+        // Register control panel URLs
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
         // Register FeedMe ElementType
@@ -149,42 +164,31 @@ class Plugin extends BasePlugin
         }
 
         $settings = self::$plugin->getSettings();
-        if ($settings->redirectsActive) {
-            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) use ($settings) {
-
-                // get rules from db!
-                // please only if we are on the site and the redirects are active in the plugin settings
-                if ($settings->redirectsActive) {
-                    $siteId = Craft::$app->getSites()->currentSite->id;
-                    $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
-                    foreach ($allRedirects as $redirect) {
-                        $event->rules[$redirect['sourceUrl']] = [
-                            'route' => 'vredirect/redirect/index',
-                            'params' => [
-                                'sourceUrl' => $redirect['sourceUrl'],
-                                'destinationUrl' => $redirect['destinationUrl'],
-                                'statusCode' => $redirect['statusCode'],
-                                'redirectId' => $redirect['id']
-                            ]
-                        ];
-                    }
-                }
-                // 404?
-
-                if ($settings->catchAllActive) {
-                    $event->rules['<all:.+>'] = [
-                        'route' => 'vredirect/redirect/index',
-                        'params' => [
-                            'sourceUrl' => '',
-                            'destinationUrl' => '/404/',
-                            'statusCode' => 404,
-                            'redirectId' => null
-                        ]
-                    ];
-                }
-            });
+        if (!$settings->redirectsActive) {
+            // Return early.
+            return;
         }
 
-        Craft::info('dolphiq/redirect Plugin plugin loaded', __METHOD__);
+        Event::on(
+            ErrorHandler::class,
+            ErrorHandler::EVENT_BEFORE_HANDLE_EXCEPTION,
+            static function (ExceptionEvent $event) {
+                $request = Craft::$app->request;
+                // We don't care about requests that aren't on our site frontend
+                if(!$request->getIsSiteRequest() || $request->getIsLivePreview()) {
+                    return;
+                }
+                $exception = $event->exception;
+
+                if ($exception instanceof \Twig\Error\RuntimeError &&
+                    ($previousException = $exception->getPrevious()) !== null) {
+                    $exception = $previousException;
+                }
+
+                if ($exception instanceof \yii\web\HttpException && $exception->statusCode === 404) {
+                    self::$plugin->redirects->handle404($exception);
+                }
+            }
+        );
     }
 }

@@ -161,7 +161,7 @@ class SettingsController extends Controller
         $this->requireAdmin();
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
-        $source = (isset($routeParameters['source']) ? $routeParameters['source'] : 'CpSection');
+        $source = ($routeParameters['source'] ?? 'CpSection');
         $settings = Plugin::$plugin->getSettings();
 
         $navItems = $this->getMenuItems();
@@ -251,7 +251,13 @@ class SettingsController extends Controller
             '302' => 'Temporarily redirect (302)',
         ];
 
+        $typeOptions = [
+            'static' => 'Static',
+            'dynamic' => 'Dynamic',
+        ];
+
         $variables['statusCodeOptions'] = $statusCodesOptions;
+        $variables['typeOptions'] = $typeOptions;
         $variables['editableSitesOptions'] = $editableSitesOptions;
 
 
@@ -313,7 +319,6 @@ class SettingsController extends Controller
     public function actionSaveRedirect()
     {
         $this->requirePostRequest();
-        $this->requireLogin();
 
         $request = Craft::$app->getRequest();
         $redirect = new Redirect();

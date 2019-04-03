@@ -27,6 +27,7 @@ class RedirectController extends Controller
         $destinationUrl = $routeParameters['destinationUrl'];
         $statusCode = $routeParameters['statusCode'];
         $redirectId = $routeParameters['redirectId'];
+        $type = $routeParameters['type'];
 
         // are there parameters in the destination url?
         if ($statusCode != 404 && strpos($destinationUrl, '<') !== false && preg_match_all('/<([\w._-]+)>/', $destinationUrl, $matches)) {

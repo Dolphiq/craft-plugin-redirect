@@ -29,6 +29,18 @@
             }) }}
           {% endif %}
 
+        {{ forms.selectField({
+            label: "Match Type"|t('vredirect'),
+            instructions: "Redirect Type"|t('vredirect'),
+            id: 'type',
+            name: 'type',
+            options: typeOptions,
+            value: redirect.type,
+            toggle: true,
+            targetPrefix: '.type-',
+            errors: redirect.getErrors('type')
+        }) }}
+
             {{ forms.textField({
                 label: "Source URL"|t('vredirect'),
                 instructions: "The URL to be redirected"|t('vredirect'),

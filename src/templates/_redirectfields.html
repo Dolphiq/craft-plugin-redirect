@@ -1,6 +1,17 @@
 {% import "_includes/forms" as forms %}
 {% set meta = meta is defined ? meta : false %}
 
+{{ forms.selectField({
+    label: "Match Type"|t('vredirect'),
+    instructions: "Redirect Type"|t('vredirect'),
+    id: 'type',
+    name: 'type',
+    options: typeOptions,
+    value: redirect.type,
+    toggle: true,
+    targetPrefix: '.type-',
+    errors: redirect.getErrors('type')
+}) }}
 
 
 {{ forms.textField({
