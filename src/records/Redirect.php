@@ -9,8 +9,15 @@
 namespace venveo\redirect\records;
 
 use craft\db\ActiveRecord;
+use craft\records\Element;
+use craft\records\RedirectGroup;
 use yii\db\ActiveQueryInterface;
 
+/**
+ *
+ * @property \yii\db\ActiveQueryInterface $element
+ * @property \yii\db\ActiveQueryInterface $group
+ */
 class Redirect extends ActiveRecord
 {
     // Public Methods
