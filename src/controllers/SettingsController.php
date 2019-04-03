@@ -224,7 +224,7 @@ class SettingsController extends Controller
      * @return Response
      * @throws NotFoundHttpException if the requested redirect cannot be found
      */
-    public function actionEditRedirect(int $redirectId = null, Plugin $redirect = null): craft\web\Response
+    public function actionEditRedirect(int $redirectId = null, Redirect $redirect = null): craft\web\Response
     {
         $variables = [];
 
@@ -314,7 +314,7 @@ class SettingsController extends Controller
     /**
      * Saves a redirect.
      *
-     * @return Response|null
+     * @return \yii\web\Response
      */
     public function actionSaveRedirect()
     {
@@ -327,6 +327,7 @@ class SettingsController extends Controller
         $redirect->destinationUrl = $request->getBodyParam('destinationUrl');
         $redirect->statusCode = $request->getBodyParam('statusCode');
         $siteId = $request->getBodyParam('siteId');
+        $redirect->type = $request->getBodyParam('type');
         if ($siteId == null) {
             $siteId = Craft::$app->getSites()->currentSite->id;
         }
@@ -349,21 +350,18 @@ class SettingsController extends Controller
                 'redirect' => $redirect
             ]);
 
-            return null;
-        } else {
-            if ($request->getAcceptsJson()) {
-                return $this->asJson([
-                    'success' => true,
-                    'id' => $redirect->id
-                ]);
-            }
-            // else, normal result
-            Craft::$app->getSession()->setNotice(Craft::t('vredirect', 'Redirect saved.'));
-            // return $this->redirectToPostedUrl($category);
-
-            $url = $request->getBodyParam('redirectUrl');
-            return $this->redirect($url);
+            return Craft::$app->response;
         }
+
+        if ($request->getAcceptsJson()) {
+            return $this->asJson([
+                'success' => true,
+                'id' => $redirect->id
+            ]);
+        }
+        // else, normal result
+        Craft::$app->getSession()->setNotice(Craft::t('vredirect', 'Redirect saved.'));
+        return $this->redirectToPostedUrl();
     }
 
 

@@ -289,7 +289,7 @@ class Redirect extends Element
         $rules[] = [['hitCount'], 'number', 'integerOnly' => true];
         $rules[] = [['sourceUrl', 'destinationUrl'], 'string', 'max' => 255];
         $rules[] = [['sourceUrl', 'destinationUrl', 'type'], 'required'];
-        $rules[] = [['type'], 'in', 'range' => ['static', 'dynamic'], 'allowEmpty' => false];
+        $rules[] = [['type'], 'in', 'range' => ['static', 'dynamic']];
         return $rules;
     }
 
