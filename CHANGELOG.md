@@ -1,4 +1,10 @@
 # Redirect Changelog
+
+## 1.0.17 - 2018-07-04
+### Fixed
+- Fixed icon not shown in newer Craft CMS 3 release
+- Fixed an index not found error if you enable Catch-all in the settings on some systems
+
 ## 1.0.16 - 2018-04-18
 ### Fixed
 - Fixed migration scripts to create all tables on first install
