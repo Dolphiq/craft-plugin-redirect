@@ -7,6 +7,8 @@
 - Improved comments
 - Changed behavior of redirects to only fire when Craft encounters a 404 error
 - Optimized plugin code by bailing out early when possible to avoid additional calls
+- Added explicit redirect type selection: dynamic or static
+- Dynamic redirects now rely on RegEx rather than Yii routes
 
 ## 1.0.17 - 2018-07-04
 ### Fixed
