@@ -10,6 +10,11 @@ namespace venveo\redirect\records;
 
 use craft\db\ActiveRecord;
 
+/**
+ * @property string uri
+ * @property int hitCount
+ * @property int|null siteId
+ */
 class CatchAllUrl extends ActiveRecord
 {
 
@@ -20,7 +25,5 @@ class CatchAllUrl extends ActiveRecord
     {
         return '{{%dolphiq_redirects_catch_all_urls}}';
     }
-
-
 
 }

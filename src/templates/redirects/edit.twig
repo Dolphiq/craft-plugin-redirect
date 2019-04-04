@@ -1,13 +1,18 @@
 {% extends "_layouts/cp" %}
 
 {% set fullPageForm = true %}
-{% set title = "Redirects"|t('vredirect') %}
+{% set selectedSubnavItem = 'redirects' %}
+{% if redirect is defined and redirect.id is defined %}
+    {% set title = "Edit Redirect"|t('vredirect') %}
+{% else %}
+    {% set title = "New Redirect"|t('vredirect') %}
+{% endif %}
 
 {% import "_includes/forms" as forms %}
 
 {% block content %}
-    {{ actionInput('vredirect/settings/save-redirect') }}
-    {{ redirectInput(cpUrl('redirect')) }}
+    {{ actionInput('vredirect/redirects/save-redirect') }}
+    {{ redirectInput(cpUrl('redirect/redirects')) }}
 
     {% if redirect is defined and redirect.id %}
         <input type="hidden"

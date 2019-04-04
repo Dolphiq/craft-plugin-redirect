@@ -14,6 +14,14 @@ use craft\helpers\Db;
 use Cake\Utility\Hash;
 use venveo\redirect\elements\Redirect as RedirectElement;
 
+/**
+ *
+ * @property string $mappingTemplate
+ * @property array $groups
+ * @property mixed $model
+ * @property string $groupsTemplate
+ * @property string $columnTemplate
+ */
 class FeedMeRedirect extends Element implements ElementInterface
 {
     // Properties
@@ -30,17 +38,17 @@ class FeedMeRedirect extends Element implements ElementInterface
 
     public function getGroupsTemplate()
     {
-        return 'redirect/feed-me/groups';
+        return 'vredirect/_feed-me/groups';
     }
 
     public function getColumnTemplate()
     {
-        return 'redirect/feed-me/column';
+        return 'vredirect/_feed-me/column';
     }
 
     public function getMappingTemplate()
     {
-        return 'redirect/feed-me/map';
+        return 'vredirect/_feed-me/map';
     }
 
 

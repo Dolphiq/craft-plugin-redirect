@@ -115,7 +115,7 @@ class Redirect extends Element
      */
     public function getCpEditUrl()
     {
-        return UrlHelper::cpUrl('redirect/'.$this->id.'?siteId='.$this->siteId);
+        return UrlHelper::cpUrl('redirect/redirects/'.$this->id.'?siteId='.$this->siteId);
 
         return $url;
     }
@@ -135,7 +135,7 @@ class Redirect extends Element
             'dynamic' => 'Dynamic (RegExp)',
         ];
 
-        $html = Craft::$app->getView()->renderTemplate('vredirect/_redirectfields', [
+        $html = Craft::$app->getView()->renderTemplate('vredirect/redirects/_redirectfields', [
             'redirect' => $this,
             'isNewRedirect' => false,
             'meta' => false,

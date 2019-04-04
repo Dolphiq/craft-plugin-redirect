@@ -1,11 +1,11 @@
 {% extends "_layouts/elementindex" %}
-
+{% set selectedSubnavItem = 'redirects' %}
 {% set title = "Redirect entries"|t('vredirect') %}
 {% set elementType = 'venveo\\redirect\\elements\\Redirect' %}
 
 
 {% block actionButton %}
-        <a href="{{ url( 'redirect/new') }}" class="submit btn add icon">{{ "New redirect"|t('vredirect') }}</a>
+        <a href="{{ url( 'redirect/redirects/new') }}" class="submit btn add icon">{{ "New redirect"|t('vredirect') }}</a>
 {% endblock %}
 
 {% set showSiteMenu = 'auto' %}

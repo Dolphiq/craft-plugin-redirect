@@ -9,12 +9,8 @@
 namespace venveo\redirect\services;
 
 use Craft;
-use craft\db\Query;
-use craft\helpers\Json;
-use yii\web\NotFoundHttpException;
-use yii\base\Component;
-use craft\helpers\Db;
 use venveo\redirect\records\CatchAllUrl as CatchAllUrlRecord;
+use yii\base\Component;
 
 /**
  * Class Redirects service.
@@ -28,34 +24,36 @@ class CatchAll extends Component
      *
      * @param string $uri
      *
+     * @param int|null $siteId
      * @return bool
      */
-    public function registerHitByUri(string $uri, int $siteId = 0): bool
+    public function registerHitByUri(string $uri, $siteId = null): bool
     {
 
-        if ($siteId == 0) {
+        if ($siteId === null) {
             $siteId = Craft::$app->getSites()->currentSite->id;
         }
+
         // search the redirect by its uri
-        $catchAllurl = CatchAllUrlRecord::findOne([
+        $catchAllURL = CatchAllUrlRecord::findOne([
             'uri' => $uri,
             'siteId' => $siteId,
         ]);
 
-        if ($catchAllurl == null) {
+        if (!$catchAllURL) {
             // not found, new one!
-            $catchAllurl = new CatchAllUrlRecord();
-            $catchAllurl->uri = $uri;
-            $catchAllurl->hitCount = 1;
-            $catchAllurl->siteId = $siteId;
+            $catchAllURL = new CatchAllUrlRecord();
+            $catchAllURL->uri = $uri;
+            $catchAllURL->hitCount = 1;
+            $catchAllURL->siteId = $siteId;
         } else {
-            $catchAllurl->hitCount = $catchAllurl->hitCount + 1;
+            ++$catchAllURL->hitCount;
         }
-        $catchAllurl->save();
+        $catchAllURL->save();
         return true;
     }
 
-    public function getLastUrls(int $limit = 100,  int $siteId = 0): array
+    public function getLastUrls(int $limit = 100, int $siteId = 0): array
     {
 
         if ($siteId == 0) {
@@ -66,8 +64,6 @@ class CatchAll extends Component
             'siteId' => $siteId,
         ])->orderBy('dateUpdated DESC')->limit($limit);
         return $query->all();
-
-
     }
 
     public function deleteUrlById(int $id): bool
@@ -79,13 +75,13 @@ class CatchAll extends Component
         // search the redirect by its id
 
         // TODO check if the user has rights in the siteId..
-        $catchAllurl = CatchAllUrlRecord::findOne( $id);
+        $catchAllURL = CatchAllUrlRecord::findOne($id);
 
-        if($catchAllurl == null) {
+        if (!$catchAllURL) {
             return false;
         }
 
-        $catchAllurl->delete();
+        $catchAllURL->delete();
         return true;
     }
 

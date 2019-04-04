@@ -77,9 +77,23 @@ class Plugin extends BasePlugin
     public function getCpNavItem()
     {
         return [
-            'url' => 'redirect',
+            'url' => 'redirect/redirects',
             'label' => Craft::t('vredirect', 'Site redirects'),
-            'fontIcon' => 'share'
+            'fontIcon' => 'share',
+            'subnav' => [
+                'dashboard' => [
+                    'label' => 'Dashboard',
+                    'url' => UrlHelper::cpUrl('redirect/dashboard')
+                ],
+                'redirects' => [
+                    'label' => 'Redirects',
+                    'url' => UrlHelper::cpUrl('redirect/redirects')
+                ],
+                'catch-all' => [
+                    'label' => 'Registered 404s',
+                    'url' => UrlHelper::cpUrl('redirect/catch-all')
+                ]
+            ]
         ];
     }
 
@@ -102,24 +116,26 @@ class Plugin extends BasePlugin
         );
     }
 
-    /**
-     * Register CP URL rules
-     *
-     * @param RegisterUrlRulesEvent $event
-     */
+    private function registerCpRoutes() {
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
+            $event->rules = array_merge($event->rules, [
+                'redirect/catch-all' => 'vredirect/catch-all/index',
 
-    public function registerCpUrlRules(RegisterUrlRulesEvent $event): void
-    {
-        $rules = [
-            // register routes for the sub nav
-            'redirect' => 'vredirect/settings/',
-            'redirect/settings' => 'vredirect/settings/settings',
-            'redirect/redirects' => 'vredirect/settings/redirects',
-            'redirect/registered-catch-all-urls' => 'vredirect/settings/registered-catch-all-urls',
-            'redirect/new' => 'vredirect/settings/edit-redirect',
-            'redirect/<redirectId:\d+>' => 'vredirect/settings/edit-redirect',
-        ];
-        $event->rules = array_merge($event->rules, $rules);
+                'redirect/dashboard' => 'vredirect/dashboard/index',
+
+                'redirect/redirects' => 'vredirect/redirects/index',
+                'redirect/redirects/new' => 'vredirect/redirects/edit-redirect',
+                'redirect/redirects/<redirectId:\d+>' => 'vredirect/redirects/edit-redirect',
+            ]);
+        });
+    }
+
+    private function registerFeedMeElement() {
+        if (Craft::$app->plugins->isPluginEnabled('feed-me')) {
+            Event::on(Elements::class, Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(RegisterFeedMeElementsEvent $e) {
+                $e->elements[] = FeedMeRedirect::class;
+            });
+        }
     }
 
 
@@ -129,25 +145,18 @@ class Plugin extends BasePlugin
         self::$plugin = $this;
         $settings = self::$plugin->getSettings();
 
-        // Register control panel URLs
-        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
-
-        // Register FeedMe ElementType
-        if (Craft::$app->plugins->isPluginEnabled('feed-me')) {
-            Event::on(Elements::class, Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(RegisterFeedMeElementsEvent $e) {
-                $e->elements[] = FeedMeRedirect::class;
-            });
-        }
-
-        if (!$settings->redirectsActive) {
-            // Return early.
-            return;
-        }
+        $this->registerCpRoutes();
+        $this->registerFeedMeElement();
 
         // Remove our soft-deleted redirects when Craft is ready
         Event::on(Gc::class, Gc::EVENT_RUN, function() {
             Craft::$app->gc->hardDelete('{{%dolphiq_redirects}}');
         });
+
+        if (!$settings->redirectsActive) {
+            // Return early.
+            return;
+        }
 
         // Start lookin' for some 404s!
         Event::on(

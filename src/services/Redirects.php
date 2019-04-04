@@ -13,6 +13,7 @@ use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use venveo\redirect\elements\db\RedirectQuery;
 use venveo\redirect\elements\Redirect;
+use venveo\redirect\Plugin;
 use venveo\redirect\records\Redirect as RedirectRecord;
 use yii\base\Component;
 use yii\base\ExitException;
@@ -59,6 +60,9 @@ class Redirects extends Component
         $query->matchingUri = $fullPath;
         $matchedRedirect = $query->one();
         if (!$matchedRedirect) {
+            if(Plugin::$plugin->getSettings()->catchAllActive) {
+                $this->registerCatchAll();
+            }
             return;
         }
         try {
@@ -115,7 +119,13 @@ class Redirects extends Component
         }
     }
 
-    public function registerCatchAll() {
-
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function registerCatchAll(): void
+    {
+        $catchAllService = Plugin::$plugin->catchAll;
+        $fullPath = ltrim(Craft::$app->request->getUrl(), '/');
+        $catchAllService->registerHitByUri($fullPath);
     }
 }

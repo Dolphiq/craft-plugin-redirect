@@ -16,7 +16,7 @@ use craft\web\Response;
 use venveo\redirect\elements\Redirect;
 use venveo\redirect\Plugin;
 
-class SettingsController extends Controller
+class RedirectsController extends Controller
 {
 
     // Public Methods
@@ -60,7 +60,7 @@ class SettingsController extends Controller
         $this->requireLogin();
         $urlId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
-        Plugin::$plugin->getCatchAll()->DeleteUrlById($urlId);
+        Plugin::$plugin->getCatchAll()->deleteUrlById($urlId);
 
         return $this->asJson(['success' => true]);
     }
