@@ -40,7 +40,7 @@
         }
     },
     "extra": {
-        "name": "Redirect plugin for Craft 3",
+        "name": "Redirects",
         "handle": "vredirect",
         "schemaVersion": "1.0.7",
         "developer": "Venveo",
