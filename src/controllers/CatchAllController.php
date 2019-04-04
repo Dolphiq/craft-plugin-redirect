@@ -8,8 +8,11 @@
 
 namespace venveo\redirect\controllers;
 
+use Craft;
 use craft\web\Controller;
 use craft\web\Response;
+use venveo\redirect\Plugin;
+use venveo\redirect\records\CatchAllUrl;
 
 class CatchAllController extends Controller
 {
@@ -25,6 +28,19 @@ class CatchAllController extends Controller
      */
     public function actionIndex()
     {
-        return $this->renderTemplate('vredirect/catch-all/index', []);
+        return $this->renderTemplate('vredirect/catch-all/index', [
+            'catchAllQuery' => CatchAllUrl::find()
+        ]);
+    }
+
+    public function actionDelete() {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        $catchAllId = Craft::$app->getRequest()->getRequiredBodyParam('id');
+
+        Plugin::$plugin->catchAll->deleteUrlById($catchAllId);
+
+        return $this->asJson(['success' => true]);
     }
 }

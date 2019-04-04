@@ -4,5 +4,45 @@
 {% set title = "Registered 404 entries"|t('vredirect') %}
 
 {% set content %}
-    Hi
+    {% paginate catchAllQuery.limit(10) as pageInfo, catchAllEntries %}
+    <div id="noentries"{% if pageInfo.total > 0 %} class="hidden"{% endif %}>
+        <p>{{ "No 404s exist yet."|t('vredirect') }}</p>
+    </div>
+        <table class="data fullwidth collapsible" id="catch-alls">
+            <thead>
+            <tr>
+                <th scope="col">URI</th>
+                <th scope="col">First Hit</th>
+                <th scope="col">Last Hit</th>
+                <th scope="col">Hits</th>
+                <td class="thin"></td>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for item in catchAllEntries %}
+                <tr data-id="{{ item.id }}">
+                    <th scope="row" data-title="URI"><a href="{{ url('settings/sections') }}"><code>{{ item.uri }}</code></a></th>
+                    <td>{{ item.dateCreated|date('d/m/Y H:i:s') }}</td>
+                    <td>{{ item.dateUpdated|date('d/m/Y H:i:s') }}</td>
+                    <td>{{ item.hitCount }}</td>
+                    <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}" role="button"></a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% include '_includes/pagination' %}
 {% endset %}
+
+
+{% js %}
+    var adminTable = new Craft.AdminTable({
+    tableSelector: '#catch-alls',
+    noItemsSelector: '#noentries',
+    deleteAction: '{{ actionUrl('vredirect/catch-all/delete') }}',
+    confirmDeleteMessage: '{{ "Are you sure you want to delete this item?"|t('vredirect') }}',
+    onDeleteItem: function()
+    {
+    }
+    });
+{% endjs %}

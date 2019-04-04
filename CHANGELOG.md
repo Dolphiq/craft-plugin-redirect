@@ -3,10 +3,14 @@
 ## Unreleased
 ### Added
 - Soft delete redirects
+- Pagination to Catch All URLs
+
+### Removed
+- "Catch All Template" setting - just render the normal 404 page
 
 ### Changed
 - Forked for Venveo
-- Now requires Craft 3.1
+- Now requires Craft 3.1.19
 - Deleted unused code
 - Improved comments
 - Changed behavior of redirects to only fire when Craft encounters a 404 error
