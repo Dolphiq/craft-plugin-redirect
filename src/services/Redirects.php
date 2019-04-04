@@ -23,47 +23,6 @@ use yii\web\HttpException;
  */
 class Redirects extends Component
 {
-
-    // Public Methods
-    // =========================================================================
-
-    /**
-     * Returns the redirects defined in `config/redirects.php`
-     *
-     * @return array
-     */
-    public function getConfigFileRedirects(): array
-    {
-        $path = Craft::$app->getPath()->getConfigPath().DIRECTORY_SEPARATOR.'redirects.php';
-
-        if (file_exists($path)) {
-            $routes = require $path;
-
-            if (is_array($routes)) {
-                // Check for any site-specific routes
-                $siteHandle = Craft::$app->getSites()->currentSite->handle;
-
-                if (
-                    isset($routes[$siteHandle]) &&
-                    is_array($routes[$siteHandle]) &&
-                    !isset($routes[$siteHandle]['route']) &&
-                    !isset($routes[$siteHandle]['template'])
-                ) {
-                    $localizedRoutes = $routes[$siteHandle];
-                    unset($routes[$siteHandle]);
-
-                    // Merge them so that the localized routes come first
-                    $routes = array_merge($localizedRoutes, $routes);
-                }
-
-                return $routes;
-            }
-        }
-
-        return [];
-    }
-
-
     /**
      * Returns a redirect by its ID.
      *

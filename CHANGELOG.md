@@ -14,6 +14,7 @@
 - Added explicit redirect type selection: dynamic or static
 - Dynamic redirects now rely on RegEx rather than Yii routes
 - Redirects lookups are now performed as database queries rather than PHP lgoic
+- Dropped support for config file redirects
 
 ### Fixed
 - Fixed potential compatibility issues with PostgreSQL
