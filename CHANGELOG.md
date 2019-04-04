@@ -1,6 +1,6 @@
 # Redirect Changelog
 
-## Unreleased
+## 2.0.0 - 2019-04-04
 ### Added
 - Soft delete redirects
 - Pagination to Catch All URLs
