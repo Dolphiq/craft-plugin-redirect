@@ -15,9 +15,9 @@ use craft\base\Plugin as BasePlugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\helpers\UrlHelper;
+use craft\services\Gc;
 use craft\web\ErrorHandler;
 use craft\web\UrlManager;
-use HttpException;
 use venveo\redirect\elements\FeedMeRedirect;
 use venveo\redirect\models\Settings;
 use venveo\redirect\services\CatchAll;
@@ -93,7 +93,6 @@ class Plugin extends BasePlugin
      * Return the settings response (if some one clicks on the settings/plugin icon)
      *
      */
-
     public function getSettingsResponse()
     {
         $url = UrlHelper::cpUrl('settings/redirect/settings');
@@ -168,6 +167,10 @@ class Plugin extends BasePlugin
             // Return early.
             return;
         }
+
+        Event::on(Gc::class, Gc::EVENT_RUN, function() {
+            Craft::$app->gc->hardDelete('{{%dolphiq_redirects}}');
+        });
 
         Event::on(
             ErrorHandler::class,

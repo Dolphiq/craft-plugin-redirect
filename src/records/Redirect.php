@@ -9,14 +9,14 @@
 namespace venveo\redirect\records;
 
 use craft\db\ActiveRecord;
+use craft\db\SoftDeleteTrait;
 use craft\records\Element;
 use yii\db\ActiveQueryInterface;
 
 /**
  *
  * @property \yii\db\ActiveQueryInterface $element
- * @property \yii\db\ActiveQueryInterface $group
- * @property integer|null hitAt
+ * @property Date|null hitAt
  * @property integer|null hitCount
  * @property int|null id
  * @property string sourceUrl
@@ -26,9 +26,7 @@ use yii\db\ActiveQueryInterface;
  */
 class Redirect extends ActiveRecord
 {
-    // Public Methods
-    // =========================================================================
-
+    use SoftDeleteTrait;
     /**
      * @inheritdoc
      *

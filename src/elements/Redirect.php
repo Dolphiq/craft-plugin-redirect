@@ -11,6 +11,7 @@ namespace venveo\redirect\elements;
 use Craft;
 use craft\base\Element;
 use craft\elements\actions\Edit;
+use craft\elements\actions\Restore;
 use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Html;
 use craft\helpers\UrlHelper;
@@ -78,7 +79,7 @@ class Redirect extends Element
      */
     public static function hasStatuses(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -104,9 +105,7 @@ class Redirect extends Element
     {
         $supportedSites = [];
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
-            //if($this->siteId < 1 || $this->siteId == $site->id) {
             $supportedSites[] = ['siteId' => $site->id, 'enabledByDefault' => false];
-            //}
         }
         return $supportedSites;
     }
@@ -184,10 +183,9 @@ class Redirect extends Element
                 ],
                 [
                     'key' => 'inactive',
-                    'label' => Craft::t('vredirect', 'Inactive redirects'),
+                    'label' => Craft::t('vredirect', 'Stale redirects'),
                     'criteria' => ['hitAt' => 60]
-
-                ],
+                ]
             ];
         }
         return $sources;
@@ -231,7 +229,6 @@ class Redirect extends Element
             'hitCount' => ['label' => Craft::t('vredirect', 'Hit count')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'statusCode' => ['label' => Craft::t('vredirect', 'Redirect type')],
-
         ];
 
         return $attributes;
@@ -279,6 +276,15 @@ class Redirect extends Element
         // Delete
         $actions[] = DeleteRedirects::class;
 
+
+        // Restore
+        $actions[] = Craft::$app->getElements()->createAction([
+            'type' => Restore::class,
+            'successMessage' => Craft::t('vredirect', 'Redirects restored.'),
+            'partialSuccessMessage' => Craft::t('vredirect', 'Some redirects restored.'),
+            'failMessage' => Craft::t('vredirect', 'Redirects not restored.'),
+        ]);
+
         return $actions;
     }
 
@@ -323,6 +329,15 @@ class Redirect extends Element
     public function beforeSave(bool $isNew): bool
     {
         return parent::beforeSave($isNew);
+    }
+
+    public function beforeDelete(): bool
+    {
+        $record = RedirectRecord::findOne($this->id);
+        if ($record) {
+            $record->softDelete();
+        }
+        return parent::beforeDelete();
     }
 
     /**

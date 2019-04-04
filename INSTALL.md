@@ -2,7 +2,7 @@
 
 ## Requirements
 
-This plugin requires Craft CMS 3.0.14 or later.
+This plugin requires Craft CMS 3.1.0 or later.
 
 ## Installation
 
@@ -14,7 +14,7 @@ To install the plugin, use the Plugin section in your Craft control panel or fol
 
 2. Then tell Composer to load the plugin:
 
-        composer require dolphiq/redirect
+        composer require venveo/craft-redirect
 
 3. In the Control Panel, go to Settings → Plugins and click the “Install” button for Redirect plugin.
 

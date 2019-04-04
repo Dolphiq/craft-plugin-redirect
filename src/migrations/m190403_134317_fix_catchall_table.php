@@ -27,7 +27,8 @@ class m190403_134317_fix_catchall_table extends Migration
      */
     public function safeDown()
     {
-        echo "m190403_134317_fix_catchall_table_and_rebrand cannot be reverted.\n";
-        return false;
+        if ($this->db->tableExists('{{%dolphiq_redirects_catch_all_urls}}')) {
+            MigrationHelper::renameTable('{{%dolphiq_redirects_catch_all_urls}}', '{{%dolphiq_redirects_catch_all_urls%}}', $this);
+        }
     }
 }

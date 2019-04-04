@@ -25,7 +25,7 @@ class m190403_153859_add_redirect_type extends Migration
      */
     public function safeDown()
     {
-        echo "m190403_153859_add_redirect_type cannot be reverted.\n";
-        return false;
+        $this->dropIndex($this->db->getIndexName('{{%dolphiq_redirects}}', 'type'), '{{%dolphiq_redirects}}');
+        $this->dropColumn('{{%dolphiq_redirects}}', 'type');
     }
 }

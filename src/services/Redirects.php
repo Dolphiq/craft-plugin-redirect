@@ -63,17 +63,6 @@ class Redirects extends Component
         return [];
     }
 
-    /**
-     * Returns the routes defined in the CP.
-     *
-     * @return array
-     */
-    public function getAllRedirectsForSite($siteId = null): array
-    {
-        $results = Redirect::find()->andWhere(Db::parseParam('elements_sites.siteId', $siteId))->all();
-        return $results;
-    }
-
 
     /**
      * Returns a redirect by its ID.
@@ -89,33 +78,6 @@ class Redirects extends Component
         return Craft::$app->getElements()->getElementById($redirectId, Redirect::class, $siteId);
     }
 
-
-    /**
-     * Register a hit to the redirect by its ID.
-     *
-     * @param int $redirectId
-     *
-     * @return bool
-     */
-    public function registerHitById(int $redirectId, $destinationUrl = ''): bool
-    {
-        // simple update to keep it fast
-        if ($redirectId < 1) {
-            return false;
-        }
-        $res = \Yii::$app->db->createCommand()
-            ->update(
-                '{{%dolphiq_redirects}}',
-                [
-                    'hitAt' => new \yii\db\Expression('now()'),
-                    'hitCount' => new \yii\db\Expression('{{hitCount}} + 1'),
-                ],
-                ['id' => $redirectId]
-            )
-            ->execute();
-
-        return true;
-    }
 
     public function handle404(HttpException $exception)
     {

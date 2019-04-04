@@ -1,8 +1,12 @@
 # Redirect Changelog
 
 ## Unreleased
+### Added
+- Soft delete redirects
+
 ### Changed
 - Forked for Venveo
+- Now requires Craft 3.1
 - Deleted unused code
 - Improved comments
 - Changed behavior of redirects to only fire when Craft encounters a 404 error
