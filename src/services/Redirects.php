@@ -13,6 +13,7 @@ use craft\helpers\Db;
 use craft\helpers\UrlHelper;
 use venveo\redirect\elements\db\RedirectQuery;
 use venveo\redirect\elements\Redirect;
+use venveo\redirect\records\Redirect as RedirectRecord;
 use yii\base\Component;
 use yii\base\ExitException;
 use yii\web\HttpException;
@@ -31,13 +32,18 @@ class Redirects extends Component
      *
      * @return Redirect|null
      */
-    public function getRedirectById(int $redirectId, int $siteId = null)
+    public function getRedirectById(int $redirectId, int $siteId = null): ?Redirect
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Craft::$app->getElements()->getElementById($redirectId, Redirect::class, $siteId);
     }
 
 
+    /**
+     * Processes a 404 event, checking for redirects
+     * @param HttpException $exception
+     * @throws \yii\base\InvalidConfigException
+     */
     public function handle404(HttpException $exception)
     {
         $siteId = Craft::$app->getSites()->currentSite->id;
@@ -60,21 +66,6 @@ class Redirects extends Component
         } catch (\Exception $e) {
             return;
         }
-
-
-        // 404?
-//
-//        if ($settings->catchAllActive) {
-//            $event->rules['<all:.+>'] = [
-//                'route' => 'vredirect/redirect/index',
-//                'params' => [
-//                    'sourceUrl' => '',
-//                    'destinationUrl' => '/404/',
-//                    'statusCode' => 404,
-//                    'redirectId' => null
-//                ]
-//            ];
-//        }
     }
 
     /**
@@ -82,8 +73,9 @@ class Redirects extends Component
      *
      * @param Redirect $redirect
      * @param $uri
+     * @throws \Exception
      */
-    public function doRedirect(Redirect $redirect, $uri)
+    public function doRedirect(Redirect $redirect, $uri): void
     {
         $destinationUrl = null;
         if ($redirect->type === Redirect::TYPE_STATIC) {
@@ -105,8 +97,8 @@ class Redirects extends Component
 
         // Saving elements takes a while - we're going to do our incrementing
         // directly on the record instead.
-        /** @var \venveo\redirect\records\Redirect $redirect */
-        $redirectRecord = \venveo\redirect\records\Redirect::findOne($redirect->id);
+        /** @var RedirectRecord $redirect */
+        $redirectRecord = RedirectRecord::findOne($redirect->id);
 
         if ($redirectRecord) {
             $redirectRecord->hitCount++;
@@ -121,5 +113,9 @@ class Redirects extends Component
         } catch (ExitException $e) {
             Craft::error($e->getMessage(), __METHOD__);
         }
+    }
+
+    public function registerCatchAll() {
+
     }
 }

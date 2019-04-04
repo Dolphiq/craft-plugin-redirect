@@ -9,16 +9,18 @@
     {{ actionInput('vredirect/settings/save-redirect') }}
     {{ redirectInput(cpUrl('redirect')) }}
 
-    {% if redirect is defined and redirect.id %}<input type="hidden"
-                                                       name="redirectId"
-                                                       value="{{ redirect.id }}">{% endif %}
-    <div class="readable">
-        <p>{{ "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters"|t('vredirect') }}
-            .<br><a target="_blank"
-                    href="https://github.com/Dolphiq/craft3-plugin-redirect/blob/master/RULES.md">{{ "See some examples and instructions here"|t('vredirect') }}</a>.
-        </p>
-        <br>
-    </div>
+    {% if redirect is defined and redirect.id %}
+        <input type="hidden"
+               name="redirectId"
+               value="{{ redirect.id }}">
+    {% endif %}
+    {#    <div class="readable">#}
+    {#        <p>{{ "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters"|t('vredirect') }}#}
+    {#            .<br><a target="_blank"#}
+    {#                    href="https://github.com/Dolphiq/craft3-plugin-redirect/blob/master/RULES.md">{{ "See some examples and instructions here"|t('vredirect') }}</a>.#}
+    {#        </p>#}
+    {#        <br>#}
+    {#    </div>#}
     <div id="categorygroup-settings">
         {% if craft.app.getIsMultiSite() %}
             {{ forms.selectField({

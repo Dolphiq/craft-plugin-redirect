@@ -108,7 +108,7 @@ class Plugin extends BasePlugin
      * @param RegisterUrlRulesEvent $event
      */
 
-    public function registerCpUrlRules(RegisterUrlRulesEvent $event)
+    public function registerCpUrlRules(RegisterUrlRulesEvent $event): void
     {
         $rules = [
             // register routes for the sub nav
@@ -126,8 +126,8 @@ class Plugin extends BasePlugin
     public function init()
     {
         parent::init();
-
         self::$plugin = $this;
+        $settings = self::$plugin->getSettings();
 
         // Register control panel URLs
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
@@ -139,16 +139,17 @@ class Plugin extends BasePlugin
             });
         }
 
-        $settings = self::$plugin->getSettings();
         if (!$settings->redirectsActive) {
             // Return early.
             return;
         }
 
+        // Remove our soft-deleted redirects when Craft is ready
         Event::on(Gc::class, Gc::EVENT_RUN, function() {
             Craft::$app->gc->hardDelete('{{%dolphiq_redirects}}');
         });
 
+        // Start lookin' for some 404s!
         Event::on(
             ErrorHandler::class,
             ErrorHandler::EVENT_BEFORE_HANDLE_EXCEPTION,
