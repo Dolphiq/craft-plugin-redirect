@@ -29,7 +29,7 @@ class CatchAllController extends Controller
     public function actionIndex()
     {
         return $this->renderTemplate('vredirect/catch-all/index', [
-            'catchAllQuery' => CatchAllUrl::find()
+            'catchAllQuery' => CatchAllUrl::find()->orderBy('hitCount DESC')
         ]);
     }
 

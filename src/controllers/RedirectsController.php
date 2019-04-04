@@ -15,6 +15,7 @@ use craft\web\Controller;
 use craft\web\Response;
 use venveo\redirect\elements\Redirect;
 use venveo\redirect\Plugin;
+use venveo\redirect\records\CatchAllUrl;
 
 class RedirectsController extends Controller
 {
@@ -65,50 +66,6 @@ class RedirectsController extends Controller
         return $this->asJson(['success' => true]);
     }
 
-    /**
-     * Called before displaying the redirect settings registered-catch-all-urls  page.
-     *
-     * @return Response
-     */
-//    public function actionRegisteredCatchAllUrls(): craft\web\Response
-//    {
-//
-//        $this->requireLogin();
-//
-//        //  $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
-//
-//        $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
-//
-//        $source = (isset($routeParameters['source']) ? $routeParameters['source'] : 'CpSection');
-//        $navItems = $this->getMenuItems();
-//
-//        $siteId = Craft::$app->getRequest()->getQueryParam('siteId', Craft::$app->getSites()->currentSite->id);
-//
-//
-//        $variables = [
-//            'settings' => Plugin::$plugin->getSettings(),
-//            'urlItems' => Plugin::$plugin->getCatchAll()->getLastUrls(100, $siteId),
-//            'navItems' => $navItems,
-//            'source' => $source,
-//            'selectedSiteId' => $siteId,
-//            'pathPrefix' => ($source == 'CpSettings' ? 'settings/' : ''),
-//            // 'allRedirects' => $allRedirects
-//        ];
-//
-//        // Get the site
-//        // ---------------------------------------------------------------------
-//        if (Craft::$app->getIsMultiSite()) {
-//            // Only use the sites that the user has access to
-//            $variables['siteIds'] = Craft::$app->getSites()->getEditableSiteIds();
-//        } else {
-//            $variables['siteIds'] = [Craft::$app->getSites()->getPrimarySite()->id];
-//        }
-//        if (!$variables['siteIds']) {
-//            throw new ForbiddenHttpException('User not permitted to edit content in any sites');
-//        }
-//
-//        return $this->renderTemplate('vredirect/registeredcatchallurls', $variables);
-//    }
 
     /**
      * Edit a redirect
@@ -121,23 +78,27 @@ class RedirectsController extends Controller
      */
     public function actionEditRedirect(int $redirectId = null, Redirect $redirect = null): craft\web\Response
     {
+        $fromCatchAllId = Craft::$app->request->getQueryParam('from');
+        if ($fromCatchAllId) {
+            $catchAllRecord = CatchAllUrl::findOne($fromCatchAllId);
+        }
+
         $variables = [];
+
+        if ($catchAllRecord) {
+            $variables['catchAllRecord'] = $catchAllRecord;
+        }
 
         // Breadcrumbs
         $variables['crumbs'] = [
             [
-                'label' => Craft::t('app', 'Settings'),
-                'url' => UrlHelper::cpUrl('settings')
-            ],
-            [
                 'label' => Craft::t('vredirect', 'Redirects'),
-                'url' => UrlHelper::cpUrl('redirect')
+                'url' => UrlHelper::cpUrl('redirect/redirects')
             ]
         ];
-        $editableSitesOptions = [
-        ];
+        $editableSitesOptions = [];
 
-        foreach (Craft::$app->getSites()->getAllSites() as $site) {
+        foreach (Craft::$app->getSites()->getEditableSites() as $site) {
             $editableSitesOptions[$site['id']] = $site->name;
         }
 
@@ -245,6 +206,14 @@ class RedirectsController extends Controller
             ]);
 
             return Craft::$app->response;
+        }
+
+        $fromCatchAllId = Craft::$app->request->getBodyParam('catchAllRecordId');
+        if ($fromCatchAllId) {
+            $catchAllRecord = CatchAllUrl::findOne($fromCatchAllId);
+            if ($catchAllRecord) {
+                $catchAllRecord->delete();
+            }
         }
 
         if ($request->getAcceptsJson()) {

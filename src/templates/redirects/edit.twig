@@ -2,10 +2,13 @@
 
 {% set fullPageForm = true %}
 {% set selectedSubnavItem = 'redirects' %}
-{% if redirect is defined and redirect.id is defined %}
-    {% set title = "Edit Redirect"|t('vredirect') %}
-{% else %}
+{% if brandNewRedirect is defined and brandNewRedirect %}
     {% set title = "New Redirect"|t('vredirect') %}
+    {% if catchAllRecord is defined %}
+        {% set title = "New Redirect from 404"|t('vredirect') %}
+    {% endif %}
+{% else %}
+    {% set title = "Edit Redirect"|t('vredirect') %}
 {% endif %}
 
 {% import "_includes/forms" as forms %}
@@ -18,6 +21,12 @@
         <input type="hidden"
                name="redirectId"
                value="{{ redirect.id }}">
+    {% endif %}
+
+    {% if catchAllRecord is defined and catchAllRecord.id %}
+        <input type="hidden"
+               name="catchAllRecordId"
+               value="{{ catchAllRecord.id }}">
     {% endif %}
     {#    <div class="readable">#}
     {#        <p>{{ "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters"|t('vredirect') }}#}
@@ -59,7 +68,7 @@
             id: 'source-url',
             class: 'ltr',
             name: 'sourceUrl',
-            value: redirect.sourceUrl,
+            value: redirect.sourceUrl ?? catchAllRecord.uri ?? '',
             errors: redirect.getErrors('sourceUrl'),
             autofocus: true,
             required: true

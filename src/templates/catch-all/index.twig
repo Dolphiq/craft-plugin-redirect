@@ -22,7 +22,7 @@
 
             {% for item in catchAllEntries %}
                 <tr data-id="{{ item.id }}">
-                    <th scope="row" data-title="URI"><a href="{{ url('settings/sections') }}"><code>{{ item.uri }}</code></a></th>
+                    <th scope="row" data-title="URI"><a href="{{ url('redirect/redirects/new?from='~item.id) }}"><code>{{ item.uri }}</code></a></th>
                     <td>{{ item.dateCreated|date('d/m/Y H:i:s') }}</td>
                     <td>{{ item.dateUpdated|date('d/m/Y H:i:s') }}</td>
                     <td>{{ item.hitCount }}</td>
