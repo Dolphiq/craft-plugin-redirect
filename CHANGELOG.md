@@ -4,6 +4,7 @@
 ### Added
 - Soft delete redirects
 - Pagination to Catch All URLs
+- Auto-delete caught 404 a redirect is spawned from it
 
 ### Removed
 - "Catch All Template" setting - just render the normal 404 page
@@ -19,6 +20,7 @@
 - Dynamic redirects now rely on RegEx rather than Yii routes
 - Redirects lookups are now performed as database queries rather than PHP lgoic
 - Dropped support for config file redirects
+- Catch All URLs can now show all of them
 
 ### Fixed
 - Fixed potential compatibility issues with PostgreSQL
