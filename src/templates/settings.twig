@@ -1,45 +1,34 @@
-{% extends "_layouts/cp" %}
-
-{% set title = "Redirect settings"|t('vredirect') %}
-
-{% set fullPageForm = true %}
-
-{% set crumbs = [
-    { label: "Settings"|t('app'), url: url('settings') }
-] %}
-
-{% block sidebar %}
-
-    {% if pathPrefix is not defined %}
-        {% set pathPrefix = '' %}
-    {% endif %}
-
-    {% set selectedNavItem = "settings" %}
-    {% include "vredirect/nav" %}
-
-{% endblock %}
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Varnish plugin for Craft CMS 3.x
+ *
+ * Varnish Settings.twig
+ *
+ * @author    Venveo
+ * @copyright Copyright (c) 2019 Venveo
+ * @link      https://www.venveo.com
+ * @package   Varnish
+ * @since     1.0.0
+ */
+#}
 
 {% import "_includes/forms" as forms %}
 
-{% block content %}
-    {{ actionInput('vredirect/settings/save-settings') }}
-    <input type="hidden" name="action" value="">
-    {{ forms.lightswitchField({
-        label:        "Activate redirects"|t('vredirect'),
-        instructions: "This switch activate/de-activate all the entered redirects without removing them."|t('vredirect'),
-        id:           'redirectsActive',
-        name:         'redirectsActive',
-        on:           settings.redirectsActive,
-        errors:       settings.getErrors('redirectsActive')
-    }) }}
+{{ forms.lightswitchField({
+    label:        "Activate redirects"|t('vredirect'),
+    instructions: "This switch activate/de-activate all the entered redirects without removing them."|t('vredirect'),
+    id:           'redirectsActive',
+    name:         'redirectsActive',
+    on:           settings.redirectsActive,
+    errors:       settings.getErrors('redirectsActive')
+}) }}
 
-    {{ forms.lightswitchField({
-        label:        "Use a Catch All page template"|t('vredirect'),
-        instructions: "All the not existing urls are redirected to this page. We also register the missed urls."|t('vredirect'),
-        id:           'catchAllActive',
-        name:         'catchAllActive',
-        on:           settings.catchAllActive,
-        errors:       settings.getErrors('catchAllActive')
-    }) }}
-
-{% endblock content %}
+{{ forms.lightswitchField({
+    label:        "Catch all 404s"|t('vredirect'),
+    instructions: "404s will be caught and logged when this setting is active"|t('vredirect'),
+    id:           'catchAllActive',
+    name:         'catchAllActive',
+    on:           settings.catchAllActive,
+    errors:       settings.getErrors('catchAllActive')
+}) }}

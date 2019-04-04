@@ -90,13 +90,16 @@ class Plugin extends BasePlugin
     }
 
     /**
-     * Return the settings response (if some one clicks on the settings/plugin icon)
-     *
+     * @inheritdoc
      */
-    public function getSettingsResponse()
+    protected function settingsHtml(): string
     {
-        $url = UrlHelper::cpUrl('settings/redirect/settings');
-        return Craft::$app->controller->redirect($url);
+        return Craft::$app->view->renderTemplate(
+            'vredirect/settings',
+            [
+                'settings' => $this->getSettings()
+            ]
+        );
     }
 
     /**
@@ -115,32 +118,6 @@ class Plugin extends BasePlugin
             'redirect/registered-catch-all-urls' => 'vredirect/settings/registered-catch-all-urls',
             'redirect/new' => 'vredirect/settings/edit-redirect',
             'redirect/<redirectId:\d+>' => 'vredirect/settings/edit-redirect',
-
-            // register routes for the settings tab
-            'settings/vredirect' => [
-                'route' => 'vredirect/settings',
-                'params' => ['source' => 'CpSettings']
-            ],
-            'settings/vredirect/settings' => [
-                'route' => 'vredirect/settings/settings',
-                'params' => ['source' => 'CpSettings']
-            ],
-            'settings/vredirect/redirects' => [
-                'route' => 'vredirect/settings/redirects',
-                'params' => ['source' => 'CpSettings']
-            ],
-            'settings/vredirect/registered-catch-all-urls' => [
-                'route' => 'vredirect/settings/registered-catch-all-urls',
-                'params' => ['source' => 'CpSettings']
-            ],
-            'settings/vredirect/new' => [
-                'route' => 'vredirect/settings/edit-redirect',
-                'params' => ['source' => 'CpSettings']
-            ],
-            'settings/vredirect/<redirectId:\d+>' => [
-                'route' => 'vredirect/settings/edit-redirect',
-                'params' => ['source' => 'CpSettings']
-            ],
         ];
         $event->rules = array_merge($event->rules, $rules);
     }
