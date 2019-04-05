@@ -1,6 +1,9 @@
 # Redirect Changelog
 
 ## Unreleased
+### Fixed
+- Side nav now shows correct selected page
+
 ### Changed
 - Refactored code
 

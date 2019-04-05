@@ -79,7 +79,7 @@ class Plugin extends BasePlugin
     public function getCpNavItem()
     {
         return [
-            'url' => 'redirect/redirects',
+            'url' => 'redirect',
             'label' => Craft::t('vredirect', 'Site Redirects'),
             'fontIcon' => 'share',
             'subnav' => [
@@ -121,6 +121,8 @@ class Plugin extends BasePlugin
     private function registerCpRoutes() {
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
             $event->rules = array_merge($event->rules, [
+                'redirect' => ['template' => 'vredirect/index'],
+
                 'redirect/catch-all' => 'vredirect/catch-all/index',
 
                 'redirect/dashboard' => 'vredirect/dashboard/index',
