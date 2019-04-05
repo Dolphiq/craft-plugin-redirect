@@ -14,8 +14,10 @@ use Craft;
 use craft\base\Plugin as BasePlugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Gc;
+use craft\services\UserPermissions;
 use craft\web\ErrorHandler;
 use craft\web\UrlManager;
 use venveo\redirect\elements\FeedMeRedirect;
@@ -137,6 +139,26 @@ class Plugin extends BasePlugin
             });
         }
     }
+//    // TODO: Finish this
+//    private function registerPermissions() {
+//        $sitePermissions = [];
+//        $sites = Craft::$app->getSites()->getAllSites();
+//        foreach($sites as $site) {
+//            $sitePermissions
+//        }
+//
+//
+//        Event::on(UserPermissions::class, UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
+//            $event->permissions[\Craft::t('vredirect', 'Redirects')] = [
+//                'create' => [
+//                    'label' => \Craft::t('vredirect', 'Create Redirects'),
+//                    'nested' => [
+//
+//                    ]
+//                ]
+//            ];
+//        });
+//    }
 
 
     public function init()
