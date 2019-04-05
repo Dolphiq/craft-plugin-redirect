@@ -3,6 +3,7 @@
 ## 2.0.2.2 - 2019-04-05
 ### Changed
 - Default Catch All to enabled
+
 ### Fixed
 - Regex cleaning bug
 
