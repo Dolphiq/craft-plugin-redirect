@@ -3,6 +3,9 @@
 ### Fixed
 - Fixed undefined variable error
 
+### Changed
+- Trim trailing slashes off of request URI
+
 ## 2.0.1 - 2019-04-04
 ### Fixed
 - Fixed broken install migration
