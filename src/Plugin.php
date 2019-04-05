@@ -81,10 +81,10 @@ class Plugin extends BasePlugin
             'label' => Craft::t('vredirect', 'Site redirects'),
             'fontIcon' => 'share',
             'subnav' => [
-                'dashboard' => [
-                    'label' => 'Dashboard',
-                    'url' => UrlHelper::cpUrl('redirect/dashboard')
-                ],
+//                'dashboard' => [
+//                    'label' => 'Dashboard',
+//                    'url' => UrlHelper::cpUrl('redirect/dashboard')
+//                ],
                 'redirects' => [
                     'label' => 'Redirects',
                     'url' => UrlHelper::cpUrl('redirect/redirects')
