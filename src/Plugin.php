@@ -80,7 +80,7 @@ class Plugin extends BasePlugin
     {
         return [
             'url' => 'redirect/redirects',
-            'label' => Craft::t('vredirect', 'Site redirects'),
+            'label' => Craft::t('vredirect', 'Site Redirects'),
             'fontIcon' => 'share',
             'subnav' => [
 //                'dashboard' => [
@@ -88,12 +88,12 @@ class Plugin extends BasePlugin
 //                    'url' => UrlHelper::cpUrl('redirect/dashboard')
 //                ],
                 'redirects' => [
-                    'label' => 'Redirects',
-                    'url' => UrlHelper::cpUrl('redirect/redirects')
+                    'label' => Craft::t('vredirect', 'Redirects'),
+                    'url' => 'redirect/redirects'
                 ],
                 'catch-all' => [
-                    'label' => 'Registered 404s',
-                    'url' => UrlHelper::cpUrl('redirect/catch-all')
+                    'label' => Craft::t('vredirect', 'Registered 404s'),
+                    'url' => 'redirect/catch-all'
                 ]
             ]
         ];

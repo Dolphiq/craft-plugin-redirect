@@ -1,10 +1,9 @@
-{% extends '_layouts/cp' %}
-
+{% extends 'vredirect/_layouts/cp' %}
 {% set selectedSubnavItem = 'catch-all' %}
 {% set title = "Registered 404 entries"|t('vredirect') %}
 
 {% set content %}
-    {% paginate catchAllQuery.limit(10) as pageInfo, catchAllEntries %}
+    {% paginate catchAllQuery.limit(25) as pageInfo, catchAllEntries %}
     <div id="noentries"{% if pageInfo.total > 0 %} class="hidden"{% endif %}>
         <p>{{ "No 404s exist yet."|t('vredirect') }}</p>
     </div>
