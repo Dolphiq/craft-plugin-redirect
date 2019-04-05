@@ -31,10 +31,6 @@ class RedirectsController extends Controller
      */
     public function actionIndex(): craft\web\Response
     {
-
-        $variables = [
-        ];
-
         // Get the site
         // ---------------------------------------------------------------------
         if (Craft::$app->getIsMultiSite()) {
@@ -49,23 +45,6 @@ class RedirectsController extends Controller
 
         return $this->renderTemplate('vredirect/redirects/index', $variables);
     }
-
-    /**
-     * Called before displaying the redirect settings registered-catch-all-urls  page.
-     *
-     * @return Response
-     */
-    public function actionDeleteCatchAllUrls(): craft\web\Response
-    {
-
-        $this->requireLogin();
-        $urlId = Craft::$app->getRequest()->getRequiredBodyParam('id');
-
-        Plugin::$plugin->getCatchAll()->deleteUrlById($urlId);
-
-        return $this->asJson(['success' => true]);
-    }
-
 
     /**
      * Edit a redirect
@@ -103,18 +82,8 @@ class RedirectsController extends Controller
             $editableSitesOptions[$site['id']] = $site->name;
         }
 
-        $statusCodesOptions = [
-            '301' => 'Permanent redirect (301)',
-            '302' => 'Temporarily redirect (302)',
-        ];
-
-        $typeOptions = [
-            'static' => 'Static',
-            'dynamic' => 'Dynamic (RegExp)',
-        ];
-
-        $variables['statusCodeOptions'] = $statusCodesOptions;
-        $variables['typeOptions'] = $typeOptions;
+        $variables['statusCodeOptions'] = Redirect::STATUS_CODE_OPTIONS;
+        $variables['typeOptions'] = Redirect::TYPE_OPTIONS;
         $variables['editableSitesOptions'] = $editableSitesOptions;
 
 

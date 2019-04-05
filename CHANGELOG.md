@@ -1,4 +1,16 @@
 # Redirect Changelog
+
+## 2.0.2 - 2019-04-05
+### Fixed
+- Side nav now shows correct selected page
+- Fixed inline editing of redirects
+
+### Changed
+- Refactored code
+
+### Removed
+- Disabled Dashboard page until its ready
+
 ## 2.0.1.1 - 2019-04-04
 ### Fixed
 - Fixed undefined variable error

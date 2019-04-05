@@ -17,14 +17,27 @@ use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\validators\DateTimeValidator;
 use craft\web\ErrorHandler;
+use Throwable;
 use venveo\redirect\elements\actions\DeleteRedirects;
 use venveo\redirect\elements\db\RedirectQuery;
 use venveo\redirect\records\Redirect as RedirectRecord;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 
 class Redirect extends Element
 {
     public const TYPE_STATIC = 'static';
     public const TYPE_DYNAMIC = 'dynamic';
+
+    public const STATUS_CODE_OPTIONS = [
+        '301' => 'Permanent redirect (301)',
+        '302' => 'Temporarily redirect (302)'
+    ];
+
+    public const TYPE_OPTIONS = [
+        'static' => 'Static',
+        'dynamic' => 'Dynamic (RegExp)',
+    ];
 
     /**
      * @inheritdoc
@@ -79,7 +92,7 @@ class Redirect extends Element
      */
     public static function hasStatuses(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -97,7 +110,7 @@ class Redirect extends Element
      */
     public function getIsEditable(): bool
     {
-        return false;
+        return true;
     }
 
 
@@ -116,8 +129,6 @@ class Redirect extends Element
     public function getCpEditUrl()
     {
         return UrlHelper::cpUrl('redirect/redirects/'.$this->id.'?siteId='.$this->siteId);
-
-        return $url;
     }
 
     /**
@@ -125,22 +136,12 @@ class Redirect extends Element
      */
     public function getEditorHtml(): string
     {
-        $statusCodesOptions = [
-            '301' => 'Permanent redirect (301)',
-            '302' => 'Temporarily redirect (302)',
-        ];
-
-        $typeOptions = [
-            'static' => 'Static',
-            'dynamic' => 'Dynamic (RegExp)',
-        ];
-
         $html = Craft::$app->getView()->renderTemplate('vredirect/redirects/_redirectfields', [
             'redirect' => $this,
             'isNewRedirect' => false,
             'meta' => false,
-            'statusCodeOptions' => $statusCodesOptions,
-            'typeOptions' => $typeOptions
+            'statusCodeOptions' => self::STATUS_CODE_OPTIONS,
+            'typeOptions' => self::TYPE_OPTIONS
         ]);
 
         $html .= parent::getEditorHtml();
@@ -168,22 +169,22 @@ class Redirect extends Element
             $sources = [
                 [
                     'key' => '*',
-                    'label' => Craft::t('vredirect', 'All redirects'),
+                    'label' => Craft::t('vredirect', 'All Redirects'),
                     'criteria' => []
                 ],
                 [
                     'key' => 'permanent',
-                    'label' => Craft::t('vredirect', 'Permanent redirects'),
+                    'label' => Craft::t('vredirect', 'Permanent (301) Redirects'),
                     'criteria' => ['statusCode' => 301]
                 ],
                 [
                     'key' => 'temporarily',
-                    'label' => Craft::t('vredirect', 'Temporarily redirects'),
+                    'label' => Craft::t('vredirect', 'Temporary (302) Redirects'),
                     'criteria' => ['statusCode' => 302]
                 ],
                 [
                     'key' => 'inactive',
-                    'label' => Craft::t('vredirect', 'Stale redirects'),
+                    'label' => Craft::t('vredirect', 'Stale Redirects'),
                     'criteria' => ['hitAt' => 60]
                 ]
             ];
@@ -242,12 +243,7 @@ class Redirect extends Element
         switch ($attribute) {
             case 'statusCode':
 
-                $statusCodesOptions = [
-                    '301' => 'Permanent redirect (301)',
-                    '302' => 'Temporarily redirect (302)',
-                ];
-
-                return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('vredirect', $statusCodesOptions[$this->statusCode])]) : '';
+                return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('vredirect', self::STATUS_CODE_OPTIONS[$this->statusCode])]) : '';
 
             case 'baseUrl':
 
@@ -303,16 +299,17 @@ class Redirect extends Element
     }
 
     /**
+     * Cleans a URL by removing its base URL if it's a relative one
+     * Also strip leading slashes from absolute URLs
+     *
      * @inheritdoc
      */
     public function formatUrl(string $url): string
     {
-        $resultUrl = $url;
-        // trim spaces
-        $resultUrl = trim($resultUrl);
+        // trim white space
+        $resultUrl = trim($url);
 
         if (strpos($resultUrl, '://') !== false) {
-            // complete url
             // check if the base url is there and strip if it does
             $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
         } else {
@@ -322,15 +319,13 @@ class Redirect extends Element
         return $resultUrl;
     }
 
-
     /**
-     * @inheritdoc
+     * SOft-delete the record with the element
+     *
+     * @return bool
+     * @throws Throwable
+     * @throws StaleObjectException
      */
-    public function beforeSave(bool $isNew): bool
-    {
-        return parent::beforeSave($isNew);
-    }
-
     public function beforeDelete(): bool
     {
         $record = RedirectRecord::findOne($this->id);
@@ -342,7 +337,7 @@ class Redirect extends Element
 
     /**
      * @inheritdoc
-     * @throws Exception if reasons
+     * @throws Exception
      */
     public function afterSave(bool $isNew)
     {
@@ -400,18 +395,6 @@ class Redirect extends Element
         return $attributes;
     }
 
-
-    // Public Methods
-    // =========================================================================
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-    }
-
     /**
      * Use the sourceUrl as the string representation.
      *
@@ -422,7 +405,7 @@ class Redirect extends Element
     {
         try {
             return $this->getName();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ErrorHandler::convertExceptionToError($e);
         }
     }
@@ -474,6 +457,5 @@ class Redirect extends Element
     /**
      * @var int|null siteId
      */
-
     public $siteId;
 }

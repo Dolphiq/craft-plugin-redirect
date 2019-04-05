@@ -14,8 +14,10 @@ use Craft;
 use craft\base\Plugin as BasePlugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Gc;
+use craft\services\UserPermissions;
 use craft\web\ErrorHandler;
 use craft\web\UrlManager;
 use venveo\redirect\elements\FeedMeRedirect;
@@ -77,21 +79,21 @@ class Plugin extends BasePlugin
     public function getCpNavItem()
     {
         return [
-            'url' => 'redirect/redirects',
-            'label' => Craft::t('vredirect', 'Site redirects'),
+            'url' => 'redirect',
+            'label' => Craft::t('vredirect', 'Site Redirects'),
             'fontIcon' => 'share',
             'subnav' => [
-                'dashboard' => [
-                    'label' => 'Dashboard',
-                    'url' => UrlHelper::cpUrl('redirect/dashboard')
-                ],
+//                'dashboard' => [
+//                    'label' => 'Dashboard',
+//                    'url' => UrlHelper::cpUrl('redirect/dashboard')
+//                ],
                 'redirects' => [
-                    'label' => 'Redirects',
-                    'url' => UrlHelper::cpUrl('redirect/redirects')
+                    'label' => Craft::t('vredirect', 'Redirects'),
+                    'url' => 'redirect/redirects'
                 ],
                 'catch-all' => [
-                    'label' => 'Registered 404s',
-                    'url' => UrlHelper::cpUrl('redirect/catch-all')
+                    'label' => Craft::t('vredirect', 'Registered 404s'),
+                    'url' => 'redirect/catch-all'
                 ]
             ]
         ];
@@ -119,6 +121,8 @@ class Plugin extends BasePlugin
     private function registerCpRoutes() {
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
             $event->rules = array_merge($event->rules, [
+                'redirect' => ['template' => 'vredirect/index'],
+
                 'redirect/catch-all' => 'vredirect/catch-all/index',
 
                 'redirect/dashboard' => 'vredirect/dashboard/index',
@@ -137,6 +141,26 @@ class Plugin extends BasePlugin
             });
         }
     }
+//    // TODO: Finish this
+//    private function registerPermissions() {
+//        $sitePermissions = [];
+//        $sites = Craft::$app->getSites()->getAllSites();
+//        foreach($sites as $site) {
+//            $sitePermissions
+//        }
+//
+//
+//        Event::on(UserPermissions::class, UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
+//            $event->permissions[\Craft::t('vredirect', 'Redirects')] = [
+//                'create' => [
+//                    'label' => \Craft::t('vredirect', 'Create Redirects'),
+//                    'nested' => [
+//
+//                    ]
+//                ]
+//            ];
+//        });
+//    }
 
 
     public function init()
