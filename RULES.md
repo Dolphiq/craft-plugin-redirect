@@ -1,8 +1,25 @@
 ## Using the Redirect plugin
 
-You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches. See some examples below.
+You can use the Redirect plugin to redirect simple routes but also use it for 
+more advanced route matches.
 
-### Simple redirect exact match
+### Static Routes
+These are used for simple A -> B redirects. You may use absolute URLs or
+relative URLs in either the source or the destination.
+
+### Dynamic Routes
+Dynamic routes are routes built using regular expressions. As such, you must be
+very careful when you create them. Know your escape characters (such as `/`) as 
+they are required in the source URL but not the destination URL.
+
+Create matching groups in your RegEx and reference them in the destionation the
+same way you would in `preg_replace`: $1, $2, ..., $7, etc
+
+---
+ 
+See some examples below.
+
+### Simple static match
 Source URL:
 ```
 oldpage/wont/work/anymore
@@ -22,67 +39,22 @@ Destination URL:
 https://www.newwebsite.com/newpage/will/work/again
 ```
 
-### More advanced redirect with a parameter
+### More advanced dynamic redirect with a parameter:
 Source URL:
 ```
-category/<catname>/overview.php
+category\/(.+)\/overview.php
 ```
 Destination URL:
 ```
-overview/category/<catname>/index.html
+overview/category/$1/index.html
 ```
 
 ### Multiple parameters mixed
 Source URL:
 ```
-cars/<brand>/<dontusepart>/<color>/index.html
+cars\/(.+)\/(.+)/(.+)\/index.html
 ```
 Destination URL:
 ```
-overview/cars/<brand>/colors/<color>
+overview/cars/$1/colors/$3
 ```
-*note: it is not required to use all the source parameters in the destination URL
-
-### Replace a uri parameter in de source string to a new path
-
-Source URL:
-```
-books/detail
-```
-Destination URL:
-```
-book-detail/<bookId>/index.html
-```
-
-Example: the original url looks like:
-```
-books/detail?bookId=124
-```
-
-After the redirect, the url will look like:
-```
-book-detail/124/index.html
-```
-
-### Replace a long path with unknown amount of segments for an other url
-
-Source URL:
-```
-wholepath/<options:.+>
-```
-Destination URL:
-```
-otherpath/index.html?cat=<a>&subcat=<b>
-```
-
-Example: the original url looks like:
-```
-wholepath/this/is/a/long/path/with/params?a=1&b=2&c=4
-```
-
-After the redirect, the url will look like:
-```
-/otherpath/index.html?cat=1&subcat=2
-```
-
-[Click here](README.md) for the main readme.
