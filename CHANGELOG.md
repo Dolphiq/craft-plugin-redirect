@@ -1,5 +1,9 @@
 # Redirect Changelog
 
+## 2.0.2.1 - 2019-04-05
+### Fixed
+- Fixed string checking error
+
 ## 2.0.2 - 2019-04-05
 ### Fixed
 - Side nav now shows correct selected page
