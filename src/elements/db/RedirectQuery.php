@@ -157,10 +157,19 @@ class RedirectQuery extends ElementQuery
                 ['[[dolphiq_redirects.type]]' => 'static'],
                 ['[[dolphiq_redirects.sourceUrl]]' => $this->matchingUri]
                 ]);
-            $this->subQuery->orWhere(['and',
-                ['[[dolphiq_redirects.type]]' => 'dynamic'],
-                ':uri RLIKE [[dolphiq_redirects.sourceUrl]]'
-            ], ['uri' => $this->matchingUri]);
+            if (Craft::$app->db->getIsPgsql()) {
+                $this->subQuery->orWhere([
+                    'and',
+                    ['[[dolphiq_redirects.type]]' => 'dynamic'],
+                    ':uri SIMILAR TO [[dolphiq_redirects.sourceUrl]]'
+                ], ['uri' => $this->matchingUri]);
+            } else {
+                $this->subQuery->orWhere([
+                    'and',
+                    ['[[dolphiq_redirects.type]]' => 'dynamic'],
+                    ':uri RLIKE [[dolphiq_redirects.sourceUrl]]'
+                ], ['uri' => $this->matchingUri]);
+            }
         }
 
         // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));
