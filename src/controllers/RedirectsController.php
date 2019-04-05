@@ -79,6 +79,7 @@ class RedirectsController extends Controller
     public function actionEditRedirect(int $redirectId = null, Redirect $redirect = null): craft\web\Response
     {
         $fromCatchAllId = Craft::$app->request->getQueryParam('from');
+        $catchAllRecord = null;
         if ($fromCatchAllId) {
             $catchAllRecord = CatchAllUrl::findOne($fromCatchAllId);
         }

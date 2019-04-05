@@ -1,4 +1,7 @@
 # Redirect Changelog
+## 2.0.1.1 - 2019-04-04
+### Fixed
+- Fixed undefined variable error
 
 ## 2.0.1 - 2019-04-04
 ### Fixed
