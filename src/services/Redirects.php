@@ -87,14 +87,13 @@ class Redirects extends Component
         } elseif ($redirect->type === Redirect::TYPE_DYNAMIC) {
             $sourceUrl = $redirect->sourceUrl;
             // Add leading and trailing slashes for RegEx
-            if (!mb_strpos($redirect->sourceUrl, '/', 'UTF-8') === 0) {
+            if (mb_strpos($sourceUrl, '/') !== 0) {
                 $sourceUrl = '/'.$sourceUrl;
             }
-            if (!mb_substr($redirect->sourceUrl, -1, 1, 'UTF-8') === '/') {
+            if (mb_strrpos($sourceUrl, '/') !== strlen($sourceUrl)) {
                 $sourceUrl .= '/';
             }
-            // Ignore case
-            $sourceUrl .= 'i';
+
             $processedUrl = preg_replace($sourceUrl, $redirect->destinationUrl, $uri);
         } else {
             return;

@@ -17,16 +17,7 @@ class Settings extends Model
      * @var bool
      */
     public $redirectsActive = true;
-    public $catchAllActive = false;
-    public $catchAllTemplate = '';
-
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-    }
+    public $catchAllActive = true;
 
     /**
      * @inheritdoc
