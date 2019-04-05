@@ -23,7 +23,6 @@ use venveo\redirect\elements\db\RedirectQuery;
 use venveo\redirect\records\Redirect as RedirectRecord;
 use yii\db\Exception;
 use yii\db\StaleObjectException;
-use yii\validators\RegularExpressionValidator;
 
 class Redirect extends Element
 {
@@ -31,7 +30,13 @@ class Redirect extends Element
     public const TYPE_DYNAMIC = 'dynamic';
 
     public const STATUS_CODE_OPTIONS = [
-        ''
+        '301' => 'Permanent redirect (301)',
+        '302' => 'Temporarily redirect (302)'
+    ];
+
+    public const TYPE_OPTIONS = [
+        'static' => 'Static',
+        'dynamic' => 'Dynamic (RegExp)',
     ];
 
     /**
@@ -131,22 +136,12 @@ class Redirect extends Element
      */
     public function getEditorHtml(): string
     {
-        $statusCodesOptions = [
-            '301' => 'Permanent redirect (301)',
-            '302' => 'Temporarily redirect (302)',
-        ];
-
-        $typeOptions = [
-            'static' => 'Static',
-            'dynamic' => 'Dynamic (RegExp)',
-        ];
-
         $html = Craft::$app->getView()->renderTemplate('vredirect/redirects/_redirectfields', [
             'redirect' => $this,
             'isNewRedirect' => false,
             'meta' => false,
-            'statusCodeOptions' => $statusCodesOptions,
-            'typeOptions' => $typeOptions
+            'statusCodeOptions' => self::STATUS_CODE_OPTIONS,
+            'typeOptions' => self::TYPE_OPTIONS
         ]);
 
         $html .= parent::getEditorHtml();
@@ -248,12 +243,7 @@ class Redirect extends Element
         switch ($attribute) {
             case 'statusCode':
 
-                $statusCodesOptions = [
-                    '301' => 'Permanent redirect (301)',
-                    '302' => 'Temporarily redirect (302)',
-                ];
-
-                return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('vredirect', $statusCodesOptions[$this->statusCode])]) : '';
+                return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('vredirect', self::STATUS_CODE_OPTIONS[$this->statusCode])]) : '';
 
             case 'baseUrl':
 
@@ -311,6 +301,7 @@ class Redirect extends Element
     /**
      * Cleans a URL by removing its base URL if it's a relative one
      * Also strip leading slashes from absolute URLs
+     *
      * @inheritdoc
      */
     public function formatUrl(string $url): string
@@ -330,6 +321,7 @@ class Redirect extends Element
 
     /**
      * SOft-delete the record with the element
+     *
      * @return bool
      * @throws Throwable
      * @throws StaleObjectException
