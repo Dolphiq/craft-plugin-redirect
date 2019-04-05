@@ -39,9 +39,6 @@
           "venveo\\redirect\\": "src/"
         }
     },
-    "replace": {
-        "dolphiq\redirect": "~1.0.20"
-    },
     "extra": {
         "name": "Redirects",
         "handle": "vredirect",
