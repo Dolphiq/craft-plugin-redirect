@@ -18,6 +18,7 @@ class m190404_124125_add_soft_deletes extends Migration
         // Place migration code here...
         $this->addColumn('{{%dolphiq_redirects}}', 'dateDeleted',
             $this->dateTime()->null()->after('dateUpdated'));
+        return true;
     }
 
     /**
@@ -26,5 +27,6 @@ class m190404_124125_add_soft_deletes extends Migration
     public function safeDown()
     {
         $this->dropColumn('{{%dolphiq_redirects}}', 'dateDeleted');
+        return true;
     }
 }

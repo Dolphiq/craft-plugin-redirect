@@ -18,6 +18,7 @@ class m190403_153859_add_redirect_type extends Migration
     {
         $this->addColumn('{{%dolphiq_redirects}}', 'type', $this->string('8')->null()->defaultValue('static')->notNull()->after('id'));
         $this->createIndex($this->db->getIndexName('{{%dolphiq_redirects}}', 'type'), '{{%dolphiq_redirects}}', 'type');
+        return true;
     }
 
     /**
@@ -27,5 +28,6 @@ class m190403_153859_add_redirect_type extends Migration
     {
         $this->dropIndex($this->db->getIndexName('{{%dolphiq_redirects}}', 'type'), '{{%dolphiq_redirects}}');
         $this->dropColumn('{{%dolphiq_redirects}}', 'type');
+        return true;
     }
 }

@@ -49,6 +49,7 @@ class Install extends Migration
 
         $this->createTable('{{%dolphiq_redirects}}', [
             'id' => $this->primaryKey(),
+            'type' => $this->string('8')->null()->defaultValue('static')->notNull(),
             'sourceUrl' => $this->string(),
             'destinationUrl' => $this->string(),
             'statusCode' => $this->string(),
@@ -56,13 +57,14 @@ class Install extends Migration
             'hitAt' => $this->dateTime(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
+            'deletedAt' => $this->dateTime()->null(),
             'uid' => $this->uid()
         ]);
 
         if (!$this->db->tableExists('{{%dolphiq_redirects_catch_all_urls}}')) {
 
             $this->createTable(
-                '{{%dolphiq_redirects_catch_all_urls%}}',
+                '{{%dolphiq_redirects_catch_all_urls}}',
                 [
                     'id' => $this->primaryKey(),
                     'uri' => $this->string(255)->notNull()->defaultValue(''),
@@ -78,5 +80,6 @@ class Install extends Migration
         }
 
         $this->addForeignKey(null, '{{%dolphiq_redirects}}', ['id'], '{{%elements}}', ['id'], 'CASCADE', null);
+        $this->createIndex($this->db->getIndexName('{{%dolphiq_redirects}}', 'type'), '{{%dolphiq_redirects}}', 'type');
     }
 }

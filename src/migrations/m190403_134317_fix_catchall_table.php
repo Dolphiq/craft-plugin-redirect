@@ -20,6 +20,7 @@ class m190403_134317_fix_catchall_table extends Migration
         if ($this->db->tableExists('{{%dolphiq_redirects_catch_all_urls%}}')) {
             MigrationHelper::renameTable('{{%dolphiq_redirects_catch_all_urls%}}', '{{%dolphiq_redirects_catch_all_urls}}', $this);
         }
+        return true;
     }
 
     /**
@@ -30,5 +31,6 @@ class m190403_134317_fix_catchall_table extends Migration
         if ($this->db->tableExists('{{%dolphiq_redirects_catch_all_urls}}')) {
             MigrationHelper::renameTable('{{%dolphiq_redirects_catch_all_urls}}', '{{%dolphiq_redirects_catch_all_urls%}}', $this);
         }
+        return true;
     }
 }
