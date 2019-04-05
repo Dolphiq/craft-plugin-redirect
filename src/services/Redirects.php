@@ -54,7 +54,7 @@ class Redirects extends Component
         // Just the URI
         $path = Craft::$app->request->fullPath;
         // Path with query params
-        $fullPath = ltrim(Craft::$app->request->getUrl(), '/');
+        $fullPath = rtrim(ltrim(Craft::$app->request->getUrl(), '/'), '/');
 
         $query = new RedirectQuery(Redirect::class);
         $query->matchingUri = $fullPath;
