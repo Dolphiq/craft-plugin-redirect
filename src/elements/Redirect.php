@@ -79,7 +79,7 @@ class Redirect extends Element
      */
     public static function hasStatuses(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -97,7 +97,7 @@ class Redirect extends Element
      */
     public function getIsEditable(): bool
     {
-        return false;
+        return true;
     }
 
 
