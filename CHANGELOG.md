@@ -1,5 +1,9 @@
 # Redirect Changelog
 
+## 2.0.1 - 2019-04-04
+### Fixed
+- Fixed broken install migration
+
 ## 2.0.0 - 2019-04-04
 ### Added
 - Soft delete redirects
