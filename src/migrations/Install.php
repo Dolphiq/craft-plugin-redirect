@@ -57,7 +57,7 @@ class Install extends Migration
             'hitAt' => $this->dateTime(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
-            'deletedAt' => $this->dateTime()->null(),
+            'dateDeleted' => $this->dateTime()->null(),
             'uid' => $this->uid()
         ]);
 
