@@ -1,4 +1,12 @@
 # Redirect Changelog
+
+## Unreleased
+### Changed
+- Refactored code
+
+### Removed
+- Disabled Dashboard page until its ready
+
 ## 2.0.1.1 - 2019-04-04
 ### Fixed
 - Fixed undefined variable error
