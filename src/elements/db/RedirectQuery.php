@@ -1,9 +1,10 @@
 <?php
 /**
+ * Craft Redirect plugin
  *
- * @author    dolphiq
+ * @author    Venveo
  * @copyright Copyright (c) 2017 dolphiq
- * @link      https://dolphiq.nl/
+ * @copyright Copyright (c) 2019 Venveo
  */
 
 namespace venveo\redirect\elements\db;
