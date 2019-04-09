@@ -42,7 +42,7 @@ https://www.newwebsite.com/newpage/will/work/again
 ### More advanced dynamic redirect with a parameter:
 Source URL:
 ```
-category\/(.+)\/overview.php
+^category\/(.+)\/overview.php$
 ```
 Destination URL:
 ```
@@ -52,7 +52,7 @@ overview/category/$1/index.html
 ### Multiple parameters mixed
 Source URL:
 ```
-cars\/(.+)\/(.+)/(.+)\/index.html
+^cars\/(.+)\/(.+)/(.+)\/index.html$
 ```
 Destination URL:
 ```
