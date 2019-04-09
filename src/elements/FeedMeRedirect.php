@@ -1,4 +1,10 @@
 <?php
+/**
+ * Craft Redirect plugin
+ *
+ * @author    Venveo
+ * @copyright Copyright (c) 2019 Venveo
+ */
 namespace venveo\redirect\elements;
 
 use verbb\feedme\FeedMe;

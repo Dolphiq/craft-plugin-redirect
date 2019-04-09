@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Craft Redirect plugin
+ *
+ * @author    Venveo
+ * @copyright Copyright (c) 2017 dolphiq
+ * @copyright Copyright (c) 2019 Venveo
+ */
 namespace venveo\redirect\elements\actions;
 
 use Craft;

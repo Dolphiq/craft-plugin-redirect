@@ -1,10 +1,11 @@
 <?php
 
 /**
+ * Craft Redirect plugin
  *
- * @author    dolphiq
+ * @author    Venveo
  * @copyright Copyright (c) 2017 dolphiq
- * @link      https://dolphiq.nl/
+ * @copyright Copyright (c) 2019 Venveo
  */
 
 namespace venveo\redirect\models;
@@ -18,6 +19,7 @@ class Settings extends Model
      */
     public $redirectsActive = true;
     public $catchAllActive = true;
+    public $autoRedirect = true;
 
     /**
      * @inheritdoc
@@ -25,7 +27,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['redirectsActive', 'catchAllActive'], 'required'],
+            [['redirectsActive', 'catchAllActive', 'autoRedirect'], 'boolean'],
         ];
     }
 }

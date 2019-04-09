@@ -3,14 +3,15 @@
 /**
  * Craft Redirect plugin
  *
- * @author    dolphiq
+ * @author    Venveo
  * @copyright Copyright (c) 2017 dolphiq
- * @link      https://dolphiq.nl/
+ * @copyright Copyright (c) 2019 Venveo
  */
 
 namespace venveo\redirect;
 
 use Craft;
+use craft\base\Element;
 use craft\base\Plugin as BasePlugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterUrlRulesEvent;
@@ -27,6 +28,7 @@ use venveo\redirect\services\Redirects;
 use verbb\feedme\events\RegisterFeedMeElementsEvent;
 use verbb\feedme\services\Elements;
 use yii\base\Event;
+use yii\base\ModelEvent;
 
 
 /**
