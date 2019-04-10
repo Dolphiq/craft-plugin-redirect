@@ -26,6 +26,8 @@ This plugin requires Craft CMS 3.1.19 or later - also tested on 3.2 alpha.
 ### Creating a redirect from a 404 entry
 ![Screenshot](resources/screenshots/redirect-from-404.png)
 
+## Importing redirects using Feed Me
+![Screenshot](resources/screenshots/import-from-feedme.png)
 
 ## Using the Redirect plugin
 
