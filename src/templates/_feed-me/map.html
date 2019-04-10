@@ -3,21 +3,21 @@
 
 {% set fields = [
   {
-    name: 'Source',
-    handle: 'sourceUrl',
-    instructions: 'The source URL' | t('vredirect'),
-    required: true,
-    default: {
-    type: 'text',
+      name: 'Source',
+      handle: 'sourceUrl',
+      instructions: 'The source URL' | t('vredirect'),
+      required: true,
+      default: {
+      type: 'text',
   },
   },
   {
-    name: 'Destination',
-    handle: 'destinationUrl',
-    instructions: 'The destination URL' | t('vredirect'),
-    required: true,
-    default: {
-    type: 'text',
+      name: 'Destination',
+      handle: 'destinationUrl',
+      instructions: 'The destination URL' | t('vredirect'),
+      required: true,
+      default: {
+      type: 'text',
   },
   },
   {
@@ -27,8 +27,8 @@
     default: {
     type: 'select',
     options: [
-      { label: '301', value: '301' },
-      { label: '302', value: '302' },
+        { label: '301', value: '301' },
+        { label: '302', value: '302' },
     ],
   },
   }, {
@@ -36,40 +36,40 @@
     handle: 'id',
     instructions: '<strong class="error">Warning: </strong>This should only be used for an existing Redirect ID.' | t('vredirect'),
     default: {
-      type: 'text',
+        type: 'text',
     },
-  }] %}
+}] %}
 
 <h2>{{ 'Redirect Fields' | t('vredirect') }}</h2>
 
-<table class="feedme-mapping data fullwidth collapsible">
-  <thead>
-  <th>{{ 'Field' | t('feed-me') }}</th>
-  <th>{{ 'Feed Element' | t('feed-me') }}</th>
-  <th>{{ 'Default Value' | t('feed-me') }}</th>
-  </thead>
-  <tbody>
-  {% for field in fields %}
+    <table class="feedme-mapping data fullwidth collapsible">
+    <thead>
+    <th>{{ 'Field' | t('feed-me') }}</th>
+    <th>{{ 'Feed Element' | t('feed-me') }}</th>
+    <th>{{ 'Default Value' | t('feed-me') }}</th>
+    </thead>
+    <tbody>
+    {% for field in fields %}
     {% set template = field.type ?? 'default' %}
     {% set variables = field | merge({ feed: feed, feedData: feedData, attribute: true }) %}
 
     {% include 'feed-me/_includes/fields/' ~ template ignore missing with variables only %}
-  {% endfor %}
-  </tbody>
-</table>
+    {% endfor %}
+    </tbody>
+    </table>
 
-<hr>
+    <hr>
 
-<h2>{{ "Set a unique identifier to match against existing elements" | t('feed-me') }}</h2>
+    <h2>{{ "Set a unique identifier to match against existing elements" | t('feed-me') }}</h2>
 
-<p>{{ "Select the fields you want to use to check for existing elements. When selected, Feed Me will look for existing elements that match the fields provided below and either update, or skip depending on your choice of Import Strategy." | t('feed-me') }}</p>
+    <p>{{ "Select the fields you want to use to check for existing elements. When selected, Feed Me will look for existing elements that match the fields provided below and either update, or skip depending on your choice of Import Strategy." | t('feed-me') }}</p>
 
-<div class="feedme-uniques">
-  {% for field in fields if field and feedMeMacro.fieldCanBeUniqueId(field) %}
-    {{ forms.checkboxField({
-      name: 'fieldUnique[' ~ field.handle ~ ']',
-      label: field.name,
-      checked: feed.fieldUnique[field.handle] ?? '',
-    }) }}
-  {% endfor %}
-</div>
+    <div class="feedme-uniques">
+        {% for field in fields if field and feedMeMacro.fieldCanBeUniqueId(field) %}
+        {{ forms.checkboxField({
+            name: 'fieldUnique[' ~ field.handle ~ ']',
+            label: field.name,
+            checked: feed.fieldUnique[field.handle] ?? '',
+        }) }}
+        {% endfor %}
+    </div>

@@ -45,6 +45,7 @@ class CatchAll extends Component
             $catchAllURL = new CatchAllUrlRecord();
             $catchAllURL->uri = $uri;
             $catchAllURL->hitCount = 1;
+            $catchAllURL->ignored = false;
             $catchAllURL->siteId = $siteId;
         } else {
             ++$catchAllURL->hitCount;
@@ -53,27 +54,31 @@ class CatchAll extends Component
         return true;
     }
 
-    public function getLastUrls(int $limit = 100, int $siteId = 0): array
-    {
+    /**
+     * Marks a 404 as ignored
+     * @param int $id
+     * @return bool
+     */
+    public function ignoreUrlById(int $id) {
+        // TODO check if the user has rights in the siteId..
+        $catchAllURL = CatchAllUrlRecord::findOne($id);
 
-        if ($siteId == 0) {
-            $siteId = Craft::$app->getSites()->currentSite->id;
-        }
-
-        $query = CatchAllUrlRecord::find()->where([
-            'siteId' => $siteId,
-        ])->orderBy('dateUpdated DESC')->limit($limit);
-        return $query->all();
-    }
-
-    public function deleteUrlById(int $id): bool
-    {
-        if (!$id) {
+        if (!$catchAllURL) {
             return false;
         }
-        $siteId = Craft::$app->getSites()->currentSite->id;
-        // search the redirect by its id
 
+        $catchAllURL->ignored = true;
+        return $catchAllURL->save();
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function deleteUrlById(int $id): bool
+    {
         // TODO check if the user has rights in the siteId..
         $catchAllURL = CatchAllUrlRecord::findOne($id);
 

@@ -33,6 +33,12 @@ class CatchAllController extends Controller
         ]);
     }
 
+    /**
+     * @return \yii\web\Response
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function actionDelete() {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
@@ -42,5 +48,33 @@ class CatchAllController extends Controller
         Plugin::$plugin->catchAll->deleteUrlById($catchAllId);
 
         return $this->asJson(['success' => true]);
+    }
+
+
+    /**
+     * @return \yii\web\Response
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     * @throws \yii\web\BadRequestHttpException
+     */
+    public function actionIgnore() {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        $catchAllId = Craft::$app->getRequest()->getRequiredBodyParam('id');
+
+        Plugin::$plugin->catchAll->ignoreUrlById($catchAllId);
+
+        return $this->asJson(['success' => true]);
+    }
+
+    public function actionGetFiltered() {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+        $data = Craft::$app->request->getBodyParam('data');
+        $recordQuery = CatchAllUrl::find()->where(['ignored' => false]);
+        $recordQuery->limit = $data['perPage'] ?? 10;
+
+        return $this->asJson(['totalRecords' => $recordQuery->count(), 'rows' => $recordQuery->all()]);
     }
 }
