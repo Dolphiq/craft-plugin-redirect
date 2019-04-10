@@ -5,19 +5,14 @@
  * @author    Venveo
  * @copyright Copyright (c) 2019 Venveo
  */
+
 namespace venveo\redirect\elements;
 
-use verbb\feedme\FeedMe;
-use verbb\feedme\base\Element;
-use verbb\feedme\base\ElementInterface;
-
+use Cake\Utility\Hash;
 use Craft;
 use craft\base\Element as BaseElement;
-use craft\db\Query;
-use craft\elements\User as UserElement;
-use craft\helpers\Db;
-
-use Cake\Utility\Hash;
+use craft\feedme\base\Element;
+use craft\feedme\base\ElementInterface;
 use venveo\redirect\elements\Redirect as RedirectElement;
 
 /**
@@ -66,6 +61,11 @@ class FeedMeRedirect extends Element implements ElementInterface
         return [];
     }
 
+    /**
+     * @param $settings
+     * @param array $params
+     * @return \craft\elements\db\ElementQueryInterface|db\RedirectQuery
+     */
     public function getQuery($settings, $params = [])
     {
         $query = RedirectElement::find();
@@ -87,6 +87,10 @@ class FeedMeRedirect extends Element implements ElementInterface
         return $query;
     }
 
+    /**
+     * @param $settings
+     * @return Redirect
+     */
     public function setModel($settings)
     {
         $this->element = new RedirectElement();
@@ -100,10 +104,18 @@ class FeedMeRedirect extends Element implements ElementInterface
         return $this->element;
     }
 
+    /**
+     * @param $element
+     * @param $settings
+     * @return bool
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
     public function save($element, $settings)
     {
         $this->element = $element;
-        
+
         $propagate = !(isset($settings['siteId']) && $settings['siteId']);
 
         $this->element->setScenario(BaseElement::SCENARIO_ESSENTIALS);

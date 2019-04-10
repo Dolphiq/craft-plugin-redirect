@@ -8,8 +8,8 @@
     instructions: 'The source URL' | t('vredirect'),
     required: true,
     default: {
-    type: 'text',
-  },
+        type: 'text',
+    },
   },
   {
     name: 'Destination',
@@ -17,28 +17,40 @@
     instructions: 'The destination URL' | t('vredirect'),
     required: true,
     default: {
-    type: 'text',
-  },
+        type: 'text',
+    },
   },
   {
-    name: 'Type',
+    name: 'Response Code',
     handle: 'statusCode',
     instructions: 'Redirect status code: 301 or 302' | t('vredirect'),
     default: {
-    type: 'select',
-    options: [
-      { label: '301', value: '301' },
-      { label: '302', value: '302' },
-    ],
+        type: 'select',
+        options: [
+          { label: '301', value: '301' },
+          { label: '302', value: '302' },
+        ],
+    },
   },
-  }, {
+  {
+      name: 'Type',
+      handle: 'type',
+      instructions: 'Redirect Type' | t('vredirect'),
+      default: {
+        type: 'select',
+        options: [
+          { label: 'Static', value: 'static' },
+          { label: 'Dynamic', value: 'dynamic' },
+        ],
+  },
+  },
+    {
     name: 'Redirect ID',
     handle: 'id',
     instructions: '<strong class="error">Warning: </strong>This should only be used for an existing Redirect ID.' | t('vredirect'),
-    default: {
-      type: 'text',
+    type: 'text',
     },
-  }] %}
+] %}
 
 <h2>{{ 'Redirect Fields' | t('vredirect') }}</h2>
 
@@ -65,11 +77,11 @@
 <p>{{ "Select the fields you want to use to check for existing elements. When selected, Feed Me will look for existing elements that match the fields provided below and either update, or skip depending on your choice of Import Strategy." | t('feed-me') }}</p>
 
 <div class="feedme-uniques">
-  {% for field in fields if field and feedMeMacro.fieldCanBeUniqueId(field) %}
-    {{ forms.checkboxField({
-      name: 'fieldUnique[' ~ field.handle ~ ']',
-      label: field.name,
-      checked: feed.fieldUnique[field.handle] ?? '',
-    }) }}
-  {% endfor %}
+    {% for field in fields if field and craft.feedme.fieldCanBeUniqueId(field) %}
+        {{ forms.checkboxField({
+            name: 'fieldUnique[' ~ field.handle ~ ']',
+            label: field.name,
+            checked: feed.fieldUnique[field.handle] ?? '',
+        }) }}
+    {% endfor %}
 </div>
