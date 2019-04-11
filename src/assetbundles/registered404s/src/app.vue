@@ -11,9 +11,10 @@
             @on-column-filter="onColumnFilter"
             :select-options="{ enabled: true, selectionText: 'redirects selected', }"
             :totalRows="totalRecords"
-            pagination-options="{
+            :pagination-options="{
     enabled: true,
   }"
+
             :sort-options="{
     enabled: true
   }"

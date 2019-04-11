@@ -31376,7 +31376,9 @@ exports.default = _default;
               selectionText: "redirects selected"
             },
             totalRows: _vm.totalRecords,
-            "pagination-options": "{\n  enabled: true,\n}",
+            "pagination-options": {
+              enabled: true
+            },
             "sort-options": {
               enabled: true
             },

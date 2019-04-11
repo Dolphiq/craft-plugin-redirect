@@ -9,12 +9,14 @@
 namespace venveo\redirect\controllers;
 
 use Craft;
+use craft\db\Paginator;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use craft\web\Response;
 use venveo\redirect\Plugin;
 use venveo\redirect\records\CatchAllUrl;
 use venveo\redirect\records\Redirect;
+use yii\db\Query;
 
 class CatchAllController extends Controller
 {
@@ -44,7 +46,6 @@ class CatchAllController extends Controller
         $this->requireAcceptsJson();
         $data = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);
         $recordQuery = CatchAllUrl::find();
-        $recordQuery->limit = $data['perPage'] ?? 10;
 
         // Handle sorting...
         if (isset($data['sort']['field'], $data['sort']['type'])) {
@@ -72,11 +73,20 @@ class CatchAllController extends Controller
                 $recordQuery->andWhere([$filter => $value]);
             }
         }
+        $data['page'] = $data['page'] ?? 1;
+        $recordQuery->limit = $data['perPage'] ?? 10;
+
+        /** @var Query $query */
+        $paginator = new Paginator((clone $recordQuery)->limit(null), [
+            'currentPage' => $data['page'],
+            'pageSize' => $data['perPage'] ?: 100,
+        ]);
 
         // Process the results
         $rows = [];
         $sites = [];
-        foreach($recordQuery->all() as $record) {
+
+        foreach($paginator->getPageResults() as $record) {
             if (!isset($sites[$record->siteId])) {
                 $sites[$record->siteId] = Craft::$app->sites->getSiteById($record->siteId)->name;
             }
@@ -86,7 +96,7 @@ class CatchAllController extends Controller
             $row['createUrl'] = UrlHelper::cpUrl('redirect/redirects/new', ['from' => $record->id]);
             $rows[] = $row;
         }
-        return $this->asJson(['totalRecords' => $recordQuery->count(), 'rows' => $rows]);
+        return $this->asJson(['totalRecords' => $paginator->totalResults, 'rows' => $rows, 'page' => $paginator->currentPage]);
     }
 
     public function actionDelete() {
