@@ -25,8 +25,6 @@ use venveo\redirect\elements\FeedMeRedirect;
 use venveo\redirect\models\Settings;
 use venveo\redirect\services\CatchAll;
 use venveo\redirect\services\Redirects;
-use verbb\feedme\events\RegisterFeedMeElementsEvent;
-use verbb\feedme\services\Elements;
 use yii\base\Event;
 use yii\base\ModelEvent;
 
@@ -136,9 +134,13 @@ class Plugin extends BasePlugin
         });
     }
 
-    private function registerFeedMeElement() {
-        if (Craft::$app->plugins->isPluginEnabled('feed-me')) {
-            Event::on(Elements::class, Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(RegisterFeedMeElementsEvent $e) {
+    /**
+     * Registers our custom feed import logic if feed-me is enabled. Also note, we're checking for craft\feedme
+     */
+    private function registerFeedMeElement(): void
+    {
+        if (Craft::$app->plugins->isPluginEnabled('feed-me') && class_exists(\craft\feedme\Plugin::class)) {
+            Event::on(\craft\feedme\services\Elements::class, \craft\feedme\services\Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(\craft\feedme\events\RegisterFeedMeElementsEvent $e) {
                 $e->elements[] = FeedMeRedirect::class;
             });
         }

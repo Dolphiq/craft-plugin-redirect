@@ -296,6 +296,7 @@ class Redirect extends Element
         $rules[] = [['sourceUrl', 'destinationUrl'], 'string', 'max' => 255];
         $rules[] = [['sourceUrl', 'destinationUrl', 'type'], 'required'];
         $rules[] = [['type'], 'in', 'range' => ['static', 'dynamic']];
+        $rules[] = [['statusCode'], 'in', 'range' => ['301', '302']];
         return $rules;
     }
 

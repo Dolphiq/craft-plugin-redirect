@@ -1,5 +1,14 @@
 # Redirect Changelog
 
+## 2.0.3 - 2019-04-10
+### Changed
+- Switched Feed Me integration to use Craft namespaced version. If you're using Feed Me, make sure you're on the new
+official channel: craftcms/feed-me
+
+### Fixed
+- Feed-me integration had stopped working on latest version of feed-me
+- Added validation to ensure statusCode is 301 or 302 to prevent feed-me mismatches
+
 ## 2.0.2.2 - 2019-04-05
 ### Changed
 - Default Catch All to enabled
