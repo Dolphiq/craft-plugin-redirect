@@ -91,7 +91,7 @@
                     {
                         label: 'Ignored',
                         field: 'ignored',
-                        type: 'number',
+                        type: 'boolean',
                         filterOptions: {
                             enabled: true,
                             filterValue: false, // initial populated value for this filter

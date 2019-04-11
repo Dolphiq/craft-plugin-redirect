@@ -31249,7 +31249,7 @@ var _default = _vue.default.extend({
       }, {
         label: 'Ignored',
         field: 'ignored',
-        type: 'number',
+        type: 'boolean',
         filterOptions: {
           enabled: true,
           filterValue: false,
