@@ -6,16 +6,22 @@
             @on-sort-change="onSortChange"
             @on-column-filter="onColumnFilter"
             @on-per-page-change="onPerPageChange"
+            @on-search="onSearch"
             :totalRows="totalRecords"
             pagination-options="{
     enabled: true,
   }"
             :sort-options="{
-    enabled: true,
-    initialSortBy: {field: 'firstHit', type: 'asc'}
+    enabled: true
   }"
             :rows="rows"
-            :columns="columns"/>
+            :columns="columns"
+            :search-options="{
+    enabled: true,
+    trigger: 'enter',
+    placeholder: 'Search this table',
+  }"
+        />
     </div>
 </template>
 
@@ -35,12 +41,20 @@
                     columnFilters: {
                     },
                     sort: [
+                        {
+                        field: 'dateUpdated',
+                        type: 'asc'
+                    }
                     ],
 
                     page: 1, // what page I want to show
                     perPage: 10 // how many items I'm showing per page
                 },
                 columns: [
+                    {
+                        label: 'Site Name',
+                        field: 'siteName',
+                    },
                     {
                         label: 'URI',
                         field: 'uri',
@@ -87,14 +101,19 @@
             onSortChange(params) {
                 this.updateParams({
                     sort: {
-                        type: params.sortType,
-                        field: this.columns[params.columnIndex].field,
+                        type: params[0].type,
+                        field: params[0].field,
                     },
                 });
                 this.loadItems();
             },
 
             onColumnFilter(params) {
+                this.updateParams(params);
+                this.loadItems();
+            },
+
+            onSearch(params) {
                 this.updateParams(params);
                 this.loadItems();
             },

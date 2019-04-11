@@ -31201,6 +31201,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
+//
 _vue.default.use(_vueGoodTable.default);
 
 var _default = _vue.default.extend({
@@ -31209,13 +31215,19 @@ var _default = _vue.default.extend({
       serverParams: {
         // a map of column filters example: {name: 'john', age: '20'}
         columnFilters: {},
-        sort: [],
+        sort: [{
+          field: 'dateUpdated',
+          type: 'asc'
+        }],
         page: 1,
         // what page I want to show
         perPage: 10 // how many items I'm showing per page
 
       },
       columns: [{
+        label: 'Site Name',
+        field: 'siteName'
+      }, {
         label: 'URI',
         field: 'uri'
       }, {
@@ -31258,13 +31270,17 @@ var _default = _vue.default.extend({
     onSortChange: function onSortChange(params) {
       this.updateParams({
         sort: {
-          type: params.sortType,
-          field: this.columns[params.columnIndex].field
+          type: params[0].type,
+          field: params[0].field
         }
       });
       this.loadItems();
     },
     onColumnFilter: function onColumnFilter(params) {
+      this.updateParams(params);
+      this.loadItems();
+    },
+    onSearch: function onSearch(params) {
       this.updateParams(params);
       this.loadItems();
     },
@@ -31305,17 +31321,22 @@ exports.default = _default;
           totalRows: _vm.totalRecords,
           "pagination-options": "{\n  enabled: true,\n}",
           "sort-options": {
-            enabled: true,
-            initialSortBy: { field: "firstHit", type: "asc" }
+            enabled: true
           },
           rows: _vm.rows,
-          columns: _vm.columns
+          columns: _vm.columns,
+          "search-options": {
+            enabled: true,
+            trigger: "enter",
+            placeholder: "Search this table"
+          }
         },
         on: {
           "on-page-change": _vm.onPageChange,
           "on-sort-change": _vm.onSortChange,
           "on-column-filter": _vm.onColumnFilter,
-          "on-per-page-change": _vm.onPerPageChange
+          "on-per-page-change": _vm.onPerPageChange,
+          "on-search": _vm.onSearch
         }
       })
     ],
@@ -31394,7 +31415,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51209" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57259" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -71,10 +71,35 @@ class CatchAllController extends Controller
     public function actionGetFiltered() {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
-        $data = Craft::$app->request->getBodyParam('data');
+        $request = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);
+        $data = $request['data'] ?? [];
         $recordQuery = CatchAllUrl::find()->where(['ignored' => false]);
         $recordQuery->limit = $data['perPage'] ?? 10;
 
-        return $this->asJson(['totalRecords' => $recordQuery->count(), 'rows' => $recordQuery->all()]);
+        // Handle sorting...
+        if (isset($data['sort']['field'], $data['sort']['type'])) {
+            $cols = [];
+            $cols[$data['sort']['field']] = $data['sort']['type'] == 'asc' ? SORT_ASC : SORT_DESC;
+            $recordQuery->addOrderBy($cols);
+        }
+
+        // Handle searching
+        if(isset($data['searchTerm']) && $data['searchTerm'] != '') {
+            $recordQuery->andFilterWhere(['like', 'uri', $data['searchTerm']]);
+        }
+
+        // Process the results
+        $rows = [];
+        $sites = [];
+        foreach($recordQuery->all() as $record) {
+            if (!isset($sites[$record->siteId])) {
+                $sites[$record->siteId] = Craft::$app->sites->getSiteById($record->siteId)->name;
+            }
+            $siteName = $sites[$record->siteId];
+            $row = $record->toArray();
+            $row['siteName'] = $siteName;
+            $rows[] = $row;
+        }
+        return $this->asJson(['totalRecords' => $recordQuery->count(), 'rows' => $rows]);
     }
 }
