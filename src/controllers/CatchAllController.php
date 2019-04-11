@@ -13,9 +13,7 @@ use craft\db\Paginator;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use craft\web\Response;
-use venveo\redirect\Plugin;
 use venveo\redirect\records\CatchAllUrl;
-use venveo\redirect\records\Redirect;
 use yii\db\Query;
 
 class CatchAllController extends Controller
@@ -41,7 +39,8 @@ class CatchAllController extends Controller
      * @return \yii\web\Response
      * @throws \yii\web\BadRequestHttpException
      */
-    public function actionGetFiltered() {
+    public function actionGetFiltered()
+    {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
         $data = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);
@@ -55,13 +54,13 @@ class CatchAllController extends Controller
         }
 
         // Handle searching
-        if(isset($data['searchTerm']) && $data['searchTerm'] != '') {
+        if (isset($data['searchTerm']) && $data['searchTerm'] != '') {
             $recordQuery->andFilterWhere(['like', 'uri', $data['searchTerm']]);
         }
 
         // Handle filters
         if (isset($data['columnFilters'])) {
-            foreach($data['columnFilters'] as $filter => $value) {
+            foreach ($data['columnFilters'] as $filter => $value) {
                 if ($value == '') {
                     continue;
                 }
@@ -86,7 +85,7 @@ class CatchAllController extends Controller
         $rows = [];
         $sites = [];
 
-        foreach($paginator->getPageResults() as $record) {
+        foreach ($paginator->getPageResults() as $record) {
             if (!isset($sites[$record->siteId])) {
                 $sites[$record->siteId] = Craft::$app->sites->getSiteById($record->siteId)->name;
             }
@@ -99,7 +98,8 @@ class CatchAllController extends Controller
         return $this->asJson(['totalRecords' => $paginator->totalResults, 'rows' => $rows, 'page' => $paginator->currentPage]);
     }
 
-    public function actionDelete() {
+    public function actionDelete()
+    {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
         $data = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);
@@ -107,7 +107,8 @@ class CatchAllController extends Controller
         return $this->asJson('Deleted');
     }
 
-    public function actionIgnore() {
+    public function actionIgnore()
+    {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
         $data = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);
@@ -115,7 +116,8 @@ class CatchAllController extends Controller
         return $this->asJson('Ignored');
     }
 
-    public function actionUnIgnore() {
+    public function actionUnIgnore()
+    {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
         $data = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);

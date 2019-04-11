@@ -26,11 +26,11 @@
     placeholder: 'Search for a URI',
   }"
         >
-        <div slot="selected-row-actions">
-            <button class="btn small" v-on:click="actionDelete">Delete</button>
-            <button class="btn small" v-on:click="actionIgnore">Ignore</button>
-            <button class="btn small" v-on:click="actionUnIgnore">Un-ignore</button>
-        </div>
+            <div slot="selected-row-actions">
+                <button class="btn small" v-on:click="actionDelete">Delete</button>
+                <button class="btn small" v-on:click="actionIgnore">Ignore</button>
+                <button class="btn small" v-on:click="actionUnIgnore">Un-ignore</button>
+            </div>
             <template slot="table-row" slot-scope="props">
                 <span v-if="props.column.field == 'createRedirect'">
                 <button class="btn small" v-on:click="actionCreateRedirect(props.row)">Create Redirect</button>
@@ -52,18 +52,17 @@
     Vue.use(VueGoodTablePlugin);
 
     export default Vue.extend({
-        data(){
+        data() {
             return {
                 selectedItems: [],
                 serverParams: {
                     // a map of column filters example: {name: 'john', age: '20'}
-                    columnFilters: {
-                    },
+                    columnFilters: {},
                     sort: [
                         {
-                        field: 'dateUpdated',
-                        type: 'asc'
-                    }
+                            field: 'dateUpdated',
+                            type: 'asc'
+                        }
                     ],
 
                     page: 1, // what page I want to show
@@ -105,8 +104,8 @@
                             enabled: true,
                             filterValue: false, // initial populated value for this filter
                             filterDropdownItems: [
-                                { value: true, text: 'Only Ignored' },
-                                { value: false, text: 'Only Un-ignored' },
+                                {value: true, text: 'Only Ignored'},
+                                {value: false, text: 'Only Un-ignored'},
                             ],
                             trigger: 'enter', //only trigger on enter not on keyup
                         },
