@@ -26,10 +26,18 @@
   }"
         >
         <div slot="selected-row-actions">
-            <button v-on:click="actionDelete">Delete</button>
-            <button v-on:click="actionIgnore">Ignore</button>
-            <button v-on:click="actionUnIgnore">Un-ignore</button>
+            <button class="btn small" v-on:click="actionDelete">Delete</button>
+            <button class="btn small" v-on:click="actionIgnore">Ignore</button>
+            <button class="btn small" v-on:click="actionUnIgnore">Un-ignore</button>
         </div>
+            <template slot="table-row" slot-scope="props">
+                <span v-if="props.column.field == 'createRedirect'">
+                <button class="btn small" v-on:click="actionCreateRedirect(props.row)">Create Redirect</button>
+                </span>
+                <span v-else>
+                {{props.formattedRow[props.column.field]}}
+                </span>
+            </template>
         </vue-good-table>
     </div>
 </template>
@@ -102,6 +110,10 @@
                             trigger: 'enter', //only trigger on enter not on keyup
                         },
                     },
+                    {
+                        label: '',
+                        field: 'createRedirect'
+                    }
                 ],
                 rows: [],
                 totalRecords: 0
@@ -175,6 +187,10 @@
                 registered404s.unIgnore404s(this.selectedItems).then(() => {
                     this.loadItems();
                 });
+            },
+
+            actionCreateRedirect(row) {
+                window.location = row.createUrl;
             }
         },
         beforeMount() {

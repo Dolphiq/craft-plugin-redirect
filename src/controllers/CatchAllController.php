@@ -9,6 +9,7 @@
 namespace venveo\redirect\controllers;
 
 use Craft;
+use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use craft\web\Response;
 use venveo\redirect\Plugin;
@@ -34,6 +35,10 @@ class CatchAllController extends Controller
         ]);
     }
 
+    /**
+     * @return \yii\web\Response
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function actionGetFiltered() {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
@@ -78,6 +83,7 @@ class CatchAllController extends Controller
             $siteName = $sites[$record->siteId];
             $row = $record->toArray();
             $row['siteName'] = $siteName;
+            $row['createUrl'] = UrlHelper::cpUrl('redirect/redirects/new', ['from' => $record->id]);
             $rows[] = $row;
         }
         return $this->asJson(['totalRecords' => $recordQuery->count(), 'rows' => $rows]);

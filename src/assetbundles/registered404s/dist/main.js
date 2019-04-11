@@ -31264,6 +31264,9 @@ var _default = _vue.default.extend({
           trigger: 'enter' //only trigger on enter not on keyup
 
         }
+      }, {
+        label: '',
+        field: 'createRedirect'
       }],
       rows: [],
       totalRecords: 0
@@ -31339,6 +31342,8 @@ var _default = _vue.default.extend({
     _registered404s.default.unIgnore404s(this.selectedItems).then(function () {
       _this4.loadItems();
     });
+  }), _defineProperty(_methods, "actionCreateRedirect", function actionCreateRedirect(row) {
+    window.location = row.createUrl;
   }), _methods),
   beforeMount: function beforeMount() {
     this.loadItems();
@@ -31390,7 +31395,38 @@ exports.default = _default;
             "on-column-filter": _vm.onColumnFilter,
             "on-per-page-change": _vm.onPerPageChange,
             "on-search": _vm.onSearch
-          }
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "table-row",
+              fn: function(props) {
+                return [
+                  props.column.field == "createRedirect"
+                    ? _c("span", [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn small",
+                            on: {
+                              click: function($event) {
+                                _vm.actionCreateRedirect(props.row)
+                              }
+                            }
+                          },
+                          [_vm._v("Create Redirect")]
+                        )
+                      ])
+                    : _c("span", [
+                        _vm._v(
+                          "\n              " +
+                            _vm._s(props.formattedRow[props.column.field]) +
+                            "\n              "
+                        )
+                      ])
+                ]
+              }
+            }
+          ])
         },
         [
           _c(
@@ -31400,17 +31436,23 @@ exports.default = _default;
               slot: "selected-row-actions"
             },
             [
-              _c("button", { on: { click: _vm.actionDelete } }, [
-                _vm._v("Delete")
-              ]),
+              _c(
+                "button",
+                { staticClass: "btn small", on: { click: _vm.actionDelete } },
+                [_vm._v("Delete")]
+              ),
               _vm._v(" "),
-              _c("button", { on: { click: _vm.actionIgnore } }, [
-                _vm._v("Ignore")
-              ]),
+              _c(
+                "button",
+                { staticClass: "btn small", on: { click: _vm.actionIgnore } },
+                [_vm._v("Ignore")]
+              ),
               _vm._v(" "),
-              _c("button", { on: { click: _vm.actionUnIgnore } }, [
-                _vm._v("Un-ignore")
-              ])
+              _c(
+                "button",
+                { staticClass: "btn small", on: { click: _vm.actionUnIgnore } },
+                [_vm._v("Un-ignore")]
+              )
             ]
           )
         ]
