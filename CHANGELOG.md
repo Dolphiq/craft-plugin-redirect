@@ -1,5 +1,10 @@
 # Redirect Changelog
 
+## 2.0.4 - 2019-04-11
+### Added
+- New "Registered 404s" screen to support filtering, bulk deleting, and bulk ignoring
+- Added "ignoring" of 404s
+
 ## 2.0.3 - 2019-04-10
 ### Changed
 - Switched Feed Me integration to use Craft namespaced version. If you're using Feed Me, make sure you're on the new

@@ -11,14 +11,10 @@
 namespace venveo\redirect;
 
 use Craft;
-use craft\base\Element;
 use craft\base\Plugin as BasePlugin;
 use craft\events\ExceptionEvent;
 use craft\events\RegisterUrlRulesEvent;
-use craft\events\RegisterUserPermissionsEvent;
-use craft\helpers\UrlHelper;
 use craft\services\Gc;
-use craft\services\UserPermissions;
 use craft\web\ErrorHandler;
 use craft\web\UrlManager;
 use venveo\redirect\elements\FeedMeRedirect;
@@ -26,7 +22,6 @@ use venveo\redirect\models\Settings;
 use venveo\redirect\services\CatchAll;
 use venveo\redirect\services\Redirects;
 use yii\base\Event;
-use yii\base\ModelEvent;
 
 
 /**
@@ -118,8 +113,9 @@ class Plugin extends BasePlugin
         );
     }
 
-    private function registerCpRoutes() {
-        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
+    private function registerCpRoutes()
+    {
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules = array_merge($event->rules, [
                 'redirect' => ['template' => 'vredirect/index'],
 
@@ -140,7 +136,7 @@ class Plugin extends BasePlugin
     private function registerFeedMeElement(): void
     {
         if (Craft::$app->plugins->isPluginEnabled('feed-me') && class_exists(\craft\feedme\Plugin::class)) {
-            Event::on(\craft\feedme\services\Elements::class, \craft\feedme\services\Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(\craft\feedme\events\RegisterFeedMeElementsEvent $e) {
+            Event::on(\craft\feedme\services\Elements::class, \craft\feedme\services\Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function (\craft\feedme\events\RegisterFeedMeElementsEvent $e) {
                 $e->elements[] = FeedMeRedirect::class;
             });
         }
@@ -177,7 +173,7 @@ class Plugin extends BasePlugin
         $this->registerFeedMeElement();
 
         // Remove our soft-deleted redirects when Craft is ready
-        Event::on(Gc::class, Gc::EVENT_RUN, function() {
+        Event::on(Gc::class, Gc::EVENT_RUN, function () {
             Craft::$app->gc->hardDelete('{{%dolphiq_redirects}}');
         });
 
@@ -193,7 +189,7 @@ class Plugin extends BasePlugin
             static function (ExceptionEvent $event) {
                 $request = Craft::$app->request;
                 // We don't care about requests that aren't on our site frontend
-                if(!$request->getIsSiteRequest() || $request->getIsLivePreview()) {
+                if (!$request->getIsSiteRequest() || $request->getIsLivePreview()) {
                     return;
                 }
                 $exception = $event->exception;
