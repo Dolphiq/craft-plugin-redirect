@@ -2,11 +2,14 @@
     <div>
         <vue-good-table
             mode="remote"
+            @on-selected-rows-change="onSelectionChanged"
             @on-page-change="onPageChange"
             @on-sort-change="onSortChange"
             @on-column-filter="onColumnFilter"
             @on-per-page-change="onPerPageChange"
             @on-search="onSearch"
+            @on-column-filter="onColumnFilter"
+            :select-options="{ enabled: true, selectionText: 'redirects selected', }"
             :totalRows="totalRecords"
             pagination-options="{
     enabled: true,
@@ -19,9 +22,15 @@
             :search-options="{
     enabled: true,
     trigger: 'enter',
-    placeholder: 'Search this table',
+    placeholder: 'Search for a URI',
   }"
-        />
+        >
+        <div slot="selected-row-actions">
+            <button v-on:click="actionDelete">Delete</button>
+            <button v-on:click="actionIgnore">Ignore</button>
+            <button v-on:click="actionUnIgnore">Un-ignore</button>
+        </div>
+        </vue-good-table>
     </div>
 </template>
 
@@ -36,6 +45,7 @@
     export default Vue.extend({
         data(){
             return {
+                selectedItems: [],
                 serverParams: {
                     // a map of column filters example: {name: 'john', age: '20'}
                     columnFilters: {
@@ -77,7 +87,21 @@
                         type: 'date',
                         dateInputFormat: 'YYYY-MM-DD',
                         dateOutputFormat: 'MMM Do YYYY',
-                    }
+                    },
+                    {
+                        label: 'Ignored',
+                        field: 'ignored',
+                        type: 'number',
+                        filterOptions: {
+                            enabled: true,
+                            filterValue: false, // initial populated value for this filter
+                            filterDropdownItems: [
+                                { value: true, text: 'Only Ignored' },
+                                { value: false, text: 'Only Un-ignored' },
+                            ],
+                            trigger: 'enter', //only trigger on enter not on keyup
+                        },
+                    },
                 ],
                 rows: [],
                 totalRecords: 0
@@ -96,6 +120,9 @@
             onPerPageChange(params) {
                 this.updateParams({perPage: params.currentPerPage});
                 this.loadItems();
+            },
+            onSelectionChanged(params) {
+                this.selectedItems = params.selectedRows
             },
 
             onSortChange(params) {
@@ -118,6 +145,11 @@
                 this.loadItems();
             },
 
+            onColumnFilter(params) {
+                this.updateParams(params);
+                this.loadItems();
+            },
+
             // load items is what brings back the rows from server
             loadItems() {
                 registered404s.get404s(this.serverParams).then(response => {
@@ -125,6 +157,25 @@
                     this.rows = response.data.rows;
                 });
             },
+            actionDelete() {
+                console.log('Delete: ', this.selectedItems)
+                registered404s.delete404s(this.selectedItems).then(() => {
+                    this.loadItems();
+                });
+
+            },
+            actionIgnore() {
+                console.log('Ignore: ', this.selectedItems)
+                registered404s.ignore404s(this.selectedItems).then(() => {
+                    this.loadItems();
+                });
+            },
+            actionUnIgnore() {
+                console.log('Ignore: ', this.selectedItems)
+                registered404s.unIgnore404s(this.selectedItems).then(() => {
+                    this.loadItems();
+                });
+            }
         },
         beforeMount() {
             this.loadItems();

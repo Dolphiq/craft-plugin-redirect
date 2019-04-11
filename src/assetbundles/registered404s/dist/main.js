@@ -30914,9 +30914,31 @@ var _default = {
    */
   get404s: function get404s(params) {
     _axios.default.defaults.headers.common['X-CSRF-Token'] = Craft.csrfTokenValue;
-    return _axios.default.post(Craft.getActionUrl('vredirect/catch-all/get-filtered'), {
-      data: params
+    return _axios.default.post(Craft.getActionUrl('vredirect/catch-all/get-filtered'), params);
+  },
+  delete404s: function delete404s(rows) {
+    _axios.default.defaults.headers.common['X-CSRF-Token'] = Craft.csrfTokenValue;
+    var ids = rows.map(function (_ref) {
+      var id = _ref.id;
+      return id;
     });
+    return _axios.default.post(Craft.getActionUrl('vredirect/catch-all/delete'), ids);
+  },
+  ignore404s: function ignore404s(rows) {
+    _axios.default.defaults.headers.common['X-CSRF-Token'] = Craft.csrfTokenValue;
+    var ids = rows.map(function (_ref2) {
+      var id = _ref2.id;
+      return id;
+    });
+    return _axios.default.post(Craft.getActionUrl('vredirect/catch-all/ignore'), ids);
+  },
+  unIgnore404s: function unIgnore404s(rows) {
+    _axios.default.defaults.headers.common['X-CSRF-Token'] = Craft.csrfTokenValue;
+    var ids = rows.map(function (_ref3) {
+      var id = _ref3.id;
+      return id;
+    });
+    return _axios.default.post(Craft.getActionUrl('vredirect/catch-all/un-ignore'), ids);
   }
 };
 exports.default = _default;
@@ -31178,40 +31200,18 @@ require("vue-good-table/dist/vue-good-table.css");
 
 var _registered404s = _interopRequireDefault(require("./api/registered404s"));
 
+var _methods;
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 _vue.default.use(_vueGoodTable.default);
 
 var _default = _vue.default.extend({
   data: function data() {
     return {
+      selectedItems: [],
       serverParams: {
         // a map of column filters example: {name: 'john', age: '20'}
         columnFilters: {},
@@ -31246,12 +31246,30 @@ var _default = _vue.default.extend({
         type: 'date',
         dateInputFormat: 'YYYY-MM-DD',
         dateOutputFormat: 'MMM Do YYYY'
+      }, {
+        label: 'Ignored',
+        field: 'ignored',
+        type: 'number',
+        filterOptions: {
+          enabled: true,
+          filterValue: false,
+          // initial populated value for this filter
+          filterDropdownItems: [{
+            value: true,
+            text: 'Only Ignored'
+          }, {
+            value: false,
+            text: 'Only Un-ignored'
+          }],
+          trigger: 'enter' //only trigger on enter not on keyup
+
+        }
       }],
       rows: [],
       totalRecords: 0
     };
   },
-  methods: {
+  methods: (_methods = {
     updateParams: function updateParams(newProps) {
       this.serverParams = Object.assign({}, this.serverParams, newProps);
     },
@@ -31266,6 +31284,9 @@ var _default = _vue.default.extend({
         perPage: params.currentPerPage
       });
       this.loadItems();
+    },
+    onSelectionChanged: function onSelectionChanged(params) {
+      this.selectedItems = params.selectedRows;
     },
     onSortChange: function onSortChange(params) {
       this.updateParams({
@@ -31283,17 +31304,42 @@ var _default = _vue.default.extend({
     onSearch: function onSearch(params) {
       this.updateParams(params);
       this.loadItems();
-    },
-    // load items is what brings back the rows from server
-    loadItems: function loadItems() {
-      var _this = this;
-
-      _registered404s.default.get404s(this.serverParams).then(function (response) {
-        _this.totalRecords = response.data.totalRecords;
-        _this.rows = response.data.rows;
-      });
     }
-  },
+  }, _defineProperty(_methods, "onColumnFilter", function onColumnFilter(params) {
+    this.updateParams(params);
+    this.loadItems();
+  }), _defineProperty(_methods, "loadItems", function loadItems() {
+    var _this = this;
+
+    _registered404s.default.get404s(this.serverParams).then(function (response) {
+      _this.totalRecords = response.data.totalRecords;
+      _this.rows = response.data.rows;
+    });
+  }), _defineProperty(_methods, "actionDelete", function actionDelete() {
+    var _this2 = this;
+
+    console.log('Delete: ', this.selectedItems);
+
+    _registered404s.default.delete404s(this.selectedItems).then(function () {
+      _this2.loadItems();
+    });
+  }), _defineProperty(_methods, "actionIgnore", function actionIgnore() {
+    var _this3 = this;
+
+    console.log('Ignore: ', this.selectedItems);
+
+    _registered404s.default.ignore404s(this.selectedItems).then(function () {
+      _this3.loadItems();
+    });
+  }), _defineProperty(_methods, "actionUnIgnore", function actionUnIgnore() {
+    var _this4 = this;
+
+    console.log('Ignore: ', this.selectedItems);
+
+    _registered404s.default.unIgnore404s(this.selectedItems).then(function () {
+      _this4.loadItems();
+    });
+  }), _methods),
   beforeMount: function beforeMount() {
     this.loadItems();
   }
@@ -31315,30 +31361,60 @@ exports.default = _default;
   return _c(
     "div",
     [
-      _c("vue-good-table", {
-        attrs: {
-          mode: "remote",
-          totalRows: _vm.totalRecords,
-          "pagination-options": "{\n  enabled: true,\n}",
-          "sort-options": {
-            enabled: true
+      _c(
+        "vue-good-table",
+        {
+          attrs: {
+            mode: "remote",
+            "select-options": {
+              enabled: true,
+              selectionText: "redirects selected"
+            },
+            totalRows: _vm.totalRecords,
+            "pagination-options": "{\n  enabled: true,\n}",
+            "sort-options": {
+              enabled: true
+            },
+            rows: _vm.rows,
+            columns: _vm.columns,
+            "search-options": {
+              enabled: true,
+              trigger: "enter",
+              placeholder: "Search for a URI"
+            }
           },
-          rows: _vm.rows,
-          columns: _vm.columns,
-          "search-options": {
-            enabled: true,
-            trigger: "enter",
-            placeholder: "Search this table"
+          on: {
+            "on-selected-rows-change": _vm.onSelectionChanged,
+            "on-page-change": _vm.onPageChange,
+            "on-sort-change": _vm.onSortChange,
+            "on-column-filter": _vm.onColumnFilter,
+            "on-per-page-change": _vm.onPerPageChange,
+            "on-search": _vm.onSearch
           }
         },
-        on: {
-          "on-page-change": _vm.onPageChange,
-          "on-sort-change": _vm.onSortChange,
-          "on-column-filter": _vm.onColumnFilter,
-          "on-per-page-change": _vm.onPerPageChange,
-          "on-search": _vm.onSearch
-        }
-      })
+        [
+          _c(
+            "div",
+            {
+              attrs: { slot: "selected-row-actions" },
+              slot: "selected-row-actions"
+            },
+            [
+              _c("button", { on: { click: _vm.actionDelete } }, [
+                _vm._v("Delete")
+              ]),
+              _vm._v(" "),
+              _c("button", { on: { click: _vm.actionIgnore } }, [
+                _vm._v("Ignore")
+              ]),
+              _vm._v(" "),
+              _c("button", { on: { click: _vm.actionUnIgnore } }, [
+                _vm._v("Un-ignore")
+              ])
+            ]
+          )
+        ]
+      )
     ],
     1
   )

@@ -13,6 +13,7 @@ use craft\web\Controller;
 use craft\web\Response;
 use venveo\redirect\Plugin;
 use venveo\redirect\records\CatchAllUrl;
+use venveo\redirect\records\Redirect;
 
 class CatchAllController extends Controller
 {
@@ -33,47 +34,11 @@ class CatchAllController extends Controller
         ]);
     }
 
-    /**
-     * @return \yii\web\Response
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     * @throws \yii\web\BadRequestHttpException
-     */
-    public function actionDelete() {
-        $this->requirePostRequest();
-        $this->requireAcceptsJson();
-
-        $catchAllId = Craft::$app->getRequest()->getRequiredBodyParam('id');
-
-        Plugin::$plugin->catchAll->deleteUrlById($catchAllId);
-
-        return $this->asJson(['success' => true]);
-    }
-
-
-    /**
-     * @return \yii\web\Response
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     * @throws \yii\web\BadRequestHttpException
-     */
-    public function actionIgnore() {
-        $this->requirePostRequest();
-        $this->requireAcceptsJson();
-
-        $catchAllId = Craft::$app->getRequest()->getRequiredBodyParam('id');
-
-        Plugin::$plugin->catchAll->ignoreUrlById($catchAllId);
-
-        return $this->asJson(['success' => true]);
-    }
-
     public function actionGetFiltered() {
         $this->requirePostRequest();
         $this->requireAcceptsJson();
-        $request = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);
-        $data = $request['data'] ?? [];
-        $recordQuery = CatchAllUrl::find()->where(['ignored' => false]);
+        $data = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);
+        $recordQuery = CatchAllUrl::find();
         $recordQuery->limit = $data['perPage'] ?? 10;
 
         // Handle sorting...
@@ -86,6 +51,21 @@ class CatchAllController extends Controller
         // Handle searching
         if(isset($data['searchTerm']) && $data['searchTerm'] != '') {
             $recordQuery->andFilterWhere(['like', 'uri', $data['searchTerm']]);
+        }
+
+        // Handle filters
+        if (isset($data['columnFilters'])) {
+            foreach($data['columnFilters'] as $filter => $value) {
+                if ($value == '') {
+                    continue;
+                }
+                if ($value == 'true' || $value === true) {
+                    $value = true;
+                } else {
+                    $value = false;
+                }
+                $recordQuery->andWhere([$filter => $value]);
+            }
         }
 
         // Process the results
@@ -101,5 +81,29 @@ class CatchAllController extends Controller
             $rows[] = $row;
         }
         return $this->asJson(['totalRecords' => $recordQuery->count(), 'rows' => $rows]);
+    }
+
+    public function actionDelete() {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+        $data = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);
+        CatchAllUrl::deleteAll(['in', 'id', $data]);
+        return $this->asJson('Deleted');
+    }
+
+    public function actionIgnore() {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+        $data = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);
+        CatchAllUrl::updateAll(['ignored' => true], ['in', 'id', $data]);
+        return $this->asJson('Ignored');
+    }
+
+    public function actionUnIgnore() {
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+        $data = \GuzzleHttp\json_decode(Craft::$app->request->getRawBody(), true);
+        CatchAllUrl::updateAll(['ignored' => false], ['in', 'id', $data]);
+        return $this->asJson('Un-ignored');
     }
 }
