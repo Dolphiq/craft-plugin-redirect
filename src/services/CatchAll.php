@@ -48,6 +48,10 @@ class CatchAll extends Component
             $catchAllURL->ignored = false;
             $catchAllURL->siteId = $siteId;
         } else {
+            // Don't bother if it's ignored
+            if ($catchAllURL->ignored) {
+                return true;
+            }
             ++$catchAllURL->hitCount;
         }
         $catchAllURL->save();
