@@ -37,13 +37,17 @@
     {#    </div>#}
     <div id="categorygroup-settings">
         {% if craft.app.getIsMultiSite() %}
+            {% set siteId = currentSiteId %}
+            {% if catchAllRecord is defined and catchAllRecord.siteId is defined %}
+                {% set siteId = catchAllRecord.siteId %}
+            {% endif %}
             {{ forms.selectField({
                 label: "Site"|t('vredirect'),
                 instructions: "Site"|t('vredirect'),
                 id: 'site-id',
                 name: 'siteId',
                 options: editableSitesOptions,
-                value: currentSiteId,
+                value: siteId,
                 toggle: true,
                 targetPrefix: '.siteId-',
                 errors: redirect.getErrors('siteId')

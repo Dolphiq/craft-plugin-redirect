@@ -14,6 +14,7 @@ use craft\db\ActiveRecord;
  * @property string uri
  * @property int hitCount
  * @property int|null siteId
+ * @property boolean ignored
  */
 class CatchAllUrl extends ActiveRecord
 {

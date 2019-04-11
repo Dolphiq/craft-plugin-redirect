@@ -75,6 +75,7 @@ class Install extends Migration
                     'dateCreated' => $this->dateTime()->notNull(),
                     'dateUpdated' => $this->dateTime()->notNull(),
                     'hitCount' => $this->integer()->unsigned()->notNull()->defaultValue(0),
+                    'ignored' => $this->boolean()->notNull()->defaultValue(false),
                 ]
             );
         }
