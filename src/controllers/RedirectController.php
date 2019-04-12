@@ -17,6 +17,7 @@ use dolphiq\redirect\RedirectPlugin;
 
 use \dolphiq\redirect\helpers\UrlRule;
 use \dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
+use yii\web\NotFoundHttpException;
 
 class RedirectController extends Controller
 {
