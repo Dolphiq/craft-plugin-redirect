@@ -102,12 +102,12 @@
                         type: 'boolean',
                         filterOptions: {
                             enabled: true,
-                            filterValue: false, // initial populated value for this filter
+                            placeholder: 'All', // placeholder for filter input
+                            value: false,
                             filterDropdownItems: [
                                 {value: true, text: 'Only Ignored'},
                                 {value: false, text: 'Only Un-ignored'},
-                            ],
-                            trigger: 'enter', //only trigger on enter not on keyup
+                            ]
                         },
                     },
                     {
