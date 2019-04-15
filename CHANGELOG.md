@@ -6,6 +6,10 @@
 - Disable sorting on non-sortable fields
 - Prevent row from being checked when clicking "Create Redirect"
 - Ignored column now says "Yes" or "No" rather than 0 or 1
+- Improved redirect path pre-parsing
+
+### Added
+- Added setting to trim trailing slashes from redirect paths on save
 
 ## 2.0.4 - 2019-04-11
 ### Added

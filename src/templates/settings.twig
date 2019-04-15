@@ -32,3 +32,12 @@
     on:           settings.catchAllActive,
     errors:       settings.getErrors('catchAllActive')
 }) }}
+
+{{ forms.lightswitchField({
+    label:        "Trim trailing slash from URLs on save"|t('vredirect'),
+    instructions: "If set, when redirects are saved, the trailing slash will be removed. Typically, you want this."|t('vredirect'),
+    id:           'trimTrailingSlashFromPath',
+    name:         'trimTrailingSlashFromPath',
+    on:           settings.trimTrailingSlashFromPath,
+    errors:       settings.getErrors('trimTrailingSlashFromPath')
+}) }}
