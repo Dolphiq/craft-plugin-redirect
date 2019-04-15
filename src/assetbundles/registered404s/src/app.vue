@@ -9,6 +9,7 @@
             @on-per-page-change="onPerPageChange"
             @on-search="onSearch"
             @on-column-filter="onColumnFilter"
+            styleClass="vgt-table condensed"
             :select-options="{ enabled: true, selectionText: 'redirects selected', }"
             :totalRows="totalRecords"
             :pagination-options="{
@@ -33,7 +34,7 @@
             </div>
             <template slot="table-row" slot-scope="props">
                 <span v-if="props.column.field == 'createRedirect'">
-                <button class="btn small" v-on:click="actionCreateRedirect(props.row)">Create Redirect</button>
+                <button class="btn small" v-on:click="actionCreateRedirect($event, props.row)">Create Redirect</button>
                 </span>
                 <span v-else>
                 {{props.formattedRow[props.column.field]}}
@@ -72,6 +73,8 @@
                     {
                         label: 'Site Name',
                         field: 'siteName',
+                        sortable: false,
+                        hidden: !this.showSiteName,
                     },
                     {
                         label: 'URI',
@@ -93,6 +96,7 @@
                         label: 'Last Hit',
                         field: 'dateUpdated',
                         type: 'date',
+                        thClass: 'collapse',
                         dateInputFormat: 'YYYY-MM-DD',
                         dateOutputFormat: 'MMM Do YYYY',
                     },
@@ -100,9 +104,11 @@
                         label: 'Ignored',
                         field: 'ignored',
                         type: 'boolean',
+                        formatFn: this.formatBool,
+                        thClass: 'collapse',
                         filterOptions: {
                             enabled: true,
-                            placeholder: 'All', // placeholder for filter input
+                            placeholder: 'All',
                             value: false,
                             filterDropdownItems: [
                                 {value: true, text: 'Only Ignored'},
@@ -112,7 +118,9 @@
                     },
                     {
                         label: '',
-                        field: 'createRedirect'
+                        field: 'createRedirect',
+                        tdClass: 'button',
+                        sortable: false
                     }
                 ],
                 rows: [],
@@ -189,8 +197,20 @@
                 });
             },
 
-            actionCreateRedirect(row) {
+            actionCreateRedirect(event, row) {
+                event.preventDefault()
+                event.stopPropagation()
                 window.location = row.createUrl;
+            },
+
+            formatBool(val) {
+                if (val == 0) {
+                    return 'No'
+                }
+                return 'Yes'
+            },
+            showSiteName() {
+                return Craft.sites.length > 1;
             }
         },
         beforeMount() {
@@ -200,4 +220,5 @@
 </script>
 
 <style lang="scss" scoped>
+
 </style>

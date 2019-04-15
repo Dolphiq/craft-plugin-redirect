@@ -31226,7 +31226,9 @@ var _default = _vue.default.extend({
       },
       columns: [{
         label: 'Site Name',
-        field: 'siteName'
+        field: 'siteName',
+        sortable: false,
+        hidden: !this.showSiteName
       }, {
         label: 'URI',
         field: 'uri'
@@ -31244,16 +31246,18 @@ var _default = _vue.default.extend({
         label: 'Last Hit',
         field: 'dateUpdated',
         type: 'date',
+        thClass: 'collapse',
         dateInputFormat: 'YYYY-MM-DD',
         dateOutputFormat: 'MMM Do YYYY'
       }, {
         label: 'Ignored',
         field: 'ignored',
         type: 'boolean',
+        formatFn: this.formatBool,
+        thClass: 'collapse',
         filterOptions: {
           enabled: true,
           placeholder: 'All',
-          // placeholder for filter input
           value: false,
           filterDropdownItems: [{
             value: true,
@@ -31265,7 +31269,9 @@ var _default = _vue.default.extend({
         }
       }, {
         label: '',
-        field: 'createRedirect'
+        field: 'createRedirect',
+        tdClass: 'button',
+        sortable: false
       }],
       rows: [],
       totalRecords: 0
@@ -31341,8 +31347,18 @@ var _default = _vue.default.extend({
     _registered404s.default.unIgnore404s(this.selectedItems).then(function () {
       _this4.loadItems();
     });
-  }), _defineProperty(_methods, "actionCreateRedirect", function actionCreateRedirect(row) {
+  }), _defineProperty(_methods, "actionCreateRedirect", function actionCreateRedirect(event, row) {
+    event.preventDefault();
+    event.stopPropagation();
     window.location = row.createUrl;
+  }), _defineProperty(_methods, "formatBool", function formatBool(val) {
+    if (val == 0) {
+      return 'No';
+    }
+
+    return 'Yes';
+  }), _defineProperty(_methods, "showSiteName", function showSiteName() {
+    return Craft.sites.length > 1;
   }), _methods),
   beforeMount: function beforeMount() {
     this.loadItems();
@@ -31370,6 +31386,7 @@ exports.default = _default;
         {
           attrs: {
             mode: "remote",
+            styleClass: "vgt-table condensed",
             "select-options": {
               enabled: true,
               selectionText: "redirects selected"
@@ -31410,7 +31427,7 @@ exports.default = _default;
                             staticClass: "btn small",
                             on: {
                               click: function($event) {
-                                _vm.actionCreateRedirect(props.row)
+                                _vm.actionCreateRedirect($event, props.row)
                               }
                             }
                           },
@@ -31539,9 +31556,9 @@ var checkedAssets, assetsToAccept;
 var parent = module.bundle.parent;
 
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
-  var hostname = "" || location.hostname;
+  var hostname = "localhost:8000" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51613" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49906" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -31717,4 +31734,4 @@ function hmrAcceptRun(bundle, id) {
   }
 }
 },{}]},{},["../../../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","main.js"], null)
-//# sourceMappingURL=/main.js.map
+//# sourceMappingURL=main.js.map
