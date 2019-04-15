@@ -43,7 +43,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['redirectsActive', 'catchAllActive', 'autoRedirect', 'trimTrailingSlashFromPath'], 'boolean'],
+            [['redirectsActive', 'catchAllActive', 'trimTrailingSlashFromPath'], 'boolean'],
         ];
     }
 }
