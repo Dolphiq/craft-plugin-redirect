@@ -21,6 +21,8 @@ use craft\web\ErrorHandler;
 use Throwable;
 use venveo\redirect\elements\actions\DeleteRedirects;
 use venveo\redirect\elements\db\RedirectQuery;
+use venveo\redirect\models\Settings;
+use venveo\redirect\Plugin;
 use venveo\redirect\records\Redirect as RedirectRecord;
 use yii\db\Exception;
 use yii\db\StaleObjectException;
@@ -295,7 +297,7 @@ class Redirect extends Element
         $rules[] = [['hitCount'], 'number', 'integerOnly' => true];
         $rules[] = [['sourceUrl', 'destinationUrl'], 'string', 'max' => 255];
         $rules[] = [['sourceUrl', 'destinationUrl', 'type'], 'required'];
-        $rules[] = [['type'], 'in', 'range' => ['static', 'dynamic']];
+        $rules[] = [['type'], 'in', 'range' => [self::TYPE_STATIC, self::TYPE_DYNAMIC]];
         $rules[] = [['statusCode'], 'in', 'range' => ['301', '302']];
         return $rules;
     }
@@ -303,26 +305,63 @@ class Redirect extends Element
     /**
      * Cleans a URL by removing its base URL if it's a relative one
      * Also strip leading slashes from absolute URLs
-     *
-     * @inheritdoc
+     * @param string $url
+     * @param bool $isSource
+     * @return string
      */
-    public function formatUrl(string $url): string
+    public function formatUrl(string $url, $isSource = false): string
     {
-        // trim white space
-        $resultUrl = trim($url);
+        /** @var Settings $settings */
+        $settings = Plugin::getInstance()->getSettings();
 
-        if (strpos($resultUrl, '://') !== false) {
-            // check if the base url is there and strip if it does
-            $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
-        } else {
-            // strip leading slash
-            $resultUrl = ltrim($resultUrl, '/');
+        $resultUrl = $url;
+        $urlInfo = parse_url($resultUrl);
+        $siteUrlHost = parse_url($this->site->baseUrl, PHP_URL_HOST);
+        // If we're the source and we're static or we're not the source, we should check for relative URLs
+        if ($this->type === self::TYPE_STATIC || !$isSource) {
+            // If our redirect source or destination has our site URL, let's strip it out
+            if (isset($urlInfo['host']) && $urlInfo['host'] === $siteUrlHost) {
+                unset($urlInfo['scheme'], $urlInfo['host'], $urlInfo['port']);
+            }
+
+            // We're down to a relative URL, let's strip the leading slash from the path
+            if (!isset($urlInfo['host']) && isset($urlInfo['path'])) {
+                $urlInfo['path'] = ltrim($urlInfo['path'], '/');
+            }
+
+            // Remove the trailing slash from the path if enabled
+            if (isset($urlInfo['path']) && $settings->trimTrailingSlashFromPath) {
+                $urlInfo['path'] = rtrim($urlInfo['path'], '/');
+            }
+
+            // Rebuild our URL
+            $resultUrl = self::unparse_url($urlInfo);
         }
         return $resultUrl;
     }
 
+
     /**
-     * SOft-delete the record with the element
+     * Source: https://www.php.net/manual/en/function.parse-url.php#106731
+     * @param array $parsed_url
+     * @return string
+     */
+    private static function unparse_url($parsed_url): string
+    {
+        $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+        $host     = $parsed_url['host'] ?? '';
+        $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+        $user     = $parsed_url['user'] ?? '';
+        $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+        $pass     = ($user || $pass) ? "$pass@" : '';
+        $path     = $parsed_url['path'] ?? '';
+        $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+        $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+        return "$scheme$user$pass$host$port$path$query$fragment";
+    }
+
+    /**
+     * Soft-delete the record with the element
      *
      * @return bool
      * @throws Throwable
@@ -368,8 +407,8 @@ class Redirect extends Element
         }
 
 
-        $record->sourceUrl = $this->formatUrl($this->sourceUrl);
-        $record->destinationUrl = $this->formatUrl($this->destinationUrl);
+        $record->sourceUrl = $this->formatUrl(trim($this->sourceUrl), true);
+        $record->destinationUrl = $this->formatUrl(trim($this->destinationUrl), false);
         $record->statusCode = $this->statusCode;
         $record->type = $this->type;
 
