@@ -1,4 +1,11 @@
 # Redirect Changelog
+## Unreleased
+### Changed
+- Improved styles of 404 list to be full width
+- Hide "Site" column if there's only one site
+- Disable sorting on non-sortable fields
+- Prevent row from being checked when clicking "Create Redirect"
+- Ignored column now says "Yes" or "No" rather than 0 or 1
 
 ## 2.0.4 - 2019-04-11
 ### Added

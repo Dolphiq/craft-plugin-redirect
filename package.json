@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Manage site 404s",
   "scripts": {
-    "dev": "parcel watch ./src/assetbundles/registered404s/src/main.js --out-dir ./src/assetbundles/registered404s/dist",
+    "dev": "parcel watch ./src/assetbundles/registered404s/src/main.js --hmr-hostname localhost:8000 --public-url ./ --log-level 3 --out-dir ./src/assetbundles/registered404s/dist",
     "build": "parcel build ./src/assetbundles/registered404s/src/main.js --out-dir ./src/assetbundles/registered404s/dist"
   },
   "author": "",
