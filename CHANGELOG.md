@@ -1,5 +1,15 @@
 # Redirect Changelog
 
+## 1.0.21 - 2019-04-17
+### Added
+- Give other plugins a chance to trigger event: beforeCatchall
+- Improve and add missing German translations
+
+### Fixed
+- Source url to work with numbers only eg rederect /12 to /number=12
+- Source url to work with # numbers, note: the # part is ignored on server side
+- Small improvements in namespacig and remove undefined variable
+
 ## 1.0.20 - 2019-02-05
 ### Added
 - Add Feed Me support
