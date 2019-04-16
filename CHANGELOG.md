@@ -1,6 +1,6 @@
 # Redirect Changelog
 
-## Unreleased
+## 2.0.6 - 2019-04-16
 ### Added
 - Added automatic migration for updating form Dolphiq Redirect
 
