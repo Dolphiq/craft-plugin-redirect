@@ -17,6 +17,7 @@ use dolphiq\redirect\RedirectPlugin;
 
 use \dolphiq\redirect\helpers\UrlRule;
 use \dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
+use yii\web\NotFoundHttpException;
 
 class RedirectController extends Controller
 {
@@ -92,7 +93,7 @@ class RedirectController extends Controller
               'gif', 'jpg', 'jpeg', 'png', 'tiff', 'svg', 'ttf', 'woff', 'woff2', 'otf', 'ico', 'js', 'css',
               ])) {
               // this is a known extention, please don't handle but trow an exception
-              throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'), 404, $e);
+              throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'), 404);
           } else {
               // register the url and go to the template!
 
