@@ -171,8 +171,17 @@ class RedirectPlugin extends \craft\base\Plugin
                 if ($settings->redirectsActive) {
                     $siteId = Craft::$app->getSites()->currentSite->id;
                     $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
+
                     foreach ($allRedirects as $redirect) {
-                        $event->rules[$redirect['sourceUrl']] = [
+                        $sourceUrl=$redirect['sourceUrl'];
+                        if(strpos($redirect['sourceUrl'],'#') !== false) {
+                            $sourceUrl = current(explode('#', $sourceUrl));
+                        }
+                        if(is_numeric($sourceUrl)) {
+                            $sourceUrl = '/' . $sourceUrl .'/';
+                        }
+
+                        $event->rules[$sourceUrl] = [
                             'route' => 'redirect/redirect/index',
                             'params' => [
                                 'sourceUrl' => $redirect['sourceUrl'],
