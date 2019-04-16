@@ -8,7 +8,6 @@
             @on-column-filter="onColumnFilter"
             @on-per-page-change="onPerPageChange"
             @on-search="onSearch"
-            @on-column-filter="onColumnFilter"
             styleClass="vgt-table condensed"
             :select-options="{ enabled: true, selectionText: 'redirects selected', }"
             :totalRows="totalRecords"
@@ -109,7 +108,7 @@
                         filterOptions: {
                             enabled: true,
                             placeholder: 'All',
-                            value: false,
+                            filterValue: false,
                             filterDropdownItems: [
                                 {value: true, text: 'Only Ignored'},
                                 {value: false, text: 'Only Un-ignored'},
@@ -165,11 +164,6 @@
                 this.loadItems();
             },
 
-            onColumnFilter(params) {
-                this.updateParams(params);
-                this.loadItems();
-            },
-
             // load items is what brings back the rows from server
             loadItems() {
                 registered404s.get404s(this.serverParams).then(response => {
@@ -178,20 +172,17 @@
                 });
             },
             actionDelete() {
-                console.log('Delete: ', this.selectedItems)
                 registered404s.delete404s(this.selectedItems).then(() => {
                     this.loadItems();
                 });
 
             },
             actionIgnore() {
-                console.log('Ignore: ', this.selectedItems)
                 registered404s.ignore404s(this.selectedItems).then(() => {
                     this.loadItems();
                 });
             },
             actionUnIgnore() {
-                console.log('Ignore: ', this.selectedItems)
                 registered404s.unIgnore404s(this.selectedItems).then(() => {
                     this.loadItems();
                 });

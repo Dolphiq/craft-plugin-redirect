@@ -1,10 +1,11 @@
 # Redirect Changelog
-## Unreleased
+## 2.0.7 - 2019-04-16
 ### Fixed
 - Unexpected behavior that can occur on dynamic redirects matching without replacement
 
 ### Changed
 - Static redirects will now take precedence over dynamic redirects
+- 404 table now defaults to only show unignored items
 
 ## 2.0.6 - 2019-04-16
 ### Added

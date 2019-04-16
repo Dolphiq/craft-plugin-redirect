@@ -2,7 +2,7 @@
     "name": "venveo/craft-redirect",
     "description": "Craft redirect plugin provides an easy way to enter and maintain 301 and 302 redirects and 404 error pages.",
     "type": "craft-plugin",
-    "version": "2.0.6",
+    "version": "2.0.7",
     "keywords": [
         "craft",
         "cms",

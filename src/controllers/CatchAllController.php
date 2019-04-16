@@ -59,18 +59,20 @@ class CatchAllController extends Controller
         }
 
         // Handle filters
-        if (isset($data['columnFilters'])) {
+        if (isset($data['columnFilters']) && !empty($data['columnFilters'])) {
             foreach ($data['columnFilters'] as $filter => $value) {
                 if ($value == '') {
                     continue;
                 }
-                if ($value == 'true' || $value === true) {
+                if ($value === 'true' || $value === true) {
                     $value = true;
                 } else {
                     $value = false;
                 }
                 $recordQuery->andWhere([$filter => $value]);
             }
+        } else {
+            $recordQuery->andWhere(['ignored' => false]);
         }
         $data['page'] = $data['page'] ?? 1;
         $recordQuery->limit = $data['perPage'] ?? 10;
