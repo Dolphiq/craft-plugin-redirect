@@ -94,7 +94,12 @@ class Redirects extends Component
                 $sourceUrl .= '/';
             }
 
-            $processedUrl = preg_replace($sourceUrl, $redirect->destinationUrl, $uri);
+            // Only preg_replace if there are replacement flags
+            if (preg_match("/\$\d/", $redirect->destinationUrl)) {
+                $processedUrl = preg_replace($sourceUrl, $redirect->destinationUrl, $uri);
+            } else {
+                $processedUrl = $redirect->destinationUrl;
+            }
         } else {
             return;
         }
