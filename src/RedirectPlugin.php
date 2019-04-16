@@ -12,6 +12,8 @@ namespace dolphiq\redirect;
 
 use Craft;
 use craft\base\Plugin;
+use dolphiq\redirect\elements\FeedMeRedirect;
+use dolphiq\redirect\elements\Redirect;
 use dolphiq\redirect\models\Settings;
 use dolphiq\redirect\services\Redirects;
 use dolphiq\redirect\services\CatchAll;
@@ -20,6 +22,8 @@ use craft\events\RegisterCpNavItemsEvent;
 use craft\web\twig\variables\Cp;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
+use verbb\feedme\events\RegisterFeedMeElementsEvent;
+use verbb\feedme\services\Elements;
 use yii\base\Event;
 
 
@@ -151,6 +155,12 @@ class RedirectPlugin extends \craft\base\Plugin
 
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
+        // Register FeedMe ElementType
+        if (\Craft::$app->plugins->isPluginEnabled('feed-me')) {
+            Event::on(Elements::class, Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(RegisterFeedMeElementsEvent $e) {
+                $e->elements[] = FeedMeRedirect::class;
+            });
+        }
 
         $settings = RedirectPlugin::$plugin->getSettings();
         if ($settings->redirectsActive) {
@@ -161,8 +171,17 @@ class RedirectPlugin extends \craft\base\Plugin
                 if ($settings->redirectsActive) {
                     $siteId = Craft::$app->getSites()->currentSite->id;
                     $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
+
                     foreach ($allRedirects as $redirect) {
-                        $event->rules[$redirect['sourceUrl']] = [
+                        $sourceUrl=$redirect['sourceUrl'];
+                        if(strpos($redirect['sourceUrl'],'#') !== false) {
+                            $sourceUrl = current(explode('#', $sourceUrl));
+                        }
+                        if(is_numeric($sourceUrl)) {
+                            $sourceUrl = '/' . $sourceUrl .'/';
+                        }
+
+                        $event->rules[$sourceUrl] = [
                             'route' => 'redirect/redirect/index',
                             'params' => [
                                 'sourceUrl' => $redirect['sourceUrl'],
