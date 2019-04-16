@@ -1,4 +1,9 @@
 # Redirect Changelog
+
+## Unreleased
+### Added
+- Added automatic migration for updating form Dolphiq Redirect
+
 ## 2.0.5 - 2019-04-15
 ### Changed
 - Improved styles of 404 list to be full width

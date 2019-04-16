@@ -8,7 +8,8 @@ format will have changed from the previous version of the plugin.
 
 Additionally, the registered 404s has been rebuilt to better handle more numerous entries.
 
-See the "Issues" section in GitHub to see the project roadmap. 
+## Updating form Dolphiq Redirect
+You can migrate directly from Dolphiq Redirect to Venveo Redirect. [Please see the migration guide](MIGRATING.md) 
 
 ## Requirements
 This plugin requires Craft CMS 3.1.19 or later - also tested on 3.2 alpha.
