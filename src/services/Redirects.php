@@ -47,26 +47,34 @@ class Redirects extends Component
      */
     public function handle404(HttpException $exception)
     {
-        $siteId = Craft::$app->getSites()->currentSite->id;
-
-        $matchedRedirect = null;
-
-        // Just the URI
-        $path = Craft::$app->request->fullPath;
         // Path with query params
         $fullPath = rtrim(ltrim(Craft::$app->request->getUrl(), '/'), '/');
 
         $query = new RedirectQuery(Redirect::class);
         $query->matchingUri = $fullPath;
-        $matchedRedirect = $query->one();
-        if (!$matchedRedirect) {
-            if(Plugin::$plugin->getSettings()->catchAllActive) {
+        $matchedRedirects = $query->all();
+        if (empty($matchedRedirects)) {
+            if (Plugin::$plugin->getSettings()->catchAllActive) {
                 $this->registerCatchAll();
             }
             return;
         }
+
+        // Make sure we do static redirects first
+        usort($matchedRedirects, function ($a, $b) {
+            if ($a->type === 'static' && $b->type === 'dynamic') {
+                return -1;
+            }
+
+            if ($a->type === 'dynamic' && $b->type === 'static') {
+                return 1;
+            }
+
+            return 0;
+        });
+
         try {
-            $this->doRedirect($matchedRedirect, $fullPath);
+            $this->doRedirect($matchedRedirects[0], $fullPath);
         } catch (\Exception $e) {
             return;
         }
@@ -88,7 +96,7 @@ class Redirects extends Component
             $sourceUrl = $redirect->sourceUrl;
             // Add leading and trailing slashes for RegEx
             if (mb_strpos($sourceUrl, '/') !== 0) {
-                $sourceUrl = '/'.$sourceUrl;
+                $sourceUrl = '/' . $sourceUrl;
             }
             if (mb_strrpos($sourceUrl, '/') !== strlen($sourceUrl)) {
                 $sourceUrl .= '/';

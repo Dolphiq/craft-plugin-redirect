@@ -58,3 +58,13 @@ Destination URL:
 ```
 overview/cars/$1/colors/$3
 ```
+
+### Dynamic redirects without a parameter
+Source URL:
+```
+^some-deprecated-page\/*
+```
+Destination URL:
+```
+my-new-page
+```

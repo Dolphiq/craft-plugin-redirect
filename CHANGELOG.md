@@ -3,6 +3,9 @@
 ### Fixed
 - Unexpected behavior that can occur on dynamic redirects matching without replacement
 
+### Changed
+- Static redirects will now take precedence over dynamic redirects
+
 ## 2.0.6 - 2019-04-16
 ### Added
 - Added automatic migration for updating form Dolphiq Redirect
