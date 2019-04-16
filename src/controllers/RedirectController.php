@@ -13,15 +13,19 @@ use Craft;
 use craft\web\Controller;
 use craft\helpers\UrlHelper;
 
+use dolphiq\redirect\events\RedirectEvent;
 use dolphiq\redirect\RedirectPlugin;
 
 use \dolphiq\redirect\helpers\UrlRule;
 use \dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
+use yii\web\NotFoundHttpException;
 
 class RedirectController extends Controller
 {
     private $_sourceRouteParams = [];
     protected $allowAnonymous = ['index'];
+
+    const EVENT_BEFORE_CATCHALL = 'beforeCatchall';
 
     public function actionIndex()
     {
@@ -92,8 +96,14 @@ class RedirectController extends Controller
               'gif', 'jpg', 'jpeg', 'png', 'tiff', 'svg', 'ttf', 'woff', 'woff2', 'otf', 'ico', 'js', 'css',
               ])) {
               // this is a known extention, please don't handle but trow an exception
-              throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'), 404, $e);
+              throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'), 404);
           } else {
+
+              $event = new RedirectEvent([
+                  'uri' => $uri,
+              ]);
+              $this->trigger(self::EVENT_BEFORE_CATCHALL, $event);
+
               // register the url and go to the template!
 
               RedirectPlugin::$plugin->getCatchAll()->registerHitByUri($uri);
