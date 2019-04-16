@@ -5,29 +5,25 @@ implications:
 1. Our data is stored similarly (Yay!)
 2. Redirects work completely differently (Boo!)
 
-We'll tackle each of the following challenges in this guide:
-1. Handling handles changing handles
-2. Installing Venveo craft-redirect (AKA: vredirect)
-3. Fixing dynamic redirects
+Fortunately, Venveo Redirect provides a migration to help out with this.
 
-## 1. Handling handles changing handles
-Craft keeps track of what migrations you've run and what plugins you have installed by using a plugin handle. Because
-this plugin is a fork and can hypothetically exist alongside dolphiq redirect.
-### Step 1
-Remove Dolphiq redirect, but do **not** uninstall it. Simply:
-`composer remove dolphiq/redirect`
+### Pre-requisites:
 
-Install Venveo redirect:
-`composer require venveo/craft-redirect`
+- Dolphiq redirect installed, enabled, and updated to no further than 1.0.20. **THIS IS IMPORTANT.**
 
-Manually update database references:
-- Update the `craft_plugins` table and change the plugin entry with the handle "redirect" to "vredirect"
-```sql
-UPDATE craft_plugins SET handle = 'vredirect' WHERE handle = 'redirect' LIMIT 1;
-```
+### Steps
+1. Install Venveo redirect either through composer or the plugin store
+    
+   `composer require venveo/craft-redirect`
 
-### Step 2
-Open the admin CP of your environment and you should be prompted to run CMS updates. Run those.
+    The installation process will automatically detect if Dolphiq redirect is installed, apply the proper migrations to
+    bring it up to the required version, apply the new migrations for Venveo Redirect, and disable Dolphiq redirect.
 
-### Step 3
-TODO
+2. Update your dynamic redirects
+    
+    You'll need to update all of your redirects with dynamic patterns to RegEx and set the type to "Dynamic (RegEx)"
+   
+3. You may now safely remove dolphiq Redirect (Don't "Uninstall"!)
+    
+    `composer remove dolphiq/redirect`
+    
