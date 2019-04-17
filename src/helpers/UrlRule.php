@@ -5,9 +5,6 @@
 
 namespace dolphiq\redirect\helpers;
 
-use Craft;
-use craft\helpers\ArrayHelper;
-
 /**
  * @inheritdoc
  *

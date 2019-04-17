@@ -9,11 +9,7 @@
 namespace dolphiq\redirect\services;
 
 use Craft;
-use craft\db\Query;
-use craft\helpers\Json;
-use yii\web\NotFoundHttpException;
 use yii\base\Component;
-use craft\helpers\Db;
 use dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
 
 /**

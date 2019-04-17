@@ -11,15 +11,10 @@
 namespace dolphiq\redirect;
 
 use Craft;
-use craft\base\Plugin;
 use dolphiq\redirect\elements\FeedMeRedirect;
-use dolphiq\redirect\elements\Redirect;
 use dolphiq\redirect\models\Settings;
 use dolphiq\redirect\services\Redirects;
 use dolphiq\redirect\services\CatchAll;
-
-use craft\events\RegisterCpNavItemsEvent;
-use craft\web\twig\variables\Cp;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 use verbb\feedme\events\RegisterFeedMeElementsEvent;
