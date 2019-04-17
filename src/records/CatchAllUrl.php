@@ -22,5 +22,4 @@ class CatchAllUrl extends ActiveRecord
     }
 
 
-
 }

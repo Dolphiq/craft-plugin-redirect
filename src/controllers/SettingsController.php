@@ -37,7 +37,7 @@ class SettingsController extends Controller
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
 
-        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+        $source = (isset($routeParameters['source']) ? $routeParameters['source'] : 'CpSection');
         $navItems = $this->getMenuItems();
 
         unset($navItems['redirects']);
@@ -45,7 +45,7 @@ class SettingsController extends Controller
             'settings' => RedirectPlugin::$plugin->getSettings(),
             'navItems' => $navItems,
             'source' => $source,
-            'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
+            'pathPrefix' => ($source == 'CpSettings' ? 'settings/' : ''),
             // 'allRedirects' => $allRedirects
         ];
 
@@ -94,7 +94,7 @@ class SettingsController extends Controller
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
 
-        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+        $source = (isset($routeParameters['source']) ? $routeParameters['source'] : 'CpSection');
         $navItems = $this->getMenuItems();
 
         $siteId = Craft::$app->getRequest()->getQueryParam('siteId', Craft::$app->getSites()->currentSite->id);
@@ -106,7 +106,7 @@ class SettingsController extends Controller
             'navItems' => $navItems,
             'source' => $source,
             'selectedSiteId' => $siteId,
-            'pathPrefix' => ($source == 'CpSettings' ? 'settings/': ''),
+            'pathPrefix' => ($source == 'CpSettings' ? 'settings/' : ''),
             // 'allRedirects' => $allRedirects
         ];
 
@@ -130,26 +130,26 @@ class SettingsController extends Controller
     {
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
 
-        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+        $source = (isset($routeParameters['source']) ? $routeParameters['source'] : 'CpSection');
 
         $settings = RedirectPlugin::$plugin->getSettings();
 
         $navItems = [
             'settings' => [
                 'label' => "Settings",
-                'url' => UrlHelper::url( ($source == 'CpSettings' ? 'settings/': '') . 'redirect/settings')
+                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect/settings')
             ]
         ];
 
         if ($settings['catchAllActive']) {
             $navItems['registeredcatchall'] = [
                 'label' => "Registered catch all urls",
-                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect/registered-catch-all-urls')
+                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect/registered-catch-all-urls')
             ];
         }
         $navItems['redirects'] = [
             'label' => "Redirect entries",
-            'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/': '') . 'redirect')
+            'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect')
         ];
 
         return $navItems;
@@ -166,17 +166,17 @@ class SettingsController extends Controller
         $this->requireAdmin();
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
-        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+        $source = (isset($routeParameters['source']) ? $routeParameters['source'] : 'CpSection');
         $settings = RedirectPlugin::$plugin->getSettings();
 
         $navItems = $this->getMenuItems();
 
         return $this->renderTemplate('redirect/settings', [
-          'settings' => $settings,
-          'navItems' => $navItems,
-          'source' => $source,
-          'pathPrefix' => ($source == 'CpSettings' ? 'settings/': '')
-       ]);
+            'settings' => $settings,
+            'navItems' => $navItems,
+            'source' => $source,
+            'pathPrefix' => ($source == 'CpSettings' ? 'settings/' : '')
+        ]);
     }
 
     /**
@@ -207,10 +207,10 @@ class SettingsController extends Controller
         if (!Craft::$app->getPlugins()->savePluginSettings($plugin, $newSettings)) {
             Craft::$app->getSession()->setError(Craft::t('app', 'Couldn’t save plugin settings.'));
 
-        // Send the plugin back to the template
-        Craft::$app->getUrlManager()->setRouteParams([
-            'plugin' => $plugin
-        ]);
+            // Send the plugin back to the template
+            Craft::$app->getUrlManager()->setRouteParams([
+                'plugin' => $plugin
+            ]);
 
             return null;
         }
@@ -223,8 +223,8 @@ class SettingsController extends Controller
     /**
      * Edit a redirect
      *
-     * @param int|null  $redirectId The redirect's ID, if editing an existing site
-     * @param Redirect|null $redirect   The redirect being edited, if there were any validation errors
+     * @param int|null $redirectId The redirect's ID, if editing an existing site
+     * @param Redirect|null $redirect The redirect being edited, if there were any validation errors
      *
      * @return Response
      * @throws NotFoundHttpException if the requested redirect cannot be found
@@ -252,8 +252,8 @@ class SettingsController extends Controller
         }
 
         $statusCodesOptions = [
-          '301' => 'Permanent redirect (301)',
-          '302' => 'Temporarily redirect (302)',
+            '301' => 'Permanent redirect (301)',
+            '302' => 'Temporarily redirect (302)',
         ];
 
         $variables['statusCodeOptions'] = $statusCodesOptions;
@@ -301,10 +301,10 @@ class SettingsController extends Controller
         $variables['redirect'] = $redirect;
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
-        $source = (isset($routeParameters['source'])?$routeParameters['source']:'CpSection');
+        $source = (isset($routeParameters['source']) ? $routeParameters['source'] : 'CpSection');
 
         $variables['source'] = $source;
-        $variables['pathPrefix'] = ($source == 'CpSettings' ? 'settings/': '');
+        $variables['pathPrefix'] = ($source == 'CpSettings' ? 'settings/' : '');
         $variables['currentSiteId'] = $redirect->siteId;
         return $this->renderTemplate('redirect/edit', $variables);
     }
@@ -339,10 +339,10 @@ class SettingsController extends Controller
         if (!$res) {
             if ($request->getAcceptsJson()) {
                 return $this->asJson([
-                  'success' => false
-              ]);
+                    'success' => false
+                ]);
             }
-          // else, normal result
+            // else, normal result
             Craft::$app->getSession()->setError(Craft::t('redirect', 'Couldn’t save the redirect.'));
 
             Craft::$app->getUrlManager()->setRouteParams([
@@ -353,19 +353,18 @@ class SettingsController extends Controller
         } else {
             if ($request->getAcceptsJson()) {
                 return $this->asJson([
-                  'success' => true,
-                  'id' => $redirect->id
-              ]);
+                    'success' => true,
+                    'id' => $redirect->id
+                ]);
             }
-        // else, normal result
-        Craft::$app->getSession()->setNotice(Craft::t('redirect', 'Redirect saved.'));
-        // return $this->redirectToPostedUrl($category);
+            // else, normal result
+            Craft::$app->getSession()->setNotice(Craft::t('redirect', 'Redirect saved.'));
+            // return $this->redirectToPostedUrl($category);
 
-        $url = $request->getBodyParam('redirectUrl');
+            $url = $request->getBodyParam('redirectUrl');
             return $this->redirect($url);
         }
     }
-
 
 
     /**

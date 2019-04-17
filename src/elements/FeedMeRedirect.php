@@ -1,4 +1,5 @@
 <?php
+
 namespace dolphiq\redirect\elements;
 
 use verbb\feedme\FeedMe;
@@ -89,7 +90,7 @@ class FeedMeRedirect extends Element implements ElementInterface
     public function save($element, $settings)
     {
         $this->element = $element;
-        
+
         $propagate = !(isset($settings['siteId']) && $settings['siteId']);
 
         $this->element->setScenario(BaseElement::SCENARIO_ESSENTIALS);

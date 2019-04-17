@@ -53,7 +53,7 @@ class DeleteRedirects extends ElementAction
         try {
             foreach ($query->all() as $redirect) {
 
-            Craft::$app->getElements()->deleteElement($redirect);
+                Craft::$app->getElements()->deleteElement($redirect);
 
             }
         } catch (Exception $exception) {

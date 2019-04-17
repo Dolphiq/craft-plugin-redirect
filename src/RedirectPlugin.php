@@ -27,13 +27,13 @@ use verbb\feedme\services\Elements;
 use yii\base\Event;
 
 
-
 class RedirectPlugin extends \craft\base\Plugin
 {
     public static $plugin;
 
     private $_redirectsService;
     private $_catchAallService;
+
     /**
      * Returns the Redirects service.
      *
@@ -58,7 +58,7 @@ class RedirectPlugin extends \craft\base\Plugin
     }
 
     public $controllerMap = [
-     // 'redirect' => RedirectController::class,
+        // 'redirect' => RedirectController::class,
     ];
 
     public $hasCpSection = true;
@@ -76,10 +76,10 @@ class RedirectPlugin extends \craft\base\Plugin
     public function getCpNavItem()
     {
         return [
-        'url'=> 'redirect',
-        'label'=>Craft::t('redirect', 'Site redirects'),
-        'fontIcon' => 'share'
-      ];
+            'url' => 'redirect',
+            'label' => Craft::t('redirect', 'Site redirects'),
+            'fontIcon' => 'share'
+        ];
     }
 
 
@@ -122,23 +122,23 @@ class RedirectPlugin extends \craft\base\Plugin
             // register routes for the settings tab
 
             'settings/redirect' => [
-                'route'=>'redirect/settings',
-                'params'=>['source' => 'CpSettings']],
+                'route' => 'redirect/settings',
+                'params' => ['source' => 'CpSettings']],
             'settings/redirect/settings' => [
-                'route'=>'redirect/settings/settings',
-                'params'=>['source' => 'CpSettings']],
+                'route' => 'redirect/settings/settings',
+                'params' => ['source' => 'CpSettings']],
             'settings/redirect/redirects' => [
-                'route'=>'redirect/settings/redirects',
-                'params'=>['source' => 'CpSettings']],
+                'route' => 'redirect/settings/redirects',
+                'params' => ['source' => 'CpSettings']],
             'settings/redirect/registered-catch-all-urls' => [
-                'route'=>'redirect/settings/registered-catch-all-urls',
-                'params'=>['source' => 'CpSettings']],
+                'route' => 'redirect/settings/registered-catch-all-urls',
+                'params' => ['source' => 'CpSettings']],
             'settings/redirect/new' => [
-                'route'=>'redirect/settings/edit-redirect',
-                'params'=>['source' => 'CpSettings']],
+                'route' => 'redirect/settings/edit-redirect',
+                'params' => ['source' => 'CpSettings']],
             'settings/redirect/<redirectId:\d+>' => [
-                'route'=>'redirect/settings/edit-redirect',
-                'params'=>['source' => 'CpSettings']],
+                'route' => 'redirect/settings/edit-redirect',
+                'params' => ['source' => 'CpSettings']],
         ];
         $event->rules = array_merge($event->rules, $rules);
     }
@@ -157,7 +157,7 @@ class RedirectPlugin extends \craft\base\Plugin
 
         // Register FeedMe ElementType
         if (\Craft::$app->plugins->isPluginEnabled('feed-me')) {
-            Event::on(Elements::class, Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(RegisterFeedMeElementsEvent $e) {
+            Event::on(Elements::class, Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function (RegisterFeedMeElementsEvent $e) {
                 $e->elements[] = FeedMeRedirect::class;
             });
         }
@@ -166,19 +166,19 @@ class RedirectPlugin extends \craft\base\Plugin
         if ($settings->redirectsActive) {
             Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) use ($settings) {
 
-            // get rules from db!
-            // please only if we are on the site and the redirects are active in the plugin settings
+                // get rules from db!
+                // please only if we are on the site and the redirects are active in the plugin settings
                 if ($settings->redirectsActive) {
                     $siteId = Craft::$app->getSites()->currentSite->id;
                     $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
 
                     foreach ($allRedirects as $redirect) {
-                        $sourceUrl=$redirect['sourceUrl'];
-                        if(strpos($redirect['sourceUrl'],'#') !== false) {
+                        $sourceUrl = $redirect['sourceUrl'];
+                        if (strpos($redirect['sourceUrl'], '#') !== false) {
                             $sourceUrl = current(explode('#', $sourceUrl));
                         }
-                        if(is_numeric($sourceUrl)) {
-                            $sourceUrl = '/' . $sourceUrl .'/';
+                        if (is_numeric($sourceUrl)) {
+                            $sourceUrl = '/' . $sourceUrl . '/';
                         }
 
                         $event->rules[$sourceUrl] = [

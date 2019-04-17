@@ -1,4 +1,3 @@
-
 {% extends "_layouts/cp" %}
 {% set title = "Registered catch all urls"|t('redirect') %}
 {% set showSiteMenu = true %}
@@ -17,8 +16,8 @@
 {% block sidebar %}
 
     {% if pathPrefix is not defined %}
-        {%  set pathPrefix = '' %}
-    {%  endif %}
+        {% set pathPrefix = '' %}
+    {% endif %}
 
     {% set selectedNavItem = "settings" %}
     {% include "redirect/nav" %}
@@ -43,9 +42,12 @@
             <tbody>
             {% for urlItem in urlItems %}
                 <tr data-id="{{ urlItem.id }}" data-name="{{ urlItem.uri }}">
-                    <th scope="row" data-title="{{ 'Url'|t('redirect') }}"><a href="{{ url('redirect/new/?sourceCatchAllUrlId=' ~ urlItem.uid) }}">{{ urlItem.uri }}</a></th>
+                    <th scope="row" data-title="{{ 'Url'|t('redirect') }}"><a
+                                href="{{ url('redirect/new/?sourceCatchAllUrlId=' ~ urlItem.uid) }}">{{ urlItem.uri }}</a>
+                    </th>
                     <td data-title="{{ 'Hits'|t('redirect') }}"><code>{{ urlItem.hitCount }}</code></td>
-                    <td data-title="{{ 'Last hit'|t('redirect') }}"><code>{{ urlItem.dateUpdated|datetime('short') }}</code></td>
+                    <td data-title="{{ 'Last hit'|t('redirect') }}">
+                        <code>{{ urlItem.dateUpdated|datetime('short') }}</code></td>
                     <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}" role="button"></a></td>
                 </tr>
             {% endfor %}

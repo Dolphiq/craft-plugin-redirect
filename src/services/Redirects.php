@@ -33,7 +33,7 @@ class Redirects extends Component
      */
     public function getConfigFileRedirects(): array
     {
-        $path = Craft::$app->getPath()->getConfigPath().DIRECTORY_SEPARATOR.'redirects.php';
+        $path = Craft::$app->getPath()->getConfigPath() . DIRECTORY_SEPARATOR . 'redirects.php';
 
         if (file_exists($path)) {
             $routes = require $path;
@@ -77,7 +77,7 @@ class Redirects extends Component
     /**
      * Returns a redirect by its ID.
      *
-     * @param int      $redirectId
+     * @param int $redirectId
      * @param int|null $siteId
      *
      * @return Redirect|null
@@ -99,19 +99,19 @@ class Redirects extends Component
     public function registerHitById(int $redirectId, $destinationUrl = ''): bool
     {
         // simple update to keep it fast
-        if ($redirectId<1) {
+        if ($redirectId < 1) {
             return false;
         }
         $res = \Yii::$app->db->createCommand()
-          ->update(
-            '{{%dolphiq_redirects}}',
-            [
-              'hitAt'=>new \yii\db\Expression('now()'),
-              'hitCount'=>new \yii\db\Expression('{{hitCount}} + 1'),
-            ],
-            ['id' => $redirectId]
-          )
-          ->execute();
+            ->update(
+                '{{%dolphiq_redirects}}',
+                [
+                    'hitAt' => new \yii\db\Expression('now()'),
+                    'hitCount' => new \yii\db\Expression('{{hitCount}} + 1'),
+                ],
+                ['id' => $redirectId]
+            )
+            ->execute();
 
         return true;
     }
