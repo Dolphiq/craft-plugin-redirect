@@ -55,6 +55,7 @@ class Redirect extends Element
     {
         return false;
     }
+
     /**
      * @inheritdoc
      */
@@ -96,7 +97,7 @@ class Redirect extends Element
         foreach (Craft::$app->getSites()->getAllSites() as $site) {
             //if($this->siteId < 1 || $this->siteId == $site->id) {
             $supportedSites[] = ['siteId' => $site->id, 'enabledByDefault' => false];
-          //}
+            //}
         }
         return $supportedSites;
     }
@@ -117,8 +118,8 @@ class Redirect extends Element
     public function getEditorHtml(): string
     {
         $statusCodesOptions = [
-          '301' => 'Permanent redirect (301)',
-          '302' => 'Temporarily redirect (302)',
+            '301' => 'Permanent redirect (301)',
+            '302' => 'Temporarily redirect (302)',
         ];
 
         $html = Craft::$app->getView()->renderTemplate('redirect/_redirectfields', [
@@ -151,28 +152,28 @@ class Redirect extends Element
     {
         if ($context === 'index') {
             $sources = [
-              [
-                  'key' => '*',
-                  'label' => Craft::t('redirect', 'All redirects'),
-                  'criteria' => []
-              ],
-              [
-                'key' => 'permanent',
-                'label' => Craft::t('redirect', 'Permanent redirects'),
-                'criteria' => ['statusCode' => 301]
-              ],
-              [
-                'key' => 'temporarily',
-                'label' => Craft::t('redirect', 'Temporarily redirects'),
-                'criteria' => ['statusCode' => 302]
-              ],
-              [
-                'key' => 'inactive',
-                'label' => Craft::t('redirect', 'Inactive redirects'),
-                'criteria' => ['hitAt' => 60]
+                [
+                    'key' => '*',
+                    'label' => Craft::t('redirect', 'All redirects'),
+                    'criteria' => []
+                ],
+                [
+                    'key' => 'permanent',
+                    'label' => Craft::t('redirect', 'Permanent redirects'),
+                    'criteria' => ['statusCode' => 301]
+                ],
+                [
+                    'key' => 'temporarily',
+                    'label' => Craft::t('redirect', 'Temporarily redirects'),
+                    'criteria' => ['statusCode' => 302]
+                ],
+                [
+                    'key' => 'inactive',
+                    'label' => Craft::t('redirect', 'Inactive redirects'),
+                    'criteria' => ['hitAt' => 60]
 
-              ],
-          ];
+                ],
+            ];
         }
         return $sources;
     }
@@ -228,22 +229,21 @@ class Redirect extends Element
         switch ($attribute) {
             case 'statusCode':
 
-              $statusCodesOptions = [
-                '301' => 'Permanent redirect (301)',
-                '302' => 'Temporarily redirect (302)',
-              ];
+                $statusCodesOptions = [
+                    '301' => 'Permanent redirect (301)',
+                    '302' => 'Temporarily redirect (302)',
+                ];
 
-              return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('redirect', $statusCodesOptions[$this->statusCode])]) : '';
+                return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('redirect', $statusCodesOptions[$this->statusCode])]) : '';
 
             case 'baseUrl':
 
-              return Html::encodeParams('<a href="{baseUrl}" target="_blank">test</a>', ['baseUrl' => $this->getSite()->baseUrl . $this->sourceUrl]);
+                return Html::encodeParams('<a href="{baseUrl}" target="_blank">test</a>', ['baseUrl' => $this->getSite()->baseUrl . $this->sourceUrl]);
 
         }
 
         return parent::tableAttributeHtml($attribute);
     }
-
 
 
     /**
@@ -286,16 +286,16 @@ class Redirect extends Element
     public function formatUrl(string $url): string
     {
         $resultUrl = $url;
-      // trim spaces
-      $resultUrl = trim($resultUrl);
+        // trim spaces
+        $resultUrl = trim($resultUrl);
 
         if (stripos($resultUrl, '://') !== false) {
             // complete url
-        // check if the base url is there and strip if it does
-        $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
+            // check if the base url is there and strip if it does
+            $resultUrl = str_ireplace($this->getSite()->baseUrl, '', $resultUrl);
         } else {
             // strip leading slash
-        $resultUrl = ltrim($resultUrl, '/');
+            $resultUrl = ltrim($resultUrl, '/');
         }
         return $resultUrl;
     }
@@ -320,7 +320,7 @@ class Redirect extends Element
             $record = RedirectRecord::findOne($this->id);
 
             if (!$record) {
-                throw new Exception('Invalid redirect ID: '.$this->id);
+                throw new Exception('Invalid redirect ID: ' . $this->id);
             }
         } else {
             $record = new RedirectRecord();

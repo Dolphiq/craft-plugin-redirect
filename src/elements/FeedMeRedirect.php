@@ -1,4 +1,5 @@
 <?php
+
 namespace dolphiq\redirect\elements;
 
 use verbb\feedme\FeedMe;
@@ -7,9 +8,6 @@ use verbb\feedme\base\ElementInterface;
 
 use Craft;
 use craft\base\Element as BaseElement;
-use craft\db\Query;
-use craft\elements\User as UserElement;
-use craft\helpers\Db;
 
 use Cake\Utility\Hash;
 use dolphiq\redirect\elements\Redirect as RedirectElement;
@@ -89,7 +87,7 @@ class FeedMeRedirect extends Element implements ElementInterface
     public function save($element, $settings)
     {
         $this->element = $element;
-        
+
         $propagate = !(isset($settings['siteId']) && $settings['siteId']);
 
         $this->element->setScenario(BaseElement::SCENARIO_ESSENTIALS);

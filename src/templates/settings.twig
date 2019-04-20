@@ -5,16 +5,16 @@
 {% set fullPageForm = true %}
 
 {% set crumbs = [
-    { label: "Settings"|t('app'), url: url('settings') }
+{ label: "Settings"|t('app'), url: url('settings') }
 ] %}
 
 {% block sidebar %}
 
-  {% if pathPrefix is not defined %}
-      {%  set pathPrefix = '' %}
-  {%  endif %}
+    {% if pathPrefix is not defined %}
+        {% set pathPrefix = '' %}
+    {% endif %}
 
-  {% set selectedNavItem = "settings" %}
+    {% set selectedNavItem = "settings" %}
     {% include "redirect/nav" %}
 
 
@@ -29,26 +29,26 @@
 {% block content %}
 
     <input type="hidden" name="action" value="redirect/settings/save-settings">
-		<input type="hidden" name="pluginHandle" value="redirect">
+    <input type="hidden" name="pluginHandle" value="redirect">
 
 
-{{ forms.lightswitchField({
-    label:        "Activate redirects"|t('redirect'),
-    instructions: "This switch activate/de-activate all the entered redirects without removing them."|t('redirect'),
-    id:           'redirectsActive',
-    name:         'redirectsActive',
-    on:           settings.redirectsActive,
-    errors:       settings.getErrors('redirectsActive')
-}) }}
+    {{ forms.lightswitchField({
+        label:        "Activate redirects"|t('redirect'),
+        instructions: "This switch activate/de-activate all the entered redirects without removing them."|t('redirect'),
+        id:           'redirectsActive',
+        name:         'redirectsActive',
+        on:           settings.redirectsActive,
+        errors:       settings.getErrors('redirectsActive')
+    }) }}
 
-{{ forms.lightswitchField({
-    label:        "Use a Catch All page template"|t('redirect'),
-    instructions: "All the not existing urls are redirected to this page. We also register the missed urls."|t('redirect'),
-    id:           'catchAllActive',
-    name:         'catchAllActive',
-    on:           settings.catchAllActive,
-    errors:       settings.getErrors('catchAllActive')
-}) }}
+    {{ forms.lightswitchField({
+        label:        "Use a Catch All page template"|t('redirect'),
+        instructions: "All the not existing urls are redirected to this page. We also register the missed urls."|t('redirect'),
+        id:           'catchAllActive',
+        name:         'catchAllActive',
+        on:           settings.catchAllActive,
+        errors:       settings.getErrors('catchAllActive')
+    }) }}
 
     {{ forms.textField({
         label: "Catch all template"|t('redirect'),

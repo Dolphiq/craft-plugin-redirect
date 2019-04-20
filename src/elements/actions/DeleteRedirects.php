@@ -4,7 +4,6 @@ namespace dolphiq\redirect\elements\actions;
 
 use Craft;
 use craft\base\ElementAction;
-use dolphiq\redirect\elements\Redirect;
 use craft\elements\db\ElementQueryInterface;
 use yii\base\Exception;
 
@@ -53,7 +52,7 @@ class DeleteRedirects extends ElementAction
         try {
             foreach ($query->all() as $redirect) {
 
-            Craft::$app->getElements()->deleteElement($redirect);
+                Craft::$app->getElements()->deleteElement($redirect);
 
             }
         } catch (Exception $exception) {

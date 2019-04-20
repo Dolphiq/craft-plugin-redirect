@@ -13,10 +13,10 @@ use yii\db\ActiveQueryInterface;
 /**
  * Class Redirect record.
  *
- * @property int         $id            ID
- * @property int         $fieldLayoutId Field layout ID
- * @property string      $name          Name
- * @property string      $handle        Handle
+ * @property int $id            ID
+ * @property int $fieldLayoutId Field layout ID
+ * @property string $name          Name
+ * @property string $handle        Handle
  * @property FieldLayout $fieldLayout   Field layout
  *
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>

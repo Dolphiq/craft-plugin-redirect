@@ -1,6 +1,6 @@
 <?php
 
-  return [
+return [
 
     "Site redirects" => "Website doorverwijzingen",
     "New redirect" => "Nieuwe doorverwijzing",

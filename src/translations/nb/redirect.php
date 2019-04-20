@@ -1,6 +1,6 @@
 <?php
 
-  return [
+return [
 
     "Site redirects" => "Viderekoblinger",
     "New redirect" => "Ny viderekobling",
