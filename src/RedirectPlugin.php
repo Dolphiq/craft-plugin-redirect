@@ -22,8 +22,8 @@ use craft\events\RegisterCpNavItemsEvent;
 use craft\web\twig\variables\Cp;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
-use verbb\feedme\events\RegisterFeedMeElementsEvent;
-use verbb\feedme\services\Elements;
+use craft\feedme\events\RegisterFeedMeElementsEvent;
+use craft\feedme\services\Elements;
 use yii\base\Event;
 
 

@@ -1,9 +1,9 @@
 <?php
 namespace dolphiq\redirect\elements;
 
-use verbb\feedme\FeedMe;
-use verbb\feedme\base\Element;
-use verbb\feedme\base\ElementInterface;
+use craft\feedme\FeedMe;
+use craft\feedme\base\Element;
+use craft\feedme\base\ElementInterface;
 
 use Craft;
 use craft\base\Element as BaseElement;
