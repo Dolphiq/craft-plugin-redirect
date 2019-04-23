@@ -17,8 +17,6 @@ use dolphiq\redirect\services\Redirects;
 use dolphiq\redirect\services\CatchAll;
 use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
-use verbb\feedme\events\RegisterFeedMeElementsEvent;
-use verbb\feedme\services\Elements;
 use yii\base\Event;
 
 
@@ -51,10 +49,6 @@ class RedirectPlugin extends \craft\base\Plugin
         /** @var WebApplication|ConsoleApplication $this */
         return $this->_catchAallService;
     }
-
-    public $controllerMap = [
-        // 'redirect' => RedirectController::class,
-    ];
 
     public $hasCpSection = true;
     public $hasCpSettings = true;
@@ -138,6 +132,18 @@ class RedirectPlugin extends \craft\base\Plugin
         $event->rules = array_merge($event->rules, $rules);
     }
 
+    /**
+     * Registers our custom feed import logic if feed-me is enabled. Also note, we're checking for craft\feedme
+     */
+    private function registerFeedMeElement(): void
+    {
+        if (Craft::$app->plugins->isPluginEnabled('feed-me') && class_exists(\craft\feedme\Plugin::class)) {
+            Event::on(\craft\feedme\services\Elements::class, \craft\feedme\services\Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function (\craft\feedme\events\RegisterFeedMeElementsEvent $e) {
+                $e->elements[] = FeedMeRedirect::class;
+            });
+        }
+    }
+
 
     public function init()
     {
@@ -151,11 +157,7 @@ class RedirectPlugin extends \craft\base\Plugin
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
         // Register FeedMe ElementType
-        if (\Craft::$app->plugins->isPluginEnabled('feed-me')) {
-            Event::on(Elements::class, Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function (RegisterFeedMeElementsEvent $e) {
-                $e->elements[] = FeedMeRedirect::class;
-            });
-        }
+       $this->registerFeedMeElement();
 
         $settings = RedirectPlugin::$plugin->getSettings();
         if ($settings->redirectsActive) {
