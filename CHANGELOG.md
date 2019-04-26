@@ -1,5 +1,14 @@
 # Redirect Changelog
 
+
+## 1.0.22 - 2019-04-26
+
+### Changed
+- Cleanup and improvements in the sourcecode
+
+### Fixed
+- Class 'verbb\feedme\services\Elements' not found when updating the plugin
+
 ## 1.0.21 - 2019-04-17
 ### Added
 - Give other plugins a chance to trigger event: beforeCatchall
