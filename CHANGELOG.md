@@ -8,6 +8,7 @@
 
 ### Fixed
 - Class 'verbb\feedme\services\Elements' not found when updating the plugin
+- Use new craft\feedme namespace
 
 ## 1.0.21 - 2019-04-17
 ### Added
