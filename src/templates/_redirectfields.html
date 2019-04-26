@@ -2,37 +2,36 @@
 {% set meta = meta is defined ? meta : false %}
 
 
-
 {{ forms.textField({
-    label: "Source URL"|t('redirect'),
-    instructions: "The URL to be redirected"|t('redirect'),
-    id: 'source-url',
-    class: 'ltr',
-    name: 'sourceUrl',
-    value: redirect.sourceUrl,
-    errors: redirect.getErrors('sourceUrl'),
-    autofocus: true,
-    required: true
+label: "Source URL"|t('redirect'),
+instructions: "The URL to be redirected"|t('redirect'),
+id: 'source-url',
+class: 'ltr',
+name: 'sourceUrl',
+value: redirect.sourceUrl,
+errors: redirect.getErrors('sourceUrl'),
+autofocus: true,
+required: true
 }) }}
 
 {{ forms.textField({
-    label: "Destination URL"|t('redirect'),
-    instructions: "The final URL"|t('redirect'),
-    id: 'destination-url',
-    class: 'ltr',
-    name: 'destinationUrl',
-    value: redirect.destinationUrl,
-    errors: redirect.getErrors('destinationUrl'),
-    required: true
+label: "Destination URL"|t('redirect'),
+instructions: "The final URL"|t('redirect'),
+id: 'destination-url',
+class: 'ltr',
+name: 'destinationUrl',
+value: redirect.destinationUrl,
+errors: redirect.getErrors('destinationUrl'),
+required: true
 }) }}
 {{ forms.selectField({
-  label: "Redirect type"|t('redirect'),
-  instructions: "Redirect status code"|t('redirect'),
-  id: 'status-code',
-  name: 'statusCode',
-  options: statusCodeOptions,
-  value: redirect.statusCode,
-  toggle: true,
-  targetPrefix: '.statusCode-',
-  errors: redirect.getErrors('statusCode')
+label: "Redirect type"|t('redirect'),
+instructions: "Redirect status code"|t('redirect'),
+id: 'status-code',
+name: 'statusCode',
+options: statusCodeOptions,
+value: redirect.statusCode,
+toggle: true,
+targetPrefix: '.statusCode-',
+errors: redirect.getErrors('statusCode')
 }) }}

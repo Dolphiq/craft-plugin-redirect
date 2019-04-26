@@ -9,11 +9,7 @@
 namespace dolphiq\redirect\services;
 
 use Craft;
-use craft\db\Query;
-use craft\helpers\Json;
-use yii\web\NotFoundHttpException;
 use yii\base\Component;
-use craft\helpers\Db;
 use dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
 
 /**
@@ -55,7 +51,7 @@ class CatchAll extends Component
         return true;
     }
 
-    public function getLastUrls(int $limit = 100,  int $siteId = 0): array
+    public function getLastUrls(int $limit = 100, int $siteId = 0): array
     {
 
         if ($siteId == 0) {
@@ -79,9 +75,9 @@ class CatchAll extends Component
         // search the redirect by its id
 
         // TODO check if the user has rights in the siteId..
-        $catchAllurl = CatchAllUrlRecord::findOne( $id);
+        $catchAllurl = CatchAllUrlRecord::findOne($id);
 
-        if($catchAllurl == null) {
+        if ($catchAllurl == null) {
             return false;
         }
 

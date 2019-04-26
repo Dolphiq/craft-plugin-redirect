@@ -70,13 +70,15 @@ Potential features:
 * CSV import/export of the redirects
 * Add a priority property for (partly) overlapping urls
 
+### Created by
+- Dolphiq - Johan Zandstra - dolphiq.nl
+- Venveo - Ransom Roberson - venveo.com
 
-### Contributors & Developers
-- Johan Zandstra - info@dolphiq.nl
+### Other Contributors
 - 24hoursmedia
 - Mosnar
 - boscho87
 - HelgeSverre
 - ohlincik
 
-Brought to you by [Dolphiq](https://dolphiq.nl)
+

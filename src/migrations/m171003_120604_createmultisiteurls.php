@@ -48,7 +48,7 @@ class m171003_120604_createmultisiteurls extends Migration
             foreach ($oldRedirects as $oldRedirect) {
                 // insert new redirect (element) into the database
 
-              $redirect = new Redirect();
+                $redirect = new Redirect();
                 $redirect->sourceUrl = $oldRedirect['sourceUrl'];
                 $redirect->destinationUrl = $oldRedirect['destinationUrl'];
                 $redirect->statusCode = $oldRedirect['statusCode'];

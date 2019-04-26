@@ -118,7 +118,7 @@ class RedirectQuery extends ElementQuery
         $this->joinElementTable('dolphiq_redirects');
 
 
-     //   $this->joinElementTable('elements_sites');
+        //   $this->joinElementTable('elements_sites');
 
         $this->query->select([
             'elements_sites.siteId',
@@ -147,8 +147,8 @@ class RedirectQuery extends ElementQuery
             $this->subQuery->andWhere('(dolphiq_redirects.hitAt < :calculatedDate AND dolphiq_redirects.hitAt IS NOT NULL)', [':calculatedDate' => $inactiveDate->format("Y-m-d H:m:s")]);
         }
 
-       // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));
-       // $this->_applyEditableParam();
+        // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));
+        // $this->_applyEditableParam();
 
         return parent::beforePrepare();
     }
