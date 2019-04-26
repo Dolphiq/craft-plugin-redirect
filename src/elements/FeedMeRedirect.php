@@ -28,17 +28,17 @@ class FeedMeRedirect extends Element implements ElementInterface
 
     public function getGroupsTemplate()
     {
-        return 'redirect/feed-me/groups';
+        return 'redirect/_feed-me/groups';
     }
 
     public function getColumnTemplate()
     {
-        return 'redirect/feed-me/column';
+        return 'redirect/_feed-me/column';
     }
 
     public function getMappingTemplate()
     {
-        return 'redirect/feed-me/map';
+        return 'redirect/_feed-me/map';
     }
 
 
