@@ -275,7 +275,7 @@ class Redirect extends Element
         $rules = parent::rules();
         $rules[] = [['hitAt'], DateTimeValidator::class];
         $rules[] = [['hitCount'], 'number', 'integerOnly' => true];
-        $rules[] = [['sourceUrl', 'destinationUrl'], 'string', 'max' => 255];
+        $rules[] = [['sourceUrl', 'destinationUrl'], 'string', 'max' => 1000];
         $rules[] = [['sourceUrl', 'destinationUrl'], 'required'];
         return $rules;
     }

@@ -54,7 +54,7 @@ class RedirectPlugin extends \craft\base\Plugin
     public $hasCpSettings = true;
 
     // table schema version
-    public $schemaVersion = '1.0.4';
+    public $schemaVersion = '1.0.5';
 
     /*
     *
@@ -152,8 +152,6 @@ class RedirectPlugin extends \craft\base\Plugin
         self::$plugin = $this;
 
         // only register CP URLs if the user is logged in
-
-
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
         // Register FeedMe ElementType

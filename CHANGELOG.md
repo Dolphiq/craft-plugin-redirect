@@ -1,8 +1,10 @@
 # Redirect Changelog
 
+## 1.0.23 - 2019-04-26
+### Changed
+- Change the url size (source and destination url) from maximal 255 characters to maximal 1000 characters
 
 ## 1.0.22 - 2019-04-26
-
 ### Changed
 - Cleanup and improvements in the sourcecode
 
