@@ -135,7 +135,7 @@ class RedirectPlugin extends \craft\base\Plugin
     /**
      * Registers our custom feed import logic if feed-me is enabled. Also note, we're checking for craft\feedme
      */
-    private function registerFeedMeElement(): void
+    private function registerFeedMeElement()
     {
         if (Craft::$app->plugins->isPluginEnabled('feed-me') && class_exists(\craft\feedme\Plugin::class)) {
             Event::on(\craft\feedme\services\Elements::class, \craft\feedme\services\Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function (\craft\feedme\events\RegisterFeedMeElementsEvent $e) {
