@@ -54,7 +54,7 @@ class RedirectPlugin extends \craft\base\Plugin
     public $hasCpSettings = true;
 
     // table schema version
-    public $schemaVersion = '1.0.4';
+    public $schemaVersion = '1.0.5';
 
     /*
     *
@@ -135,7 +135,7 @@ class RedirectPlugin extends \craft\base\Plugin
     /**
      * Registers our custom feed import logic if feed-me is enabled. Also note, we're checking for craft\feedme
      */
-    private function registerFeedMeElement(): void
+    private function registerFeedMeElement()
     {
         if (Craft::$app->plugins->isPluginEnabled('feed-me') && class_exists(\craft\feedme\Plugin::class)) {
             Event::on(\craft\feedme\services\Elements::class, \craft\feedme\services\Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function (\craft\feedme\events\RegisterFeedMeElementsEvent $e) {
@@ -152,8 +152,6 @@ class RedirectPlugin extends \craft\base\Plugin
         self::$plugin = $this;
 
         // only register CP URLs if the user is logged in
-
-
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
         // Register FeedMe ElementType
