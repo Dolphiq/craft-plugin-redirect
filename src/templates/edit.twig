@@ -15,6 +15,7 @@
     {{ redirectInput('settings/redirect') }}
 
     {% if redirect.id %}<input type="hidden" name="redirectId" value="{{ redirect.id }}">{% endif %}
+    {% if redirect.uid %}<input type="hidden" name="uid" value="{{ redirect.uid }}">{% endif %}
     <div class="readable">
         <p>{{ "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters"|t('redirect') }}
             .<br><a target="_blank"

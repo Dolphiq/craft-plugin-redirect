@@ -323,6 +323,7 @@ class SettingsController extends Controller
         $request = Craft::$app->getRequest();
         $redirect = new Redirect();
         $redirect->id = $request->getBodyParam('redirectId');
+        $redirect->uid = $request->getBodyParam('uid');
         $redirect->sourceUrl = $request->getBodyParam('sourceUrl');
         $redirect->destinationUrl = $request->getBodyParam('destinationUrl');
         $redirect->statusCode = $request->getBodyParam('statusCode');
