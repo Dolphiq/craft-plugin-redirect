@@ -346,14 +346,6 @@ class Redirect extends Element
 
         $record->save(false);
 
-        // remove form other sites
-        Craft::$app->getDb()->createCommand()
-            ->delete('{{%elements_sites}}', [
-                'AND',
-                ['elementId' => $record->id],
-                ['!=', 'siteId', $this->siteId]
-            ])
-            ->execute();
         parent::afterSave($isNew);
     }
 

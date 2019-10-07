@@ -352,6 +352,15 @@ class SettingsController extends Controller
 
             return null;
         } else {
+          // remove form other sites
+          Craft::$app->getDb()->createCommand()
+            ->delete('{{%elements_sites}}', [
+              'AND',
+              ['elementId' => $redirect->id],
+              ['!=', 'siteId', $siteId]
+            ])
+            ->execute();
+
             if ($request->getAcceptsJson()) {
                 return $this->asJson([
                     'success' => true,
