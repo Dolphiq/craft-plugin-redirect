@@ -144,7 +144,8 @@ class RedirectQuery extends ElementQuery
             $inactiveDate = new \DateTime();
             $inactiveDate->modify("-60 days");
 
-            $this->subQuery->andWhere('(dolphiq_redirects.hitAt < :calculatedDate AND dolphiq_redirects.hitAt IS NOT NULL)', [':calculatedDate' => $inactiveDate->format("Y-m-d H:m:s")]);
+            $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.hitAt', $inactiveDate->format("Y-m-d H:m:s"), '<'));
+            $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.hitAt', ':notempty:'));
         }
 
         // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));
