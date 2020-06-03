@@ -16,6 +16,8 @@ use craft\helpers\UrlHelper;
 use dolphiq\redirect\RedirectPlugin;
 use dolphiq\redirect\elements\Redirect;
 
+use craft\records\Element as ElementRecord;
+
 use craft\db\Query;
 
 class SettingsController extends Controller
@@ -330,6 +332,11 @@ class SettingsController extends Controller
         $siteId = $request->getBodyParam('siteId');
         if ($siteId == null) {
             $siteId = Craft::$app->getSites()->currentSite->id;
+        }
+
+        $elementRecord = ElementRecord::findOne($redirect->id);
+        if($elementRecord) {
+	        $redirect->uid = $elementRecord->uid;
         }
 
         $redirect->siteId = $siteId;
