@@ -1,4 +1,10 @@
 # Redirect Changelog
+## 1.1.0 - 2020-08-03
+### Fixed
+- Fixed to work properly in Craft 3.4.0
+
+### Fixed
+- :void is not a return type in PHP < 7.1
 
 ## 1.0.23 - 2019-04-30
 ### Changed
