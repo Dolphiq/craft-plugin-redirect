@@ -1,4 +1,8 @@
 # Redirect Changelog
+## 1.1.1 - 2020-08-06
+### Fixed
+- Fixed plugin name in Composer to be in line with the plugin store
+
 ## 1.1.0 - 2020-08-03
 ### Fixed
 - Fixed to work properly in Craft 3.4.0
