@@ -65,7 +65,7 @@ class RedirectController extends Controller
             foreach ($matches[1] as $name) {
                 if (isset($sourceParameters[$name])) {
                     $destinationUrl = str_ireplace("<$name>", $sourceParameters[$name], $destinationUrl);
-                } elseif (isset($_GET[$name])) {
+                } else {
                     $destinationUrl = str_ireplace("<$name>", $_GET[$name], $destinationUrl);
                 }
             }
