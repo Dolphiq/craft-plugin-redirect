@@ -60,6 +60,9 @@
     </div>
 {% endblock %}
 
+{% block footer %}
+    <div id="count-container" class="light flex-grow">&nbsp;</div>
+{% endblock %}
 
 {% block initJs %}
     Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#main'), {
