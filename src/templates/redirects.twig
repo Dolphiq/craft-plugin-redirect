@@ -17,7 +17,7 @@
     {% exit 404 %}
 {% endif %}
 
-{% set sources = craft.app.elementIndexes.getSources(elementType, 'index') %}
+{% set sources = craft.app.ElementSources.getSources(elementType, 'index') %}
 
 {% set showSiteMenu = (craft.app.getIsMultiSite() ? (showSiteMenu ?? 'auto') : false) %}
 {% if showSiteMenu == 'auto' %}

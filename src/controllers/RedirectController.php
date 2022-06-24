@@ -23,7 +23,7 @@ use yii\web\NotFoundHttpException;
 class RedirectController extends Controller
 {
     private $_sourceRouteParams = [];
-    protected $allowAnonymous = ['index'];
+    protected array|int|bool $allowAnonymous = ['index'];
 
     const EVENT_BEFORE_CATCHALL = 'beforeCatchall';
 

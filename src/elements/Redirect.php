@@ -35,7 +35,7 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
-    public static function refHandle()
+    public static function refHandle(): ?string
     {
         return 'redirect';
     }
@@ -105,7 +105,7 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
-    public function getCpEditUrl()
+    public function getCpEditUrl(): ?string
     {
         return UrlHelper::cpUrl('redirect/' . $this->id . '?siteId=' . $this->siteId);
 
@@ -167,12 +167,14 @@ class Redirect extends Element
                     'label' => Craft::t('redirect', 'Temporarily redirects'),
                     'criteria' => ['statusCode' => 302]
                 ],
-                [
+                /*
+                 * @todo: add a toggle to set a redirect inactive
+                 * [
                     'key' => 'inactive',
                     'label' => Craft::t('redirect', 'Inactive redirects'),
                     'criteria' => ['hitAt' => 60]
 
-                ],
+                ],*/
             ];
         }
         return $sources;
@@ -270,7 +272,7 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = parent::rules();
         $rules[] = [['hitAt'], DateTimeValidator::class];
@@ -313,7 +315,7 @@ class Redirect extends Element
      * @inheritdoc
      * @throws Exception if reasons
      */
-    public function afterSave(bool $isNew)
+    public function afterSave(bool $isNew): void
     {
         // Get the redirect record
         if (!$isNew) {
@@ -367,7 +369,7 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
     }
@@ -378,7 +380,7 @@ class Redirect extends Element
      * @return string
      */
     /** @noinspection PhpInconsistentReturnPointsInspection */
-    public function __toString()
+    public function __toString(): string
     {
         try {
             return $this->getName();
@@ -430,5 +432,5 @@ class Redirect extends Element
      * @var int|null siteId
      */
 
-    public $siteId;
+    public ?int $siteId;
 }

@@ -35,7 +35,7 @@ class DeleteRedirects extends ElementAction
     /**
      * @inheritdoc
      */
-    public function getConfirmationMessage()
+    public function getConfirmationMessage(): ?string
     {
         return Craft::t('redirect', 'Are you sure you want to delete the selected redirects?');
     }

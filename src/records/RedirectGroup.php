@@ -5,9 +5,10 @@
  * @license   https://craftcms.com/license
  */
 
-namespace craft\records;
+namespace dolphiq\redirect\records;
 
 use craft\db\ActiveRecord;
+use craft\records\FieldLayout;
 use yii\db\ActiveQueryInterface;
 
 /**

@@ -11,16 +11,21 @@
 namespace dolphiq\redirect;
 
 use Craft;
+use craft\base\Plugin;
+use craft\events\RegisterUrlRulesEvent;
+use craft\feedme\events\RegisterFeedMeElementsEvent;
+use craft\feedme\Plugin as FeedmePlugin;
+use craft\feedme\services\Elements as FeedmeElements;
+use craft\helpers\UrlHelper;
+use craft\web\UrlManager;
 use dolphiq\redirect\elements\FeedMeRedirect;
 use dolphiq\redirect\models\Settings;
-use dolphiq\redirect\services\Redirects;
 use dolphiq\redirect\services\CatchAll;
-use craft\events\RegisterUrlRulesEvent;
-use craft\web\UrlManager;
+use dolphiq\redirect\services\Redirects;
 use yii\base\Event;
+use yii\web\Response;
 
-
-class RedirectPlugin extends \craft\base\Plugin
+class RedirectPlugin extends Plugin
 {
     public static $plugin;
 
@@ -30,7 +35,7 @@ class RedirectPlugin extends \craft\base\Plugin
     /**
      * Returns the Redirects service.
      *
-     * @return \dolphiq\redirect\services\Redirects The Redirects service
+     * @return Redirects The Redirects service
      */
     public function getRedirects()
     {
@@ -50,11 +55,11 @@ class RedirectPlugin extends \craft\base\Plugin
         return $this->_catchAallService;
     }
 
-    public $hasCpSection = true;
-    public $hasCpSettings = true;
+    public bool $hasCpSection = true;
+    public bool $hasCpSettings = true;
 
     // table schema version
-    public $schemaVersion = '1.0.5';
+    public string $schemaVersion = '1.0.5';
 
     /*
     *
@@ -62,7 +67,7 @@ class RedirectPlugin extends \craft\base\Plugin
     *  The getCpNavItem was found in the source and will check the user privilages already.
     *
     */
-    public function getCpNavItem()
+    public function getCpNavItem(): array
     {
         return [
             'url' => 'redirect',
@@ -82,10 +87,10 @@ class RedirectPlugin extends \craft\base\Plugin
      *
      */
 
-    public function getSettingsResponse()
+    public function getSettingsResponse(): Response
     {
-        $url = \craft\helpers\UrlHelper::cpUrl('settings/redirect/settings');
-        return \Craft::$app->controller->redirect($url);
+        $url = UrlHelper::cpUrl('settings/redirect/settings');
+        return Craft::$app->controller->redirect($url);
     }
 
     /**
@@ -97,7 +102,7 @@ class RedirectPlugin extends \craft\base\Plugin
     public function registerCpUrlRules(RegisterUrlRulesEvent $event)
     {
         // only register CP URLs if the user is logged in
-        if (!\Craft::$app->user->identity)
+        if (!Craft::$app->user->identity)
             return;
         $rules = [
             // register routes for the sub nav
@@ -137,8 +142,8 @@ class RedirectPlugin extends \craft\base\Plugin
      */
     private function registerFeedMeElement()
     {
-        if (Craft::$app->plugins->isPluginEnabled('feed-me') && class_exists(\craft\feedme\Plugin::class)) {
-            Event::on(\craft\feedme\services\Elements::class, \craft\feedme\services\Elements::EVENT_REGISTER_FEED_ME_ELEMENTS, function (\craft\feedme\events\RegisterFeedMeElementsEvent $e) {
+        if (Craft::$app->plugins->isPluginEnabled('feed-me') && class_exists(FeedmePlugin::class)) {
+            Event::on(FeedmeElements::class, FeedmeElements::EVENT_REGISTER_FEED_ME_ELEMENTS, function (RegisterFeedMeElementsEvent $e) {
                 $e->elements[] = FeedMeRedirect::class;
             });
         }
@@ -155,7 +160,7 @@ class RedirectPlugin extends \craft\base\Plugin
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, [$this, 'registerCpUrlRules']);
 
         // Register FeedMe ElementType
-       $this->registerFeedMeElement();
+        $this->registerFeedMeElement();
 
         $settings = RedirectPlugin::$plugin->getSettings();
         if ($settings->redirectsActive) {
@@ -188,7 +193,7 @@ class RedirectPlugin extends \craft\base\Plugin
                         ];
                     }
 
-                    $event->rules = array_merge($activeRules ,$event->rules);
+                    $event->rules = array_merge($activeRules, $event->rules);
                 }
                 // 404?
 
