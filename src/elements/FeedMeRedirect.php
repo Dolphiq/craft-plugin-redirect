@@ -2,13 +2,11 @@
 
 namespace dolphiq\redirect\elements;
 
-use craft\feedme\Base\Element;
-use craft\feedme\Base\ElementInterface;
-
+use Cake\Utility\Hash;
 use Craft;
 use craft\base\Element as BaseElement;
-
-use Cake\Utility\Hash;
+use craft\feedme\Base\Element;
+use craft\feedme\Base\ElementInterface;
 use dolphiq\redirect\elements\Redirect as RedirectElement;
 
 class FeedMeRedirect extends Element implements ElementInterface
@@ -25,17 +23,17 @@ class FeedMeRedirect extends Element implements ElementInterface
     // Templates
     // =========================================================================
 
-    public function getGroupsTemplate()
+    public function getGroupsTemplate(): string
     {
         return 'redirect/_feed-me/groups';
     }
 
-    public function getColumnTemplate()
+    public function getColumnTemplate(): string
     {
         return 'redirect/_feed-me/column';
     }
 
-    public function getMappingTemplate()
+    public function getMappingTemplate(): string
     {
         return 'redirect/_feed-me/map';
     }
@@ -44,12 +42,12 @@ class FeedMeRedirect extends Element implements ElementInterface
     // Public Methods
     // =========================================================================
 
-    public function getGroups()
+    public function getGroups(): array
     {
         return [];
     }
 
-    public function getQuery($settings, $params = [])
+    public function getQuery($settings, $params = []): mixed
     {
         $query = RedirectElement::find();
 
@@ -70,7 +68,7 @@ class FeedMeRedirect extends Element implements ElementInterface
         return $query;
     }
 
-    public function setModel($settings)
+    public function setModel($settings): Redirect
     {
         $this->element = new RedirectElement();
 
@@ -83,7 +81,7 @@ class FeedMeRedirect extends Element implements ElementInterface
         return $this->element;
     }
 
-    public function save($element, $settings)
+    public function save($element, $settings): bool
     {
         $this->element = $element;
 

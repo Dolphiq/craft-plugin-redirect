@@ -9,14 +9,9 @@
 namespace dolphiq\redirect\fields;
 
 use Craft;
+use craft\fields\BaseRelationField;
 use dolphiq\redirect\elements\Redirect;
 
-/**
- * Users represents a Users field.
- *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since  3.0
- */
 class Redirects extends BaseRelationField
 {
     // Static
@@ -33,7 +28,7 @@ class Redirects extends BaseRelationField
     /**
      * @inheritdoc
      */
-    protected static function elementType(): string
+    public static function elementType():string
     {
         return Redirect::class;
     }
@@ -55,7 +50,7 @@ class Redirects extends BaseRelationField
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         $this->allowMultipleSources = false;

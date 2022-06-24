@@ -10,15 +10,11 @@
 namespace dolphiq\redirect\controllers;
 
 use Craft;
-use craft\web\Controller;
 use craft\helpers\UrlHelper;
-
-use dolphiq\redirect\RedirectPlugin;
-use dolphiq\redirect\elements\Redirect;
-
 use craft\records\Element as ElementRecord;
-
-use craft\db\Query;
+use craft\web\Controller;
+use dolphiq\redirect\elements\Redirect;
+use dolphiq\redirect\RedirectPlugin;
 
 class SettingsController extends Controller
 {
@@ -186,7 +182,7 @@ class SettingsController extends Controller
      *
      * @return Response
      */
-    public function actionSaveSettings(): craft\web\Response
+    public function actionSaveSettings(): ?craft\web\Response
     {
         $this->requirePostRequest();
         $this->requireAdmin();
@@ -219,7 +215,7 @@ class SettingsController extends Controller
 
         Craft::$app->getSession()->setNotice(Craft::t('app', 'Plugin settings saved.'));
 
-        return $this->redirectToPostedUrl($newSettings);
+        return $this->redirectToPostedUrl((object)$newSettings);
     }
 
     /**
@@ -335,8 +331,8 @@ class SettingsController extends Controller
         }
 
         $elementRecord = ElementRecord::findOne($redirect->id);
-        if($elementRecord) {
-	        $redirect->uid = $elementRecord->uid;
+        if ($elementRecord) {
+            $redirect->uid = $elementRecord->uid;
         }
 
         $redirect->siteId = $siteId;
@@ -359,14 +355,14 @@ class SettingsController extends Controller
 
             return null;
         } else {
-          // remove form other sites
-          Craft::$app->getDb()->createCommand()
-            ->delete('{{%elements_sites}}', [
-              'AND',
-              ['elementId' => $redirect->id],
-              ['!=', 'siteId', $siteId]
-            ])
-            ->execute();
+            // remove form other sites
+            Craft::$app->getDb()->createCommand()
+                ->delete('{{%elements_sites}}', [
+                    'AND',
+                    ['elementId' => $redirect->id],
+                    ['!=', 'siteId', $siteId]
+                ])
+                ->execute();
 
             if ($request->getAcceptsJson()) {
                 return $this->asJson([

@@ -1,5 +1,11 @@
 # Redirect Changelog
+## 2.0.0 - 2022-06-24
+### Changed
+- Make compatible with Craft 4.0
+- Make compatible php 8.0
+
 ## 1.1.1 - 2020-08-06
+
 ### Fixed
 - Fixed plugin name in Composer to be in line with the plugin store
 
