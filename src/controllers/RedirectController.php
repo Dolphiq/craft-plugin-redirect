@@ -25,12 +25,26 @@ class RedirectController extends Controller
     private $_sourceRouteParams = [];
     protected array|int|bool $allowAnonymous = ['index'];
 
+    public const FILE_EXTENSIONS = [
+        'gif',
+        'jpg',
+        'jpeg',
+        'png',
+        'tiff',
+        'svg',
+        'ttf',
+        'woff',
+        'woff2',
+        'otf',
+        'ico',
+        'js',
+        'css'
+    ];
+
     const EVENT_BEFORE_CATCHALL = 'beforeCatchall';
 
     public function actionIndex()
     {
-        // var_dump(Craft::$app->getRequest());
-
         // first check if there is a static template.. it should be rendered by the Templates controller.
         /* @see \craft\controllers\TemplatesController */
         $tplController = craft::$app->createControllerByID('templates');
@@ -41,7 +55,6 @@ class RedirectController extends Controller
                 return $tplController->actionRender($tplPath);
             }
         }
-
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
         $sourceUrl = $routeParameters['sourceUrl'];
@@ -76,6 +89,8 @@ class RedirectController extends Controller
             $destinationUrl = UrlHelper::baseUrl() . ltrim($destinationUrl, '/');
         }
 
+        $destinationUrl .= "?" . $this->request->getQueryStringWithoutPath();
+
         // register the hit to the database
         if ($redirectId != null && $statusCode != 404) {
             RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId, $destinationUrl);
@@ -92,10 +107,13 @@ class RedirectController extends Controller
 
             Craft::$app->response->statusCode = $statusCode;
 
-            if (is_array($uriParts) && isset($uriParts['extension']) && $uriParts['extension'] !== '' && in_array($uriParts['extension'], [
-                    'gif', 'jpg', 'jpeg', 'png', 'tiff', 'svg', 'ttf', 'woff', 'woff2', 'otf', 'ico', 'js', 'css',
-                ])) {
-                // this is a known extention, please don't handle but trow an exception
+            if (
+                is_array($uriParts) &&
+                isset($uriParts['extension']) &&
+                $uriParts['extension'] !== '' &&
+                in_array($uriParts['extension'], self::FILE_EXTENSIONS)
+            ) {
+                // this is a known extention, please don't handle but throw an exception
                 throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'), 404);
             } else {
 
@@ -116,11 +134,9 @@ class RedirectController extends Controller
                         'uriParts' => $uriParts
                     ]]);
                 } else {
-                    return ('this page does not exists');
+                    return ('This page does not exist.');
                 }
             }
-
-
         }
     }
 }
