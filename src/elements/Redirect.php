@@ -85,9 +85,18 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
+    public function canView(User $user): bool
+    {
+        return true;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
     public function getIsEditable(): bool
     {
-        return false;
+        return true;
     }
 
 
