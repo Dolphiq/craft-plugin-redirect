@@ -9,8 +9,8 @@
 namespace dolphiq\redirect\services;
 
 use Craft;
-use yii\base\Component;
 use dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
+use yii\base\Component;
 
 /**
  * Class Redirects service.

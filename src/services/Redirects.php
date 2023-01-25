@@ -9,9 +9,10 @@
 namespace dolphiq\redirect\services;
 
 use Craft;
+use craft\helpers\Db;
 use dolphiq\redirect\elements\Redirect;
 use yii\base\Component;
-use craft\helpers\Db;
+use yii\db\Expression;
 
 /**
  * Class Redirects service.
@@ -103,8 +104,8 @@ class Redirects extends Component
             ->update(
                 '{{%dolphiq_redirects}}',
                 [
-                    'hitAt' => new \yii\db\Expression('now()'),
-                    'hitCount' => new \yii\db\Expression('{{hitCount}} + 1'),
+                    'hitAt' => new Expression('now()'),
+                    'hitCount' => new Expression('{{hitCount}} + 1'),
                 ],
                 ['id' => $redirectId]
             )

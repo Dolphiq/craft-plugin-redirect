@@ -10,10 +10,9 @@ namespace dolphiq\redirect\elements\db;
 
 use Craft;
 use craft\db\QueryAbortedException;
-use dolphiq\redirect\elements\Redirect;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
-use yii\db\Connection;
+use DateTime;
 
 class RedirectQuery extends ElementQuery
 {
@@ -117,9 +116,6 @@ class RedirectQuery extends ElementQuery
         Craft::info('dolphiq/redirect beforePrepare', __METHOD__);
         $this->joinElementTable('dolphiq_redirects');
 
-
-        //   $this->joinElementTable('elements_sites');
-
         $this->query->select([
             'elements_sites.siteId',
             'dolphiq_redirects.sourceUrl',
@@ -128,8 +124,6 @@ class RedirectQuery extends ElementQuery
             'dolphiq_redirects.hitCount',
             'dolphiq_redirects.statusCode',
         ]);
-
-        // $this->subQuery->andWhere(Db::parseParam('status', null));
 
         if ($this->sourceUrl) {
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.sourceUrl', $this->sourceUrl));
@@ -141,15 +135,12 @@ class RedirectQuery extends ElementQuery
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.statusCode', $this->statusCode));
         }
         if ($this->hitAt && $this->hitAt > 0) {
-            $inactiveDate = new \DateTime();
+            $inactiveDate = new DateTime();
             $inactiveDate->modify("-60 days");
 
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.hitAt', $inactiveDate->format("Y-m-d H:m:s"), '<'));
             $this->subQuery->andWhere(Db::parseParam('dolphiq_redirects.hitAt', ':notempty:'));
         }
-
-        // $this->subQuery->andWhere(Db::parseParam('elements_sites.siteId', null));
-        // $this->_applyEditableParam();
 
         return parent::beforePrepare();
     }
