@@ -10,14 +10,11 @@
 namespace dolphiq\redirect\controllers;
 
 use Craft;
-use craft\web\Controller;
 use craft\helpers\UrlHelper;
-
+use craft\web\Controller;
 use dolphiq\redirect\events\RedirectEvent;
+use dolphiq\redirect\helpers\UrlRule;
 use dolphiq\redirect\RedirectPlugin;
-
-use \dolphiq\redirect\helpers\UrlRule;
-use \dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
 use yii\web\NotFoundHttpException;
 
 class RedirectController extends Controller

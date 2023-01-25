@@ -10,14 +10,15 @@ namespace dolphiq\redirect\elements;
 
 use Craft;
 use craft\base\Element;
-use dolphiq\redirect\elements\db\RedirectQuery;
-use craft\elements\db\ElementQueryInterface;
 use craft\elements\actions\Edit;
-use dolphiq\redirect\elements\actions\DeleteRedirects;
+use craft\elements\db\ElementQueryInterface;
 use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\validators\DateTimeValidator;
+use dolphiq\redirect\elements\actions\DeleteRedirects;
+use dolphiq\redirect\elements\db\RedirectQuery;
 use dolphiq\redirect\records\Redirect as RedirectRecord;
+use Throwable;
 
 class Redirect extends Element
 {
@@ -393,7 +394,7 @@ class Redirect extends Element
     {
         try {
             return $this->getName();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ErrorHandler::convertExceptionToError($e);
         }
     }
