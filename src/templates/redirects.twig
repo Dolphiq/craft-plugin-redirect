@@ -1,36 +1,12 @@
+{% extends "_layouts/elementindex" %}
 {% set title = "Redirect entries"|t('redirect') %}
 {% set elementType = 'dolphiq\\redirect\\elements\\Redirect' %}
 
 {% set docsUrl = 'https://github.com/Dolphiq/craft3-plugin-redirect' %}
 
-
 {% block actionButton %}
     <a href="{{ url( pathPrefix ~ 'redirect/new') }}" class="submit btn add icon">{{ "New redirect"|t('redirect') }}</a>
 {% endblock %}
-
-{% extends "_layouts/cp" %}
-
-{% set elementInstance = craft.app.elements.createElement(elementType) %}
-{% set context = 'index' %}
-
-{% if not elementInstance %}
-    {% exit 404 %}
-{% endif %}
-
-{% set sources = craft.app.ElementSources.getSources(elementType, 'index') %}
-
-{% set showSiteMenu = (craft.app.getIsMultiSite() ? (showSiteMenu ?? 'auto') : false) %}
-{% if showSiteMenu == 'auto' %}
-    {% set showSiteMenu = elementInstance.isLocalized() %}
-{% endif %}
-
-
-{% block contextMenu %}
-    {% if showSiteMenu %}
-        {% include "_elements/sitemenu" %}
-    {% endif %}
-{% endblock %}
-
 
 {% block sidebar %}
     <nav>
@@ -51,25 +27,3 @@
 
 {% endblock %}
 
-
-{% block content %}
-    <div class="elementindex">
-        {% include "_elements/indexcontainer" with {
-        showSiteMenu: false
-        } %}
-    </div>
-{% endblock %}
-
-{% block footer %}
-    <div id="count-container" class="light flex-grow">&nbsp;</div>
-{% endblock %}
-
-{% block initJs %}
-    Craft.elementIndex = Craft.createElementIndex('{{ elementType|e("js") }}', $('#main'), {
-    context:        '{{ context }}',
-    storageKey:     'elementindex.{{ elementType }}',
-    criteria:       Craft.defaultIndexCriteria
-    });
-{% endblock %}
-
-{% js block('initJs') %}
