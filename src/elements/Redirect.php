@@ -19,6 +19,7 @@ use dolphiq\redirect\elements\actions\DeleteRedirects;
 use dolphiq\redirect\elements\db\RedirectQuery;
 use dolphiq\redirect\records\Redirect as RedirectRecord;
 use Throwable;
+use craft\elements\User;
 
 class Redirect extends Element
 {
