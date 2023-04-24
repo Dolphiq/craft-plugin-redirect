@@ -87,7 +87,7 @@ class RedirectController extends Controller
             $destinationUrl = UrlHelper::baseUrl() . ltrim($destinationUrl, '/');
         }
 
-        if(isset($queryString)) {
+        if($queryString) {
             $destinationUrl .= "?" . $queryString;
         }
 
