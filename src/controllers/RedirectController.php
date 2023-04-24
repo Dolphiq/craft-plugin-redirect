@@ -54,6 +54,7 @@ class RedirectController extends Controller
         }
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
+        $queryString = $this->request->getQueryStringWithoutPath();
         $sourceUrl = $routeParameters['sourceUrl'];
         $destinationUrl = $routeParameters['destinationUrl'];
         $statusCode = $routeParameters['statusCode'];
@@ -86,7 +87,9 @@ class RedirectController extends Controller
             $destinationUrl = UrlHelper::baseUrl() . ltrim($destinationUrl, '/');
         }
 
-        $destinationUrl .= "?" . $this->request->getQueryStringWithoutPath();
+        if($queryString) {
+            $destinationUrl .= "?" . $queryString;
+        }
 
         // register the hit to the database
         if ($redirectId != null && $statusCode != 404) {
