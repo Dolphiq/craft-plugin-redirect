@@ -1,5 +1,7 @@
 # Craft CMS 4.x Redirect Manager
 
+## Currently the project is *DISCONTINUED*. However, feel free to fork it and continue its development!
+
 Craft plugin that provides an easy way to enter and maintain 301 and 302 redirects. The plugin provides a clear user interface for admin and non-admin users.
 
 This is particularly useful if you are migrating pages from an old website and want to avoid dead links and want to keep the page ranks for the SEO. But also useful if you are making (big) changes in the site (url) structure.
