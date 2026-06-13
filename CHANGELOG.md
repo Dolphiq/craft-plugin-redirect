@@ -1,5 +1,10 @@
 # Redirect Changelog
 
+## Unreleased
+### Changed
+- Rewrote the README: clearer feature overview, installation and usage instructions, and refreshed control-panel screenshots.
+- Redirect Manager is actively maintained again — removed the "discontinued" notice and the "may become a paid add-on" note.
+
 ## 2.0.1 - 2023-01-25
 ### Fixed
 - Fix elements not having an edit link on list view
