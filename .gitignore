@@ -17,3 +17,9 @@
 .DQ
 .php_cs.cache
 .idea/
+# Composer lock (library — resolved by consumers)
+/composer.lock
+
+# Codeception
+tests/_output/
+tests/_support/_generated/
