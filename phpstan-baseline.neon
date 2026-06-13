@@ -1,0 +1,311 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Access to constant EVENT_REGISTER_FEED_ME_ELEMENTS on an unknown class craft\\\\feedme\\\\services\\\\Elements\\.$#"
+			count: 1
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^Access to property \\$_catchAallService on an unknown class dolphiq\\\\redirect\\\\ConsoleApplication\\.$#"
+			count: 1
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^Access to property \\$_catchAallService on an unknown class dolphiq\\\\redirect\\\\WebApplication\\.$#"
+			count: 1
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^Access to property \\$_redirectsService on an unknown class dolphiq\\\\redirect\\\\ConsoleApplication\\.$#"
+			count: 1
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^Access to property \\$_redirectsService on an unknown class dolphiq\\\\redirect\\\\WebApplication\\.$#"
+			count: 1
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^Access to property \\$elements on an unknown class craft\\\\feedme\\\\events\\\\RegisterFeedMeElementsEvent\\.$#"
+			count: 2
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^Class craft\\\\feedme\\\\services\\\\Elements not found\\.$#"
+			count: 1
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$this contains unknown class dolphiq\\\\redirect\\\\ConsoleApplication\\.$#"
+			count: 2
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$this contains unknown class dolphiq\\\\redirect\\\\WebApplication\\.$#"
+			count: 2
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^Parameter \\$e of anonymous function has invalid type craft\\\\feedme\\\\events\\\\RegisterFeedMeElementsEvent\\.$#"
+			count: 1
+			path: src/RedirectPlugin.php
+
+		-
+			message: "#^Call to an undefined method yii\\\\base\\\\Controller\\<craft\\\\console\\\\Application\\|craft\\\\web\\\\Application\\>\\:\\:actionRender\\(\\)\\.$#"
+			count: 1
+			path: src/controllers/RedirectController.php
+
+		-
+			message: "#^Call to an undefined method yii\\\\base\\\\View\\:\\:doesTemplateExist\\(\\)\\.$#"
+			count: 1
+			path: src/controllers/RedirectController.php
+
+		-
+			message: "#^Call to an undefined method yii\\\\web\\\\UrlManager\\:\\:getRouteParams\\(\\)\\.$#"
+			count: 1
+			path: src/controllers/RedirectController.php
+
+		-
+			message: "#^Property dolphiq\\\\redirect\\\\controllers\\\\RedirectController\\:\\:\\$_sourceRouteParams is never read, only written\\.$#"
+			count: 1
+			path: src/controllers/RedirectController.php
+
+		-
+			message: "#^Call to an undefined method yii\\\\web\\\\UrlManager\\:\\:getRouteParams\\(\\)\\.$#"
+			count: 5
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Call to an undefined method yii\\\\web\\\\UrlManager\\:\\:setRouteParams\\(\\)\\.$#"
+			count: 2
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Class craft\\\\web\\\\Response referenced with incorrect case\\: Craft\\\\web\\\\Response\\.$#"
+			count: 6
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Instantiated class dolphiq\\\\redirect\\\\controllers\\\\ForbiddenHttpException not found\\.$#"
+			count: 2
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Instantiated class dolphiq\\\\redirect\\\\controllers\\\\NotFoundHttpException not found\\.$#"
+			count: 2
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionDeleteCatchAllUrls\\(\\) has invalid return type dolphiq\\\\redirect\\\\controllers\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionDeleteCatchAllUrls\\(\\) should return craft\\\\web\\\\Response but returns yii\\\\web\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionDeleteRedirect\\(\\) has invalid return type dolphiq\\\\redirect\\\\controllers\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionDeleteRedirect\\(\\) should return dolphiq\\\\redirect\\\\controllers\\\\Response but returns yii\\\\web\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionEditRedirect\\(\\) has invalid return type dolphiq\\\\redirect\\\\controllers\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionEditRedirect\\(\\) should return craft\\\\web\\\\Response but returns yii\\\\web\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionIndex\\(\\) has invalid return type dolphiq\\\\redirect\\\\controllers\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionIndex\\(\\) should return craft\\\\web\\\\Response but returns yii\\\\web\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionRegisteredCatchAllUrls\\(\\) has invalid return type dolphiq\\\\redirect\\\\controllers\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionRegisteredCatchAllUrls\\(\\) should return craft\\\\web\\\\Response but returns yii\\\\web\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionSaveRedirect\\(\\) has invalid return type dolphiq\\\\redirect\\\\controllers\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionSaveRedirect\\(\\) should return dolphiq\\\\redirect\\\\controllers\\\\Response\\|null but returns yii\\\\web\\\\Response\\.$#"
+			count: 3
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionSaveSettings\\(\\) has invalid return type dolphiq\\\\redirect\\\\controllers\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionSaveSettings\\(\\) should return craft\\\\web\\\\Response\\|null but returns yii\\\\web\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionSettings\\(\\) has invalid return type dolphiq\\\\redirect\\\\controllers\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\controllers\\\\SettingsController\\:\\:actionSettings\\(\\) should return craft\\\\web\\\\Response but returns yii\\\\web\\\\Response\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^PHPDoc tag @return with type dolphiq\\\\redirect\\\\controllers\\\\Response is not subtype of native type craft\\\\web\\\\Response\\.$#"
+			count: 5
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^PHPDoc tag @return with type dolphiq\\\\redirect\\\\controllers\\\\Response is not subtype of native type craft\\\\web\\\\Response\\|null\\.$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^PHPDoc tag @throws with type dolphiq\\\\redirect\\\\controllers\\\\NotFoundHttpException is not subtype of Throwable$#"
+			count: 1
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Throwing object of an unknown class dolphiq\\\\redirect\\\\controllers\\\\ForbiddenHttpException\\.$#"
+			count: 2
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Throwing object of an unknown class dolphiq\\\\redirect\\\\controllers\\\\NotFoundHttpException\\.$#"
+			count: 2
+			path: src/controllers/SettingsController.php
+
+		-
+			message: "#^Call to static method get\\(\\) on an unknown class Cake\\\\Utility\\\\Hash\\.$#"
+			count: 2
+			path: src/elements/FeedMeRedirect.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$destinationUrl\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$hitAt\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$hitCount\\.$#"
+			count: 2
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$id\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$sourceUrl\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$statusCode\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Call to an undefined static method craft\\\\base\\\\Element\\:\\:getEditorHtml\\(\\)\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Call to static method convertExceptionToError\\(\\) on an unknown class dolphiq\\\\redirect\\\\elements\\\\ErrorHandler\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Instantiated class dolphiq\\\\redirect\\\\elements\\\\Exception not found\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\elements\\\\Redirect\\:\\:find\\(\\) has invalid return type dolphiq\\\\redirect\\\\elements\\\\UserQuery\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^PHPDoc tag @return with type dolphiq\\\\redirect\\\\elements\\\\UserQuery is not subtype of native type craft\\\\elements\\\\db\\\\ElementQueryInterface\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^PHPDoc tag @throws with type dolphiq\\\\redirect\\\\elements\\\\Exception is not subtype of Throwable$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Throwing object of an unknown class dolphiq\\\\redirect\\\\elements\\\\Exception\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Variable \\$sources might not be defined\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Method dolphiq\\\\redirect\\\\elements\\\\db\\\\RedirectQuery\\:\\:_applyEditableParam\\(\\) is unused\\.$#"
+			count: 1
+			path: src/elements/db/RedirectQuery.php
+
+		-
+			message: "#^Class dolphiq\\\\redirect\\\\records\\\\Element not found\\.$#"
+			count: 1
+			path: src/records/Redirect.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\CatchAllUrl\\:\\:\\$hitCount\\.$#"
+			count: 3
+			path: src/services/CatchAll.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\CatchAllUrl\\:\\:\\$siteId\\.$#"
+			count: 1
+			path: src/services/CatchAll.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\CatchAllUrl\\:\\:\\$uri\\.$#"
+			count: 1
+			path: src/services/CatchAll.php

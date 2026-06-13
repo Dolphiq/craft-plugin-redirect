@@ -1,0 +1,11 @@
+includes:
+    - vendor/craftcms/phpstan/phpstan.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 4
+    paths:
+        - src
+    excludePaths:
+        # Feed Me is an optional integration; its base classes only exist when the Feed Me plugin is installed.
+        - src/elements/FeedMeRedirect.php

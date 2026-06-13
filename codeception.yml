@@ -1,0 +1,9 @@
+namespace: dolphiq\redirect\tests
+paths:
+    tests: tests
+    output: tests/_output
+    support: tests/_support
+    data: tests/_data
+settings:
+    shuffle: false
+    lint: true
