@@ -14,7 +14,9 @@ use Craft;
 use craft\base\Plugin;
 use craft\db\Query;
 use craft\events\ElementEvent;
+use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\services\Dashboard;
 use craft\feedme\events\RegisterFeedMeElementsEvent;
 use craft\feedme\Plugin as FeedmePlugin;
 use craft\feedme\services\Elements as FeedmeElements;
@@ -26,6 +28,7 @@ use dolphiq\redirect\elements\Redirect;
 use dolphiq\redirect\models\Settings;
 use dolphiq\redirect\services\CatchAll;
 use dolphiq\redirect\services\Redirects;
+use dolphiq\redirect\widgets\Latest404s;
 use yii\base\Event;
 use yii\web\Response;
 
@@ -186,6 +189,11 @@ class RedirectPlugin extends Plugin
 
         // Register FeedMe ElementType
         $this->registerFeedMeElement();
+
+        // Register the "Latest 404s" dashboard widget
+        Event::on(Dashboard::class, Dashboard::EVENT_REGISTER_WIDGET_TYPES, function(RegisterComponentTypesEvent $event) {
+            $event->types[] = Latest404s::class;
+        });
 
         $settings = RedirectPlugin::$plugin->getSettings();
         if ($settings->redirectsActive) {
