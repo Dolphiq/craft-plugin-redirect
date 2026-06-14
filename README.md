@@ -61,6 +61,45 @@ php craft plugin/install redirect
 
 That's it — open **Site redirects** in the control panel and add your first redirect.
 
+## Upgrading
+
+Each release line tracks a Craft major. Upgrade Craft and the plugin together, one major at a time.
+
+| Plugin | Craft | PHP |
+|--------|-------|-----|
+| `1.x`  | Craft 3 | 7.x – 8.0 |
+| `2.x`  | Craft 4 | 8.0.2+ |
+| `3.x`  | Craft 5 | 8.2+ |
+
+After any upgrade, **run the migrations** (the control panel will also prompt you):
+
+```bash
+composer require dolphiq/redirect:^3.0   # match your target Craft major
+php craft migrate/all
+php craft project-config/apply           # if you deploy project config
+```
+
+**Craft 3 → 4 (`1.x` → `2.x`)**
+- Requires PHP 8.0+. The element index moves to Craft 4's `_layouts/elementindex`.
+- Query-string parameters are now passed through to the destination on a successful redirect.
+- No redirect data changes — your existing redirects keep working.
+
+**Craft 4 → 5 (`2.x` → `3.x`)**
+- Requires Craft 5 and PHP 8.2+.
+- **Behaviour change — redirects no longer shadow real pages.** Resolution is now *event-based*: a
+  redirect is only applied when a URL would otherwise 404. Previously a redirect could override a
+  page that existed at the same path; now the real page wins. If you relied on that shadowing,
+  recreate those as content/route changes.
+- Migrations add `matchType`, `priority`, `postDate`/`expiryDate` and the 404-analytics tables, and
+  back-fill a match type for every existing redirect (inferred from its source). Existing redirects
+  keep working unchanged.
+- 404 analytics are **opt-in** (off by default) and store no personal data — enable them in
+  **Settings** if you want them.
+- **Deploy note:** reset PHP **opcache** on deploy (or enable `opcache.validate_timestamps`), or new
+  control-panel actions can 404 until the cache clears.
+
+See the [changelog](CHANGELOG.md) for the full list of changes per version.
+
 ## Usage
 
 Add a redirect under **Site redirects → New redirect**. Pick a **match type**, enter a source and
