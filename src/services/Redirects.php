@@ -70,6 +70,74 @@ class Redirects extends Component
         return $results;
     }
 
+    /**
+     * Resolves a requested URI to a matching redirect for the given site.
+     *
+     * Matches an exact source URL or a named-parameter pattern (e.g.
+     * `category/<catname>/overview.php`), substituting captured parameters into
+     * the destination URL. Returns the destination/status/id, or null on no match.
+     *
+     * @return array{destinationUrl: string, statusCode: string, redirectId: int}|null
+     */
+    public function resolveForUri(string $uri, int $siteId): ?array
+    {
+        $uri = trim($uri, '/');
+
+        foreach ($this->getAllRedirectsForSite($siteId) as $redirect) {
+            $source = trim((string)$redirect->sourceUrl, '/');
+            $params = [];
+
+            if ($source === $uri) {
+                // exact match, no parameters
+            } elseif (str_contains($source, '<')) {
+                if (!preg_match($this->sourceUrlToRegex($source), $uri, $matches)) {
+                    continue;
+                }
+                foreach ($matches as $key => $value) {
+                    if (is_string($key)) {
+                        $params[$key] = $value;
+                    }
+                }
+            } else {
+                continue;
+            }
+
+            $destinationUrl = (string)$redirect->destinationUrl;
+            foreach ($params as $name => $value) {
+                $destinationUrl = str_replace("<$name>", $value, $destinationUrl);
+            }
+
+            return [
+                'destinationUrl' => $destinationUrl,
+                'statusCode' => (string)$redirect->statusCode,
+                'redirectId' => (int)$redirect->id,
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Turns a source URL pattern into an anchored regex, converting `<name>`
+     * placeholders into named capture groups that match a single path segment.
+     */
+    private function sourceUrlToRegex(string $source): string
+    {
+        $source = trim($source, '/');
+        $parts = preg_split('/(<[\w._-]+>)/', $source, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        $regex = '';
+        foreach ($parts as $part) {
+            if (preg_match('/^<([\w._-]+)>$/', $part, $m)) {
+                $regex .= '(?P<' . $m[1] . '>[^/]+)';
+            } else {
+                $regex .= preg_quote($part, '#');
+            }
+        }
+
+        return '#^' . $regex . '$#';
+    }
+
 
     /**
      * Returns a redirect by its ID.
