@@ -15,6 +15,7 @@ use craft\records\Element as ElementRecord;
 use craft\web\Controller;
 use dolphiq\redirect\elements\Redirect;
 use dolphiq\redirect\RedirectPlugin;
+use yii\web\UploadedFile;
 
 class SettingsController extends Controller
 {
@@ -118,6 +119,42 @@ class SettingsController extends Controller
         }
 
         return $this->renderTemplate('redirect/registeredcatchallurls', $variables);
+    }
+
+    /**
+     * Downloads all redirects for a site as a CSV file.
+     */
+    public function actionExportRedirects(): \yii\web\Response
+    {
+        $this->requireLogin();
+
+        $siteId = (int)Craft::$app->getRequest()->getQueryParam('siteId', Craft::$app->getSites()->currentSite->id);
+        $csv = RedirectPlugin::$plugin->getRedirects()->exportCsv($siteId);
+
+        return Craft::$app->getResponse()->sendContentAsFile($csv, 'redirects.csv', ['mimeType' => 'text/csv']);
+    }
+
+    /**
+     * Imports redirects from an uploaded CSV file.
+     */
+    public function actionImportRedirects(): ?\yii\web\Response
+    {
+        $this->requirePostRequest();
+        $this->requireLogin();
+
+        $siteId = (int)Craft::$app->getRequest()->getBodyParam('siteId', Craft::$app->getSites()->currentSite->id);
+        $file = UploadedFile::getInstanceByName('file');
+
+        if ($file === null) {
+            Craft::$app->getSession()->setError(Craft::t('redirect', 'No CSV file was uploaded.'));
+            return null;
+        }
+
+        $result = RedirectPlugin::$plugin->getRedirects()->importCsv(file_get_contents($file->tempName), $siteId);
+
+        Craft::$app->getSession()->setNotice(Craft::t('redirect', '{created} redirect(s) imported, {skipped} skipped.', $result));
+
+        return $this->redirectToPostedUrl();
     }
 
 

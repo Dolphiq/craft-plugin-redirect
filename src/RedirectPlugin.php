@@ -115,6 +115,8 @@ class RedirectPlugin extends Plugin
             'redirect/settings' => 'redirect/settings/settings',
             'redirect/redirects' => 'redirect/settings/redirects',
             'redirect/registered-catch-all-urls' => 'redirect/settings/registered-catch-all-urls',
+            'redirect/export' => 'redirect/settings/export-redirects',
+            'redirect/import' => 'redirect/settings/import-redirects',
             'redirect/new' => 'redirect/settings/edit-redirect',
             'redirect/<redirectId:\d+>' => 'redirect/settings/edit-redirect',
 
