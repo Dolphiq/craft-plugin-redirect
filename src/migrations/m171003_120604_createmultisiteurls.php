@@ -33,7 +33,7 @@ class m171003_120604_createmultisiteurls extends Migration
                 'hitAt' => $this->dateTime(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
-                'uid' => $this->uid()
+                'uid' => $this->uid(),
             ]);
 
             $this->addForeignKey(null, '{{%dolphiq_redirects}}', ['id'], '{{%elements}}', ['id'], 'CASCADE', null);

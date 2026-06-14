@@ -1,0 +1,5 @@
+2026-06-14 00:01:22 [console.INFO] [yii\db\Connection::open] Opening DB connection: mysql:host=db;port=3306;dbname=craft_test {"memory":18537384} 
+2026-06-14 00:08:59 [console.INFO] [yii\db\Connection::open] Opening DB connection: mysql:host=db;port=3306;dbname=craft_test {"memory":18327952} 
+2026-06-14 00:09:46 [console.INFO] [yii\db\Connection::open] Opening DB connection: mysql:host=db;port=3306;dbname=craft_test {"memory":18327952} 
+2026-06-14 00:09:48 [console.INFO] [yii\db\Connection::open] Opening DB connection: mysql:host=db;port=3306;dbname=craft_test {"memory":18583568} 
+2026-06-14 00:10:48 [console.INFO] [yii\db\Connection::open] Opening DB connection: mysql:host=db;port=3306;dbname=craft_test {"memory":18583568} 

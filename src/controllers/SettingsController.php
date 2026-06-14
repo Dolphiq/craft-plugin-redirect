@@ -18,7 +18,6 @@ use dolphiq\redirect\RedirectPlugin;
 
 class SettingsController extends Controller
 {
-
     // Public Methods
     // =========================================================================
 
@@ -69,7 +68,6 @@ class SettingsController extends Controller
      */
     public function actionDeleteCatchAllUrls(): craft\web\Response
     {
-
         $this->requireLogin();
         $urlId = Craft::$app->getRequest()->getRequiredBodyParam('id');
 
@@ -85,7 +83,6 @@ class SettingsController extends Controller
      */
     public function actionRegisteredCatchAllUrls(): craft\web\Response
     {
-
         $this->requireLogin();
 
         //  $allRedirects = RedirectPlugin::$plugin->getRedirects()->getAllRedirects();
@@ -135,19 +132,19 @@ class SettingsController extends Controller
         $navItems = [
             'settings' => [
                 'label' => "Settings",
-                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect/settings')
-            ]
+                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect/settings'),
+            ],
         ];
 
         if ($settings['catchAllActive']) {
             $navItems['registeredcatchall'] = [
                 'label' => "Registered catch all urls",
-                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect/registered-catch-all-urls')
+                'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect/registered-catch-all-urls'),
             ];
         }
         $navItems['redirects'] = [
             'label' => "Redirect entries",
-            'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect')
+            'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect'),
         ];
 
         return $navItems;
@@ -160,7 +157,6 @@ class SettingsController extends Controller
      */
     public function actionSettings(): craft\web\Response
     {
-
         $this->requireAdmin();
 
         $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
@@ -173,7 +169,7 @@ class SettingsController extends Controller
             'settings' => $settings,
             'navItems' => $navItems,
             'source' => $source,
-            'pathPrefix' => ($source == 'CpSettings' ? 'settings/' : '')
+            'pathPrefix' => ($source == 'CpSettings' ? 'settings/' : ''),
         ]);
     }
 
@@ -207,7 +203,7 @@ class SettingsController extends Controller
 
             // Send the plugin back to the template
             Craft::$app->getUrlManager()->setRouteParams([
-                'plugin' => $plugin
+                'plugin' => $plugin,
             ]);
 
             return null;
@@ -235,12 +231,12 @@ class SettingsController extends Controller
         $variables['crumbs'] = [
             [
                 'label' => Craft::t('app', 'Settings'),
-                'url' => UrlHelper::url('settings')
+                'url' => UrlHelper::url('settings'),
             ],
             [
                 'label' => Craft::t('redirect', 'Redirects'),
-                'url' => UrlHelper::url('settings/redirect')
-            ]
+                'url' => UrlHelper::url('settings/redirect'),
+            ],
         ];
         $editableSitesOptions = [
         ];
@@ -276,7 +272,7 @@ class SettingsController extends Controller
             $variables['title'] = $redirect->sourceUrl;
         } else {
             if ($redirect === null) {
-                $redirect = new Redirect;
+                $redirect = new Redirect();
 
                 // is there a sourceCatchALlUrlID ?
 
@@ -343,14 +339,14 @@ class SettingsController extends Controller
         if (!$res) {
             if ($request->getAcceptsJson()) {
                 return $this->asJson([
-                    'success' => false
+                    'success' => false,
                 ]);
             }
             // else, normal result
             Craft::$app->getSession()->setError(Craft::t('redirect', 'Couldn’t save the redirect.'));
 
             Craft::$app->getUrlManager()->setRouteParams([
-                'redirect' => $redirect
+                'redirect' => $redirect,
             ]);
 
             return null;
@@ -360,14 +356,14 @@ class SettingsController extends Controller
                 ->delete('{{%elements_sites}}', [
                     'AND',
                     ['elementId' => $redirect->id],
-                    ['!=', 'siteId', $siteId]
+                    ['!=', 'siteId', $siteId],
                 ])
                 ->execute();
 
             if ($request->getAcceptsJson()) {
                 return $this->asJson([
                     'success' => true,
-                    'id' => $redirect->id
+                    'id' => $redirect->id,
                 ]);
             }
             // else, normal result

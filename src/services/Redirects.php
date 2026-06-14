@@ -20,7 +20,6 @@ use yii\db\Expression;
  */
 class Redirects extends Component
 {
-
     // Public Methods
     // =========================================================================
 

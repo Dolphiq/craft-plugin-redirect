@@ -12,7 +12,6 @@ use craft\db\ActiveRecord;
 
 class CatchAllUrl extends ActiveRecord
 {
-
     // Public Methods
     // =========================================================================
 
@@ -20,6 +19,4 @@ class CatchAllUrl extends ActiveRecord
     {
         return '{{%dolphiq_redirects_catch_all_urls}}';
     }
-
-
 }
