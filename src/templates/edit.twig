@@ -92,6 +92,31 @@
         </div>
     </div>
 
+    {# Regex helper — shown only when the regex match type is selected. #}
+    {% set regexTokens = ['^', '$', '(\\d+)', '(.+)', '([^/]+)'] %}
+    <div id="regex-helper" class="hidden">
+        <div class="pane" style="padding:14px;">
+            <div class="field">
+                <div class="heading"><label>{{ "Source pattern (regex)"|t('redirect') }}</label></div>
+                <div class="input">
+                    <p class="light" style="margin-top:0;">{{ "Click to insert into the source. Add ^ … $ to anchor."|t('redirect') }}</p>
+                    {% for tok in regexTokens %}
+                        <button type="button" class="btn small token-insert" data-insert-into="source" data-insert="{{ tok }}"><code>{{ tok }}</code></button>
+                    {% endfor %}
+                    <div id="regex-status" style="margin-top:8px;"></div>
+                </div>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+                <div class="heading"><label>{{ "Destination backreferences"|t('redirect') }}</label></div>
+                <div class="input">
+                    <p class="light" style="margin-top:0;">{{ "Click to insert a capture group into the destination."|t('redirect') }}</p>
+                    <div id="regex-backrefs"><span class="light">{{ "Add a capture group to the source pattern first."|t('redirect') }}</span></div>
+                </div>
+            </div>
+            <p style="margin:10px 0 0;"><a class="go" href="https://regexr.com/" target="_blank" rel="noopener">{{ "Test & build regular expressions at regexr.com"|t('redirect') }}</a></p>
+        </div>
+    </div>
+
     {{ forms.selectField({
         label: "Redirect type"|t('redirect'),
         instructions: "HTTP status code returned to the browser. 301 (permanent) is the usual choice."|t('redirect'),
@@ -218,32 +243,39 @@
 
 {% js %}
 (function () {
-    // Pattern token insertion: insert at the caret of the last-focused URL field.
     var srcInput = document.getElementById('source-url');
     var dstInput = document.getElementById('destination-url');
     var lastFocused = srcInput;
     [srcInput, dstInput].forEach(function (el) {
-        if (el) {
-            el.addEventListener('focus', function () { lastFocused = el; });
-        }
+        if (el) { el.addEventListener('focus', function () { lastFocused = el; }); }
     });
-    document.querySelectorAll('.token-insert').forEach(function (chip) {
-        chip.addEventListener('click', function () {
-            var token = chip.getAttribute('data-insert');
-            var input = lastFocused || srcInput;
-            if (!input) return;
-            var start = input.selectionStart != null ? input.selectionStart : input.value.length;
-            var end = input.selectionEnd != null ? input.selectionEnd : input.value.length;
-            input.value = input.value.slice(0, start) + token + input.value.slice(end);
-            var caret = start + token.length;
-            input.focus();
-            input.setSelectionRange(caret, caret);
-        });
+
+    // Insert text at the caret of a given field.
+    function insertToken(input, token) {
+        if (!input) return;
+        var start = input.selectionStart != null ? input.selectionStart : input.value.length;
+        var end = input.selectionEnd != null ? input.selectionEnd : input.value.length;
+        input.value = input.value.slice(0, start) + token + input.value.slice(end);
+        var caret = start + token.length;
+        input.focus();
+        input.setSelectionRange(caret, caret);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Delegated so dynamically-added backreference chips work too.
+    // data-insert-into="source"|"destination" targets a field; otherwise the last-focused one.
+    document.addEventListener('click', function (e) {
+        var chip = e.target.closest ? e.target.closest('.token-insert') : null;
+        if (!chip) return;
+        var into = chip.getAttribute('data-insert-into');
+        var input = into === 'source' ? srcInput : (into === 'destination' ? dstInput : (lastFocused || srcInput));
+        insertToken(input, chip.getAttribute('data-insert'));
     });
 
     // Source URL hint + placeholder follow the selected match type.
     var matchTypeSelect = document.getElementById('match-type');
     var srcField = document.getElementById('source-url-field');
+    var regexHelper = document.getElementById('regex-helper');
     var srcHints = {{ {
         exact:    { ph: 'old/page',        instr: "Exact path to match, relative to the site root."|t('redirect') },
         prefix:   { ph: 'blog',            instr: "Match any URL beneath this path (e.g. blog matches /blog and /blog/2024)."|t('redirect') },
@@ -258,15 +290,63 @@
         srcInput.setAttribute('placeholder', hint.ph);
         if (srcField) {
             var instr = srcField.querySelector('.instructions');
-            if (instr) {
-                instr.innerHTML = '<p>' + Craft.escapeHtml(hint.instr) + '</p>';
+            if (instr) { instr.innerHTML = '<p>' + Craft.escapeHtml(hint.instr) + '</p>'; }
+        }
+    }
+
+    // --- Regex helper: live validation + capture-group count + $n insert chips ---
+    function countGroups(pattern) {
+        // Matching against an empty alternative yields [full, g1, g2, …] → length-1 groups.
+        try { return (new RegExp(pattern + '|')).exec('').length - 1; }
+        catch (err) { return -1; }
+    }
+    function updateRegexHelper() {
+        if (!regexHelper || !srcInput) return;
+        var isRegex = matchTypeSelect && matchTypeSelect.value === 'regex';
+        regexHelper.classList.toggle('hidden', !isRegex);
+        if (!isRegex) return;
+
+        var pattern = srcInput.value;
+        var status = document.getElementById('regex-status');
+        var backrefs = document.getElementById('regex-backrefs');
+        var groups = -1;
+
+        if (!pattern) {
+            if (status) { status.innerHTML = ''; }
+        } else {
+            try {
+                new RegExp(pattern);
+                groups = countGroups(pattern);
+                var label = groups === 1
+                    ? Craft.t('redirect', '1 capture group')
+                    : Craft.t('redirect', '{n} capture groups', { n: groups });
+                if (status) { status.innerHTML = '<span style="color:#127fbf;">✓ ' + Craft.t('redirect', 'Valid') + ' · ' + label + '</span>'; }
+            } catch (err) {
+                if (status) { status.innerHTML = '<span class="error">✗ ' + Craft.escapeHtml(err.message) + '</span>'; }
+            }
+        }
+
+        if (backrefs) {
+            if (groups > 0) {
+                var html = '';
+                for (var i = 1; i <= groups; i++) {
+                    html += '<button type="button" class="btn small token-insert" data-insert-into="destination" data-insert="$' + i + '"><code>$' + i + '</code></button> ';
+                }
+                backrefs.innerHTML = html;
+            } else {
+                backrefs.innerHTML = '<span class="light">' + Craft.t('redirect', 'Add a capture group to the source pattern first.') + '</span>';
             }
         }
     }
+
     if (matchTypeSelect) {
         // Only on explicit change — keep the general hint (mentions <name>/*) for untouched/auto redirects.
-        matchTypeSelect.addEventListener('change', applySrcHint);
+        matchTypeSelect.addEventListener('change', function () { applySrcHint(); updateRegexHelper(); });
     }
+    if (srcInput) {
+        srcInput.addEventListener('input', updateRegexHelper);
+    }
+    updateRegexHelper(); // reflect the initial match type (e.g. editing an existing regex redirect)
 
     var btn = document.getElementById('redirect-test-btn');
     if (!btn) return;

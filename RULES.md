@@ -104,6 +104,11 @@ Destination URL:  news/$2/$1
 `/blog/2024/launch` → `/news/launch/2024`. Unknown backreferences (e.g. `$5` with no 5th group) are
 left untouched. The pattern is matched as-is — add `^…$` yourself to anchor it.
 
+On the edit form, selecting the **regex** type reveals a helper: click-to-insert tokens (`^`, `$`,
+`(\d+)`, `(.+)`, `([^/]+)`), live validation that reports the capture-group count, and `$1`/`$2`
+chips that drop a backreference into the destination. Use the **Test this redirect** box to preview
+the result.
+
 ## Enabling, disabling and scheduling
 
 - A redirect has a **status**: a disabled redirect is kept but never resolves. Toggle it on the edit
