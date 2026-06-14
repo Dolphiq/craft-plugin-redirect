@@ -1,78 +1,377 @@
 {% extends "_layouts/cp" %}
 
 {% set fullPageForm = true %}
-{% set title = "Redirects"|t('redirect') %}
+{% set title = redirect.id ? (redirect.sourceUrl ?: "Edit redirect"|t('redirect')) : "New redirect"|t('redirect') %}
 
-{% set docsUrl = 'https://github.com/Dolphiq/craft-plugin-redirect' %}
+{% set docsUrl = 'https://github.com/Dolphiq/craft-plugin-redirect/blob/master/RULES.md' %}
+
+{% set crumbs = [
+    { label: "Redirects"|t('redirect'), url: url(pathPrefix ~ 'redirect') }
+] %}
 
 {% import "_includes/forms" as forms %}
+
+{% block actionButton %}
+    <div class="btngroup submit">
+        <button type="submit" class="btn submit">{{ "Save"|t('app') }}</button>
+    </div>
+
+    {% if redirect.id %}
+        <button type="button" class="btn menubtn action-btn" title="{{ 'Actions'|t('app') }}" aria-label="{{ 'Actions'|t('app') }}"></button>
+        <div class="menu">
+            <ul>
+                <li>
+                    <a class="formsubmit error"
+                       role="button"
+                       data-action="redirect/settings/delete-redirect"
+                       data-params="{{ { id: redirect.id }|json_encode }}"
+                       data-headers="{{ { 'Accept': 'application/json' }|json_encode }}"
+                       data-redirect="{{ url(pathPrefix ~ 'redirect') }}"
+                       data-confirm="{{ 'Are you sure you want to delete this redirect?'|t('redirect') }}">
+                        {{ "Delete"|t('app') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
     <input type="hidden" name="action" value="redirect/settings/save-redirect">
     <input type="hidden" name="pluginHandle" value="redirect">
-    <input type="hidden" name="redirectUrl" value="{{ url( pathPrefix ~ 'redirect') }}">
-
+    <input type="hidden" name="redirectUrl" value="{{ url(pathPrefix ~ 'redirect') }}">
     {{ redirectInput('settings/redirect') }}
-
     {% if redirect.id %}<input type="hidden" name="redirectId" value="{{ redirect.id }}">{% endif %}
     {% if redirect.uid %}<input type="hidden" name="uid" value="{{ redirect.uid }}">{% endif %}
-    <div class="readable">
-        <p>{{ "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters"|t('redirect') }}
-            .<br><a target="_blank"
-                    href="https://github.com/Dolphiq/craft-plugin-redirect/blob/master/RULES.md">{{ "See some examples and instructions here"|t('redirect') }}</a>.
-        </p>
-        <br>
+
+    {{ forms.textField({
+        label: "Source URL"|t('redirect'),
+        instructions: "The URL to match, relative to the site root (e.g. `old/page`). Supports `<name>` parameters and `*` wildcards."|t('redirect'),
+        id: 'source-url',
+        class: 'ltr code',
+        name: 'sourceUrl',
+        value: redirect.sourceUrl,
+        errors: redirect.getErrors('sourceUrl'),
+        autofocus: true,
+        required: true
+    }) }}
+
+    {{ forms.textField({
+        label: "Destination URL"|t('redirect'),
+        instructions: "Where matching requests are sent. May be a path or a full URL."|t('redirect'),
+        id: 'destination-url',
+        class: 'ltr code',
+        name: 'destinationUrl',
+        value: redirect.destinationUrl,
+        errors: redirect.getErrors('destinationUrl'),
+        required: true
+    }) }}
+
+    {% set patternTokens = [
+        { token: '*', label: "Wildcard"|t('redirect'), desc: "Matches anything; copied into the matching * in the destination."|t('redirect'), example: 'docs/* → help/*' },
+        { token: '<name>', label: "Named segment"|t('redirect'), desc: "Captures one path segment; reuse it in the destination by the same name."|t('redirect'), example: 'category/<cat>/x → c/<cat>' },
+        { token: '<id:\\d+>', label: "Digits only"|t('redirect'), desc: "Constrain a parameter with a regex (here: numbers)."|t('redirect'), example: 'item/<id:\\d+> → products/<id>' },
+        { token: '<rest:.+>', label: "Rest of path"|t('redirect'), desc: "Capture across multiple segments."|t('redirect'), example: 'old/<rest:.+> → new/<rest>' }
+    ] %}
+    <a class="fieldtoggle" data-target="pattern-help" role="button">{{ "Pattern help — click a token to insert it"|t('redirect') }}</a>
+    <div id="pattern-help" class="hidden">
+        <div class="pane" style="padding:14px;">
+            <p class="light" style="margin-top:0;">{{ "Click a token to insert it into the last-focused URL field. Leftover destination tokens are filled from the query string."|t('redirect') }}</p>
+            <table class="data fullwidth">
+                <tbody>
+                {% for t in patternTokens %}
+                    <tr>
+                        <td class="thin"><button type="button" class="btn small token-insert" data-insert="{{ t.token }}"><code>{{ t.token }}</code></button></td>
+                        <td><strong>{{ t.label }}</strong><br><span class="light">{{ t.desc }}</span></td>
+                        <td class="ltr light"><code>{{ t.example }}</code></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <p style="margin-bottom:0;"><a class="go" href="https://github.com/Dolphiq/craft-plugin-redirect/blob/master/RULES.md" target="_blank" rel="noopener">{{ "Full matching rules & examples"|t('redirect') }}</a></p>
+        </div>
     </div>
-    <div id="categorygroup-settings">
+
+    {# Regex helper — shown only when the regex match type is selected. #}
+    {% set regexTokens = ['^', '$', '(\\d+)', '(.+)', '([^/]+)'] %}
+    <div id="regex-helper" class="hidden">
+        <div class="pane" style="padding:14px;">
+            <div class="field">
+                <div class="heading"><label>{{ "Source pattern (regex)"|t('redirect') }}</label></div>
+                <div class="input">
+                    <p class="light" style="margin-top:0;">{{ "Click to insert into the source. Add ^ … $ to anchor."|t('redirect') }}</p>
+                    {% for tok in regexTokens %}
+                        <button type="button" class="btn small token-insert" data-insert-into="source" data-insert="{{ tok }}"><code>{{ tok }}</code></button>
+                    {% endfor %}
+                    <div id="regex-status" style="margin-top:8px;"></div>
+                </div>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+                <div class="heading"><label>{{ "Destination backreferences"|t('redirect') }}</label></div>
+                <div class="input">
+                    <p class="light" style="margin-top:0;">{{ "Click to insert a capture group into the destination."|t('redirect') }}</p>
+                    <div id="regex-backrefs"><span class="light">{{ "Add a capture group to the source pattern first."|t('redirect') }}</span></div>
+                </div>
+            </div>
+            <p style="margin:10px 0 0;"><a class="go" href="https://regexr.com/" target="_blank" rel="noopener">{{ "Test & build regular expressions at regexr.com"|t('redirect') }}</a></p>
+        </div>
+    </div>
+
+    {{ forms.selectField({
+        label: "Redirect type"|t('redirect'),
+        instructions: "HTTP status code returned to the browser. 301 (permanent) is the usual choice."|t('redirect'),
+        id: 'status-code',
+        name: 'statusCode',
+        options: statusCodeOptions,
+        value: redirect.statusCode,
+        errors: redirect.getErrors('statusCode')
+    }) }}
+
+    {# Rarely-changed options — collapsed by default. Match type auto-detects from the source URL. #}
+    {% set advancedOpen = redirect.matchType not in ['', 'exact'] or redirect.priority or redirect.postDate or redirect.expiryDate %}
+    <a class="fieldtoggle{{ advancedOpen ? ' expanded' }}" data-target="advanced-options" role="button">{{ "Advanced"|t('redirect') }}</a>
+    <div id="advanced-options"{% if not advancedOpen %} class="hidden"{% endif %}>
+        {{ forms.selectField({
+            label: "Match type"|t('redirect'),
+            instructions: "How the source URL is matched. Leave on auto-detect unless you need to force it."|t('redirect'),
+            id: 'match-type',
+            name: 'matchType',
+            options: matchTypeOptions,
+            value: redirect.matchType,
+        }) }}
+
+        {{ forms.textField({
+            label: "Priority"|t('redirect'),
+            instructions: "Lower numbers are evaluated first when more than one redirect could match."|t('redirect'),
+            id: 'priority',
+            type: 'number',
+            name: 'priority',
+            value: redirect.priority,
+            size: 5,
+            errors: redirect.getErrors('priority')
+        }) }}
+
+        {{ forms.dateTimeField({
+            label: "Start date"|t('redirect'),
+            instructions: "Optional. The redirect only resolves from this moment."|t('redirect'),
+            id: 'postDate',
+            name: 'postDate',
+            value: redirect.postDate,
+            errors: redirect.getErrors('postDate')
+        }) }}
+
+        {{ forms.dateTimeField({
+            label: "End date"|t('redirect'),
+            instructions: "Optional. The redirect stops resolving from this moment."|t('redirect'),
+            id: 'expiryDate',
+            name: 'expiryDate',
+            value: redirect.expiryDate,
+            errors: redirect.getErrors('expiryDate')
+        }) }}
+    </div>
+
+    <hr>
+
+    <div class="field">
+        <div class="heading">
+            <label>{{ "Test this redirect"|t('redirect') }}</label>
+            <div class="instructions"><p>{{ "Enter a URL to check whether it matches. Nothing is saved."|t('redirect') }}</p></div>
+        </div>
+        <div class="input ltr">
+            <div class="flex">
+                <input type="text" id="redirect-test-url" class="text flex-grow" placeholder="docs/getting-started">
+                <button type="button" id="redirect-test-btn" class="btn">{{ "Test"|t('redirect') }}</button>
+            </div>
+            <div id="redirect-test-result" style="margin-top:8px;"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block details %}
+    <div class="meta">
+        {{ forms.lightswitchField({
+            label: "Enabled"|t('redirect'),
+            instructions: "Disabled redirects are kept but don't resolve."|t('redirect'),
+            id: 'enabled',
+            name: 'enabled',
+            on: redirect.id ? redirect.enabled : true,
+        }) }}
+
         {% if craft.app.getIsMultiSite() %}
             {{ forms.selectField({
                 label: "Site"|t('redirect'),
-                instructions: "Site"|t('redirect'),
                 id: 'site-id',
                 name: 'siteId',
                 options: editableSitesOptions,
                 value: currentSiteId,
-                toggle: true,
-                targetPrefix: '.siteId-',
                 errors: redirect.getErrors('siteId')
             }) }}
         {% endif %}
-
-        {{ forms.textField({
-            label: "Source URL"|t('redirect'),
-            instructions: "The URL to be redirected"|t('redirect'),
-            id: 'source-url',
-            class: 'ltr',
-            name: 'sourceUrl',
-            value: redirect.sourceUrl,
-            errors: redirect.getErrors('sourceUrl'),
-            autofocus: true,
-            required: true
-        }) }}
-
-        {{ forms.textField({
-            label: "Destination URL"|t('redirect'),
-            instructions: "The final URL"|t('redirect'),
-            id: 'destination-url',
-            class: 'ltr',
-            name: 'destinationUrl',
-            value: redirect.destinationUrl,
-            errors: redirect.getErrors('destinationUrl'),
-            required: true
-        }) }}
-        {{ forms.selectField({
-            label: "Redirect type"|t('redirect'),
-            instructions: "Redirect status code"|t('redirect'),
-            id: 'status-code',
-            name: 'statusCode',
-            options: statusCodeOptions,
-            value: redirect.statusCode,
-            toggle: true,
-            targetPrefix: '.statusCode-',
-            errors: redirect.getErrors('statusCode')
-        }) }}
     </div>
 
+    {% if redirect.id %}
+        <div class="meta read-only">
+            <div class="data">
+                <h5 class="heading">{{ "ID"|t('app') }}</h5>
+                <div class="value">{{ redirect.id }}</div>
+            </div>
+            <div class="data">
+                <h5 class="heading">{{ "Hits"|t('redirect') }}</h5>
+                <div class="value">{{ redirect.hitCount ?? 0 }}</div>
+            </div>
+            {% if redirect.hitAt %}
+                <div class="data">
+                    <h5 class="heading">{{ "Last hit"|t('redirect') }}</h5>
+                    <div class="value">{{ redirect.hitAt|datetime('short') }}</div>
+                </div>
+            {% endif %}
+            {% if redirect.dateCreated %}
+                <div class="data">
+                    <h5 class="heading">{{ "Created at"|t('app') }}</h5>
+                    <div class="value">{{ redirect.dateCreated|datetime('short') }}</div>
+                </div>
+            {% endif %}
+            {% if redirect.dateUpdated %}
+                <div class="data">
+                    <h5 class="heading">{{ "Updated at"|t('app') }}</h5>
+                    <div class="value">{{ redirect.dateUpdated|datetime('short') }}</div>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}
 
+{% js %}
+(function () {
+    var srcInput = document.getElementById('source-url');
+    var dstInput = document.getElementById('destination-url');
+    var lastFocused = srcInput;
+    [srcInput, dstInput].forEach(function (el) {
+        if (el) { el.addEventListener('focus', function () { lastFocused = el; }); }
+    });
 
+    // Insert text at the caret of a given field.
+    function insertToken(input, token) {
+        if (!input) return;
+        var start = input.selectionStart != null ? input.selectionStart : input.value.length;
+        var end = input.selectionEnd != null ? input.selectionEnd : input.value.length;
+        input.value = input.value.slice(0, start) + token + input.value.slice(end);
+        var caret = start + token.length;
+        input.focus();
+        input.setSelectionRange(caret, caret);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Delegated so dynamically-added backreference chips work too.
+    // data-insert-into="source"|"destination" targets a field; otherwise the last-focused one.
+    document.addEventListener('click', function (e) {
+        var chip = e.target.closest ? e.target.closest('.token-insert') : null;
+        if (!chip) return;
+        var into = chip.getAttribute('data-insert-into');
+        var input = into === 'source' ? srcInput : (into === 'destination' ? dstInput : (lastFocused || srcInput));
+        insertToken(input, chip.getAttribute('data-insert'));
+    });
+
+    // Source URL hint + placeholder follow the selected match type.
+    var matchTypeSelect = document.getElementById('match-type');
+    var srcField = document.getElementById('source-url-field');
+    var regexHelper = document.getElementById('regex-helper');
+    var srcHints = {{ {
+        exact:    { ph: 'old/page',        instr: "Exact path to match, relative to the site root."|t('redirect') },
+        prefix:   { ph: 'blog',            instr: "Match any URL beneath this path (e.g. blog matches /blog and /blog/2024)."|t('redirect') },
+        wildcard: { ph: 'docs/*',          instr: "Use * to match across path segments; it is copied into the matching * in the destination."|t('redirect') },
+        pattern:  { ph: 'item/<id:\\d+>',  instr: "Capture segments with <name> or <name:regex>; reuse them in the destination."|t('redirect') },
+        regex:    { ph: '^blog/(\\d+)$',   instr: "Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …"|t('redirect') }
+    }|json_encode|raw }};
+    function applySrcHint() {
+        if (!matchTypeSelect || !srcInput) return;
+        var hint = srcHints[matchTypeSelect.value];
+        if (!hint) return;
+        srcInput.setAttribute('placeholder', hint.ph);
+        if (srcField) {
+            var instr = srcField.querySelector('.instructions');
+            if (instr) { instr.innerHTML = '<p>' + Craft.escapeHtml(hint.instr) + '</p>'; }
+        }
+    }
+
+    // --- Regex helper: live validation + capture-group count + $n insert chips ---
+    function countGroups(pattern) {
+        // Matching against an empty alternative yields [full, g1, g2, …] → length-1 groups.
+        try { return (new RegExp(pattern + '|')).exec('').length - 1; }
+        catch (err) { return -1; }
+    }
+    function updateRegexHelper() {
+        if (!regexHelper || !srcInput) return;
+        var isRegex = matchTypeSelect && matchTypeSelect.value === 'regex';
+        regexHelper.classList.toggle('hidden', !isRegex);
+        if (!isRegex) return;
+
+        var pattern = srcInput.value;
+        var status = document.getElementById('regex-status');
+        var backrefs = document.getElementById('regex-backrefs');
+        var groups = -1;
+
+        if (!pattern) {
+            if (status) { status.innerHTML = ''; }
+        } else {
+            try {
+                new RegExp(pattern);
+                groups = countGroups(pattern);
+                var label = groups === 1
+                    ? Craft.t('redirect', '1 capture group')
+                    : Craft.t('redirect', '{n} capture groups', { n: groups });
+                if (status) { status.innerHTML = '<span style="color:#127fbf;">✓ ' + Craft.t('redirect', 'Valid') + ' · ' + label + '</span>'; }
+            } catch (err) {
+                if (status) { status.innerHTML = '<span class="error">✗ ' + Craft.escapeHtml(err.message) + '</span>'; }
+            }
+        }
+
+        if (backrefs) {
+            if (groups > 0) {
+                var html = '';
+                for (var i = 1; i <= groups; i++) {
+                    html += '<button type="button" class="btn small token-insert" data-insert-into="destination" data-insert="$' + i + '"><code>$' + i + '</code></button> ';
+                }
+                backrefs.innerHTML = html;
+            } else {
+                backrefs.innerHTML = '<span class="light">' + Craft.t('redirect', 'Add a capture group to the source pattern first.') + '</span>';
+            }
+        }
+    }
+
+    if (matchTypeSelect) {
+        // Only on explicit change — keep the general hint (mentions <name>/*) for untouched/auto redirects.
+        matchTypeSelect.addEventListener('change', function () { applySrcHint(); updateRegexHelper(); });
+    }
+    if (srcInput) {
+        srcInput.addEventListener('input', updateRegexHelper);
+    }
+    updateRegexHelper(); // reflect the initial match type (e.g. editing an existing regex redirect)
+
+    var btn = document.getElementById('redirect-test-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+        var result = document.getElementById('redirect-test-result');
+        result.textContent = '…';
+        Craft.sendActionRequest('POST', 'redirect/settings/test', {
+            data: {
+                matchType: document.getElementById('match-type').value,
+                sourceUrl: document.getElementById('source-url').value,
+                destinationUrl: document.getElementById('destination-url').value,
+                testUrl: document.getElementById('redirect-test-url').value
+            }
+        }).then(function (resp) {
+            var r = resp.data;
+            if (r.error) {
+                result.innerHTML = '<span class="error">' + r.error + '</span>';
+            } else if (r.matched) {
+                result.innerHTML = '<span class="success" style="color:#127fbf;">✓ ' + Craft.t('redirect', 'Matches') + ' → ' + r.destination + '</span>';
+            } else {
+                result.innerHTML = '<span>✗ ' + Craft.t('redirect', 'No match') + '</span>';
+            }
+        }).catch(function () {
+            result.innerHTML = '<span class="error">' + Craft.t('redirect', 'Test failed') + '</span>';
+        });
+    });
+})();
+{% endjs %}

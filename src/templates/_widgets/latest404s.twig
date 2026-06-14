@@ -3,20 +3,35 @@
         <thead>
             <tr>
                 <th scope="col">{{ "URL"|t('redirect') }}</th>
-                <th scope="col">{{ "Hits"|t('redirect') }}</th>
-                <th scope="col">{{ "Last hit"|t('redirect') }}</th>
+                <th scope="col" class="thin">{{ "Hits"|t('redirect') }}</th>
+                <th scope="col" class="thin">{{ "Last hit"|t('redirect') }}</th>
             </tr>
         </thead>
         <tbody>
             {% for url in urls %}
                 <tr>
-                    <td>{{ url.uri }}</td>
-                    <td>{{ url.hitCount }}</td>
-                    <td>{{ url.dateUpdated ? url.dateUpdated|datetime('short') : '' }}</td>
+                    <td class="ltr"><code>{{ url.uri }}</code></td>
+                    <td class="thin"><strong>{{ url.hitCount }}</strong></td>
+                    <td class="thin light">{{ url.dateUpdated ? url.dateUpdated|datetime('short') : '—' }}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    <div class="redirect-widget-footer">
+        <a class="go" href="{{ url('redirect/registered-catch-all-urls') }}">{{ "View all missed URLs"|t('redirect') }}</a>
+    </div>
 {% else %}
-    <p>{{ "No missed URLs have been recorded yet."|t('redirect') }}</p>
+    <div class="zilch small">
+        <p>{{ "No missed URLs have been recorded yet."|t('redirect') }}</p>
+        <p class="light">{{ "404s will appear here as they happen."|t('redirect') }}</p>
+    </div>
 {% endif %}
+
+{% css %}
+.redirect-widget-footer {
+    text-align: right;
+    padding-top: 10px;
+    margin-top: 4px;
+    border-top: 1px solid var(--hairline-color, #e3e5e8);
+}
+{% endcss %}

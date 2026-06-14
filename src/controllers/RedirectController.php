@@ -60,7 +60,9 @@ class RedirectController extends Controller
         $match = RedirectPlugin::$plugin->getRedirects()->resolveForUri($request->getFullPath(), $siteId);
 
         if ($match !== null) {
-            $destinationUrl = $match['destinationUrl'];
+            // fill any remaining <name> placeholders from the query string (per-request, not cached)
+            $destinationUrl = RedirectPlugin::$plugin->getRedirects()
+                ->substituteQueryParams($match['destinationUrl'], $request->getQueryParams());
 
             // add the site domain if the destination is not an absolute URL
             if (strpos($destinationUrl, '://') === false) {

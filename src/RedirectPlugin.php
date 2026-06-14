@@ -18,6 +18,7 @@ use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterGqlQueriesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\services\Dashboard;
+use craft\services\Gc;
 use craft\services\Gql;
 use craft\feedme\events\RegisterFeedMeElementsEvent;
 use craft\feedme\Plugin as FeedmePlugin;
@@ -28,6 +29,7 @@ use craft\web\UrlManager;
 use dolphiq\redirect\elements\FeedMeRedirect;
 use dolphiq\redirect\elements\Redirect;
 use dolphiq\redirect\models\Settings;
+use dolphiq\redirect\services\Analytics;
 use dolphiq\redirect\services\CatchAll;
 use dolphiq\redirect\gql\RedirectType;
 use dolphiq\redirect\services\Redirects;
@@ -66,11 +68,22 @@ class RedirectPlugin extends Plugin
         return $this->_catchAallService;
     }
 
+    private $_analyticsService;
+
+    public function getAnalytics(): Analytics
+    {
+        if ($this->_analyticsService == null) {
+            $this->_analyticsService = new Analytics();
+        }
+
+        return $this->_analyticsService;
+    }
+
     public bool $hasCpSection = true;
     public bool $hasCpSettings = true;
 
     // table schema version
-    public string $schemaVersion = '1.0.5';
+    public string $schemaVersion = '1.0.9';
 
     /*
     *
@@ -122,6 +135,8 @@ class RedirectPlugin extends Plugin
             'redirect/settings' => 'redirect/settings/settings',
             'redirect/redirects' => 'redirect/settings/redirects',
             'redirect/registered-catch-all-urls' => 'redirect/settings/registered-catch-all-urls',
+            'redirect/404-stats/<id:\d+>' => 'redirect/settings/catch-all-stats',
+            'redirect/import-export' => 'redirect/settings/import-export',
             'redirect/export' => 'redirect/settings/export-redirects',
             'redirect/import' => 'redirect/settings/import-redirects',
             'redirect/new' => 'redirect/settings/edit-redirect',
@@ -140,6 +155,9 @@ class RedirectPlugin extends Plugin
                 'params' => ['source' => 'CpSettings'], ],
             'settings/redirect/registered-catch-all-urls' => [
                 'route' => 'redirect/settings/registered-catch-all-urls',
+                'params' => ['source' => 'CpSettings'], ],
+            'settings/redirect/import-export' => [
+                'route' => 'redirect/settings/import-export',
                 'params' => ['source' => 'CpSettings'], ],
             'settings/redirect/new' => [
                 'route' => 'redirect/settings/edit-redirect',
@@ -259,6 +277,14 @@ class RedirectPlugin extends Plugin
                 }
             });
         }
+
+        // Prune old 404 analytics during Craft's garbage collection.
+        Event::on(Gc::class, Gc::EVENT_RUN, function() {
+            $settings = RedirectPlugin::$plugin->getSettings();
+            if ($settings->analyticsEnabled) {
+                self::$plugin->getAnalytics()->prune((int)$settings->analyticsRetentionDays);
+            }
+        });
 
         Craft::info('dolphiq/redirect Plugin plugin loaded', __METHOD__);
     }

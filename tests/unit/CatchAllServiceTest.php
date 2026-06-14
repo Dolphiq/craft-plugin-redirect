@@ -54,6 +54,21 @@ class CatchAllServiceTest extends Unit
         $this->assertFalse((new CatchAll())->deleteUrlById(999999));
     }
 
+    public function testDeleteUrlByIdIsScopedToSite(): void
+    {
+        $service = new CatchAll();
+        $service->registerHitByUri('scoped/url');
+        $record = CatchAllUrl::findOne(['uri' => 'scoped/url', 'siteId' => $this->siteId()]);
+
+        // Deleting with a different site id must be a no-op.
+        $this->assertFalse($service->deleteUrlById($record->id, 999999));
+        $this->assertNotNull(CatchAllUrl::findOne(['id' => $record->id]));
+
+        // Deleting with the correct site id works.
+        $this->assertTrue($service->deleteUrlById($record->id, $this->siteId()));
+        $this->assertNull(CatchAllUrl::findOne(['id' => $record->id]));
+    }
+
     public function testGetUrlByUidReturnsTheRecord(): void
     {
         $service = new CatchAll();

@@ -37,7 +37,7 @@ themselves, without touching server config or deploying code.
 - 📊 **Insight built in** — per-redirect hit count + last-hit date, plus a **"Latest 404s" dashboard widget**.
 - 🔗 **GraphQL** — query your redirects via the API.
 - 🧑‍💻 **Made for everyone.** A clean, native control-panel UI for admins *and* non-admin authors.
-- 🌐 **Multi-site aware** · 🔌 **Feed Me support** · 🗣️ **Translated** (EN, NL, DE, NB).
+- 🌐 **Multi-site aware** · 🔌 **Feed Me support** · 🗣️ **Translated into 16 languages** (EN, NL, DE, FR, ES, IT, DA, NB, SV, PT, PT-BR, PL, CS, FI, JA, ZH-CN, RU).
 
 ## Requirements
 
@@ -61,10 +61,55 @@ php craft plugin/install redirect
 
 That's it — open **Site redirects** in the control panel and add your first redirect.
 
+## Upgrading
+
+Each release line tracks a Craft major. Upgrade Craft and the plugin together, one major at a time.
+
+| Plugin | Craft | PHP |
+|--------|-------|-----|
+| `1.x`  | Craft 3 | 7.x – 8.0 |
+| `2.x`  | Craft 4 | 8.0.2+ |
+| `3.x`  | Craft 5 | 8.2+ |
+
+After any upgrade, **run the migrations** (the control panel will also prompt you):
+
+```bash
+composer require dolphiq/redirect:^3.0   # match your target Craft major
+php craft migrate/all
+php craft project-config/apply           # if you deploy project config
+```
+
+**Craft 3 → 4 (`1.x` → `2.x`)**
+- Requires PHP 8.0+. The element index moves to Craft 4's `_layouts/elementindex`.
+- Query-string parameters are now passed through to the destination on a successful redirect.
+- No redirect data changes — your existing redirects keep working.
+
+**Craft 4 → 5 (`2.x` → `3.x`)**
+- Requires Craft 5 and PHP 8.2+.
+- **Behaviour change — redirects no longer shadow real pages.** Resolution is now *event-based*: a
+  redirect is only applied when a URL would otherwise 404. Previously a redirect could override a
+  page that existed at the same path; now the real page wins. If you relied on that shadowing,
+  recreate those as content/route changes.
+- Migrations add `matchType`, `priority`, `postDate`/`expiryDate` and the 404-analytics tables, and
+  back-fill a match type for every existing redirect (inferred from its source). Existing redirects
+  keep working unchanged.
+- 404 analytics are **opt-in** (off by default) and store no personal data — enable them in
+  **Settings** if you want them.
+- **Deploy note:** reset PHP **opcache** on deploy (or enable `opcache.validate_timestamps`), or new
+  control-panel actions can 404 until the cache clears.
+
+See the [changelog](CHANGELOG.md) for the full list of changes per version.
+
 ## Usage
 
-Add a redirect under **Site redirects → New redirect**. Provide a source URL, a destination URL,
-and choose the redirect type. A few common patterns:
+Add a redirect under **Site redirects → New redirect**. Pick a **match type**, enter a source and
+destination URL, choose the redirect type — and use **Test this redirect** to check a URL before saving.
+
+<p align="center">
+  <img src="resources/screenshots/edit-form.png" alt="Redirect edit form with match-type picker and live test" width="100%">
+</p>
+
+A few common patterns:
 
 #### Rename a page (exact match)
 
@@ -107,9 +152,13 @@ with the `autoCreateRedirectOnUriChange` setting.
 
 ## Import & export (CSV)
 
-From **Site redirects**, use **Export CSV** to download all redirects, or **Import CSV** to bulk-add
-them. Columns: `sourceUrl, destinationUrl, statusCode` (a header row and blank/incomplete rows are
-skipped; missing status codes default to `301`).
+On the **Site redirects → Import / Export** page, use **Export CSV** to download all redirects, or
+**Import CSV** to bulk-add them. Columns: `sourceUrl, destinationUrl, statusCode` (a header row and
+blank/incomplete rows are skipped; missing status codes default to `301`).
+
+<p align="center">
+  <img src="resources/screenshots/import-export.png" alt="Import / Export page" width="100%">
+</p>
 
 ## GraphQL
 
@@ -138,6 +187,12 @@ Spot a URL that should point somewhere? Click it to create a redirect instantly.
   <img src="resources/screenshots/catch-all-missed-urls.png" alt="Registered missed URLs with hit counts" width="100%">
 </p>
 
+Keep an eye on them from the dashboard with the **Latest 404s** widget:
+
+<p align="center">
+  <img src="resources/screenshots/dashboard-widget.png" alt="Latest 404s dashboard widget" width="100%">
+</p>
+
 ## Settings
 
 <p align="center">
@@ -147,6 +202,12 @@ Spot a URL that should point somewhere? Click it to create a redirect instantly.
 - **Activate redirects** — globally enable or disable all redirects without deleting them.
 - **Use a Catch All page template** — turn on 404 handling and missed-URL tracking.
 - **Catch all template** — the Twig template that renders your 404 page.
+- **Automatic redirects on URI change** — create a 301 automatically when an element's URI changes.
+
+## Documentation
+
+- **[Matching rules](RULES.md)** — exact, named `<name>`, constrained `<name:regex>`, wildcard `*`, and query-string parameters.
+- **[Developer reference](DEVELOPERS.md)** — settings, service API, events, caching, GraphQL and Feed Me.
 
 ## Roadmap
 

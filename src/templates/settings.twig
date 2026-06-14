@@ -32,9 +32,11 @@
     <input type="hidden" name="pluginHandle" value="redirect">
 
 
+    <h2>{{ "Redirects"|t('redirect') }}</h2>
+
     {{ forms.lightswitchField({
         label:        "Activate redirects"|t('redirect'),
-        instructions: "This switch activate/de-activate all the entered redirects without removing them."|t('redirect'),
+        instructions: "Activate or de-activate all entered redirects without removing them."|t('redirect'),
         id:           'redirectsActive',
         name:         'redirectsActive',
         on:           settings.redirectsActive,
@@ -42,24 +44,63 @@
     }) }}
 
     {{ forms.lightswitchField({
-        label:        "Use a Catch All page template"|t('redirect'),
-        instructions: "All the not existing urls are redirected to this page. We also register the missed urls."|t('redirect'),
+        label:        "Automatic redirects on URI change"|t('redirect'),
+        instructions: "When an element's URI changes, automatically create a 301 redirect from the old URI to the new one."|t('redirect'),
+        id:           'autoCreateRedirectOnUriChange',
+        name:         'autoCreateRedirectOnUriChange',
+        on:           settings.autoCreateRedirectOnUriChange,
+        errors:       settings.getErrors('autoCreateRedirectOnUriChange')
+    }) }}
+
+    <hr>
+    <h2>{{ "Catch-all 404 page"|t('redirect') }}</h2>
+
+    {{ forms.lightswitchField({
+        label:        "Use a catch-all page template"|t('redirect'),
+        instructions: "Render a template for unmatched URLs and log the missed URLs."|t('redirect'),
         id:           'catchAllActive',
         name:         'catchAllActive',
         on:           settings.catchAllActive,
+        toggle:       '#settings-catchall-template',
         errors:       settings.getErrors('catchAllActive')
     }) }}
 
-    {{ forms.textField({
-        label: "Catch all template"|t('redirect'),
-        instructions: "The catch all template file name within the craft template folder"|t('redirect'),
-        id: 'catchAllTemplate',
-        class: 'ltr',
-        name: 'catchAllTemplate',
-        value: settings.catchAllTemplate,
-        errors: settings.getErrors('catchAllTemplate'),
+    <div id="settings-catchall-template"{% if not settings.catchAllActive %} class="hidden"{% endif %}>
+        {{ forms.textField({
+            label: "Catch-all template"|t('redirect'),
+            instructions: "Template file name within the Craft templates folder."|t('redirect'),
+            id: 'catchAllTemplate',
+            class: 'ltr code',
+            name: 'catchAllTemplate',
+            value: settings.catchAllTemplate,
+            errors: settings.getErrors('catchAllTemplate'),
+        }) }}
+    </div>
 
+    <hr>
+    <h2>{{ "404 analytics"|t('redirect') }}</h2>
+
+    {{ forms.lightswitchField({
+        label:        "Collect 404 analytics"|t('redirect'),
+        instructions: "Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored."|t('redirect'),
+        id:           'analyticsEnabled',
+        name:         'analyticsEnabled',
+        on:           settings.analyticsEnabled,
+        toggle:       '#settings-analytics-retention',
+        errors:       settings.getErrors('analyticsEnabled')
     }) }}
 
+    <div id="settings-analytics-retention"{% if not settings.analyticsEnabled %} class="hidden"{% endif %}>
+        {{ forms.textField({
+            label: "Retention (days)"|t('redirect'),
+            instructions: "How many days of daily 404 statistics to keep before they are pruned."|t('redirect'),
+            id: 'analyticsRetentionDays',
+            type: 'number',
+            name: 'analyticsRetentionDays',
+            value: settings.analyticsRetentionDays,
+            size: 5,
+            errors: settings.getErrors('analyticsRetentionDays')
+        }) }}
+    </div>
 
 {% endblock content %}
