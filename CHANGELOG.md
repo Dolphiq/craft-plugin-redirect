@@ -70,6 +70,10 @@ behaviour change (redirects no longer shadow real pages).
   add-on" notices.
 
 ### Fixed
+- No more stray `?` on redirect destinations: the request query string is only appended when there
+  actually is one, and joins with `&` when the destination already carries a query string (#138).
+- Feed Me mapping screen no longer errors on Craft 4/5: replaced the removed `{% for … if %}` loop
+  syntax with `|filter` (#143).
 - Deleting a catch-all 404 entry is now scoped to the site (and requires edit access), so a user can
   no longer delete another site's 404 log by ID.
 - Element-index hit count and last-hit refresh immediately after a redirect fires, instead of showing

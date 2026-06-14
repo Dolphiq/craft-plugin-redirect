@@ -69,10 +69,8 @@ class RedirectController extends Controller
                 $destinationUrl = UrlHelper::baseUrl() . ltrim($destinationUrl, '/');
             }
 
-            $queryString = $request->getQueryStringWithoutPath();
-            if ($queryString !== '') {
-                $destinationUrl .= '?' . $queryString;
-            }
+            $destinationUrl = RedirectPlugin::$plugin->getRedirects()
+                ->appendQueryString($destinationUrl, $request->getQueryStringWithoutPath());
 
             if (!empty($match['redirectId'])) {
                 RedirectPlugin::$plugin->getRedirects()->registerHitById($match['redirectId'], $destinationUrl);
