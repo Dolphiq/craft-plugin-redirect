@@ -28,7 +28,7 @@ class Redirects extends BaseRelationField
     /**
      * @inheritdoc
      */
-    public static function elementType():string
+    public static function elementType(): string
     {
         return Redirect::class;
     }

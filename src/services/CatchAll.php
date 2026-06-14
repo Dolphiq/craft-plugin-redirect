@@ -18,7 +18,6 @@ use yii\base\Component;
  */
 class CatchAll extends Component
 {
-
     /**
      * Register a hit to the catch all uri by its uri.
      *
@@ -28,7 +27,6 @@ class CatchAll extends Component
      */
     public function registerHitByUri(string $uri, int $siteId = 0): bool
     {
-
         if ($siteId == 0) {
             $siteId = Craft::$app->getSites()->currentSite->id;
         }
@@ -53,7 +51,6 @@ class CatchAll extends Component
 
     public function getLastUrls(int $limit = 100, int $siteId = 0): array
     {
-
         if ($siteId == 0) {
             $siteId = Craft::$app->getSites()->currentSite->id;
         }
@@ -62,8 +59,6 @@ class CatchAll extends Component
             'siteId' => $siteId,
         ])->orderBy('dateUpdated DESC')->limit($limit);
         return $query->all();
-
-
     }
 
     public function deleteUrlById(int $id): bool
@@ -95,6 +90,4 @@ class CatchAll extends Component
 
         return $catchAllurl;
     }
-
-
 }

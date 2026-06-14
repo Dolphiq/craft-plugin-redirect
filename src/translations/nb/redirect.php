@@ -24,6 +24,6 @@ return [
     "Couldn’t save the redirect." => "Kunne ikke lagre viderekobling",
     "Redirect saved." => "Viderekobling lagret",
     "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters" => "Du kan bruke Redirect-pluginet til å omdirigere enkle ruter, men også bruke mer avanserte rutematching med parametere",
-    "See some examples and instructions here" => "Se noen eksempler og instruksjoner her"
+    "See some examples and instructions here" => "Se noen eksempler og instruksjoner her",
 
 ];

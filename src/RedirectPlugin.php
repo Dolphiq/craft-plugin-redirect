@@ -72,7 +72,7 @@ class RedirectPlugin extends Plugin
         return [
             'url' => 'redirect',
             'label' => Craft::t('redirect', 'Site redirects'),
-            'fontIcon' => 'share'
+            'fontIcon' => 'share',
         ];
     }
 
@@ -102,8 +102,9 @@ class RedirectPlugin extends Plugin
     public function registerCpUrlRules(RegisterUrlRulesEvent $event)
     {
         // only register CP URLs if the user is logged in
-        if (!Craft::$app->user->identity)
+        if (!Craft::$app->user->identity) {
             return;
+        }
         $rules = [
             // register routes for the sub nav
             'redirect' => 'redirect/settings/',
@@ -117,22 +118,22 @@ class RedirectPlugin extends Plugin
 
             'settings/redirect' => [
                 'route' => 'redirect/settings',
-                'params' => ['source' => 'CpSettings']],
+                'params' => ['source' => 'CpSettings'], ],
             'settings/redirect/settings' => [
                 'route' => 'redirect/settings/settings',
-                'params' => ['source' => 'CpSettings']],
+                'params' => ['source' => 'CpSettings'], ],
             'settings/redirect/redirects' => [
                 'route' => 'redirect/settings/redirects',
-                'params' => ['source' => 'CpSettings']],
+                'params' => ['source' => 'CpSettings'], ],
             'settings/redirect/registered-catch-all-urls' => [
                 'route' => 'redirect/settings/registered-catch-all-urls',
-                'params' => ['source' => 'CpSettings']],
+                'params' => ['source' => 'CpSettings'], ],
             'settings/redirect/new' => [
                 'route' => 'redirect/settings/edit-redirect',
-                'params' => ['source' => 'CpSettings']],
+                'params' => ['source' => 'CpSettings'], ],
             'settings/redirect/<redirectId:\d+>' => [
                 'route' => 'redirect/settings/edit-redirect',
-                'params' => ['source' => 'CpSettings']],
+                'params' => ['source' => 'CpSettings'], ],
         ];
         $event->rules = array_merge($event->rules, $rules);
     }
@@ -143,12 +144,30 @@ class RedirectPlugin extends Plugin
     private function registerFeedMeElement()
     {
         if (Craft::$app->plugins->isPluginEnabled('feed-me') && class_exists(FeedmePlugin::class)) {
-            Event::on(FeedmeElements::class, FeedmeElements::EVENT_REGISTER_FEED_ME_ELEMENTS, function (RegisterFeedMeElementsEvent $e) {
+            Event::on(FeedmeElements::class, FeedmeElements::EVENT_REGISTER_FEED_ME_ELEMENTS, function(RegisterFeedMeElementsEvent $e) {
                 $e->elements[] = FeedMeRedirect::class;
             });
         }
     }
 
+
+    /**
+     * Builds the Yii URL-rule key for a redirect source URL: drops any `#`
+     * fragment and wraps a purely numeric source in slashes so it routes as a
+     * path segment (e.g. `12` -> `/12/`).
+     */
+    public static function ruleKeyForSourceUrl(string $sourceUrl): string
+    {
+        if (strpos($sourceUrl, '#') !== false) {
+            $sourceUrl = current(explode('#', $sourceUrl));
+        }
+
+        if (is_numeric($sourceUrl)) {
+            $sourceUrl = '/' . $sourceUrl . '/';
+        }
+
+        return $sourceUrl;
+    }
 
     public function init()
     {
@@ -164,7 +183,7 @@ class RedirectPlugin extends Plugin
 
         $settings = RedirectPlugin::$plugin->getSettings();
         if ($settings->redirectsActive) {
-            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function (RegisterUrlRulesEvent $event) use ($settings) {
+            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) use ($settings) {
 
                 // get rules from db!
                 // please only if we are on the site and the redirects are active in the plugin settings
@@ -174,13 +193,7 @@ class RedirectPlugin extends Plugin
                     $activeRules = [];
 
                     foreach ($allRedirects as $redirect) {
-                        $sourceUrl = $redirect['sourceUrl'];
-                        if (strpos($redirect['sourceUrl'], '#') !== false) {
-                            $sourceUrl = current(explode('#', $sourceUrl));
-                        }
-                        if (is_numeric($sourceUrl)) {
-                            $sourceUrl = '/' . $sourceUrl . '/';
-                        }
+                        $sourceUrl = self::ruleKeyForSourceUrl($redirect['sourceUrl']);
 
                         $activeRules[$sourceUrl] = [
                             'route' => 'redirect/redirect/index',
@@ -188,8 +201,8 @@ class RedirectPlugin extends Plugin
                                 'sourceUrl' => $redirect['sourceUrl'],
                                 'destinationUrl' => $redirect['destinationUrl'],
                                 'statusCode' => $redirect['statusCode'],
-                                'redirectId' => $redirect['id']
-                            ]
+                                'redirectId' => $redirect['id'],
+                            ],
                         ];
                     }
 
@@ -204,11 +217,10 @@ class RedirectPlugin extends Plugin
                             'sourceUrl' => '',
                             'destinationUrl' => '/404/',
                             'statusCode' => 404,
-                            'redirectId' => null
-                        ]
+                            'redirectId' => null,
+                        ],
                     ];
                 }
-
             });
         }
 

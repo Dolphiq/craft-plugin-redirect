@@ -24,6 +24,6 @@ return [
     "Couldn’t save the redirect." => "Opslaan van de doorverwijzing mislukt!",
     "Redirect saved." => "Doorverwijzing opgeslagen.",
     "You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches with parameters" => "De Redirect plugin kan gebruikt worden voor eenvoudige routes maar ook voor geavanceerdere routes met parameters",
-    "See some examples and instructions here" => "Voorbeelden en instructies over het gebruik zijn hier te vinden (engels)"
+    "See some examples and instructions here" => "Voorbeelden en instructies over het gebruik zijn hier te vinden (engels)",
 
 ];

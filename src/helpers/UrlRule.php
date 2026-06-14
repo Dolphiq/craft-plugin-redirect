@@ -11,8 +11,6 @@ namespace dolphiq\redirect\helpers;
  */
 class UrlRule extends \yii\web\UrlRule
 {
-
-
     // Properties
     // =========================================================================
 

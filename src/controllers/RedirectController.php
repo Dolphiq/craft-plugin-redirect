@@ -35,10 +35,10 @@ class RedirectController extends Controller
         'otf',
         'ico',
         'js',
-        'css'
+        'css',
     ];
 
-    const EVENT_BEFORE_CATCHALL = 'beforeCatchall';
+    public const EVENT_BEFORE_CATCHALL = 'beforeCatchall';
 
     public function actionIndex()
     {
@@ -66,7 +66,7 @@ class RedirectController extends Controller
             // Please get them again
             $parseRule = new UrlRule([
                 'pattern' => $sourceUrl,
-                'route' => 'templates/render'
+                'route' => 'templates/render',
             ]);
 
             $request = Craft::$app->getRequest();
@@ -113,7 +113,6 @@ class RedirectController extends Controller
                 // this is a known extention, please don't handle but throw an exception
                 throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'), 404);
             } else {
-
                 $event = new RedirectEvent([
                     'uri' => $uri,
                 ]);
@@ -128,7 +127,7 @@ class RedirectController extends Controller
                 if ($settings->catchAllTemplate != '') {
                     return $this->renderTemplate($settings->catchAllTemplate, ['request' => [
                         'requestUri' => $_SERVER['REQUEST_URI'],
-                        'uriParts' => $uriParts
+                        'uriParts' => $uriParts,
                     ]]);
                 } else {
                     return ('This page does not exist.');
