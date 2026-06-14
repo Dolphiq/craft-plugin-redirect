@@ -61,5 +61,14 @@
 
     }) }}
 
+    {{ forms.lightswitchField({
+        label:        "Automatic redirects on URI change"|t('redirect'),
+        instructions: "When an element's URI changes, automatically create a 301 redirect from the old URI to the new one."|t('redirect'),
+        id:           'autoCreateRedirectOnUriChange',
+        name:         'autoCreateRedirectOnUriChange',
+        on:           settings.autoCreateRedirectOnUriChange,
+        errors:       settings.getErrors('autoCreateRedirectOnUriChange')
+    }) }}
+
 
 {% endblock content %}

@@ -138,6 +138,12 @@ Spot a URL that should point somewhere? Click it to create a redirect instantly.
   <img src="resources/screenshots/catch-all-missed-urls.png" alt="Registered missed URLs with hit counts" width="100%">
 </p>
 
+Keep an eye on them from the dashboard with the **Latest 404s** widget:
+
+<p align="center">
+  <img src="resources/screenshots/dashboard-widget.png" alt="Latest 404s dashboard widget" width="100%">
+</p>
+
 ## Settings
 
 <p align="center">
@@ -147,6 +153,7 @@ Spot a URL that should point somewhere? Click it to create a redirect instantly.
 - **Activate redirects** — globally enable or disable all redirects without deleting them.
 - **Use a Catch All page template** — turn on 404 handling and missed-URL tracking.
 - **Catch all template** — the Twig template that renders your 404 page.
+- **Automatic redirects on URI change** — create a 301 automatically when an element's URI changes.
 
 ## Roadmap
 

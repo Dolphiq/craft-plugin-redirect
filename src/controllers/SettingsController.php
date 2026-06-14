@@ -232,6 +232,7 @@ class SettingsController extends Controller
             'redirectsActive' => (bool)$request->getBodyParam('redirectsActive'),
             'catchAllActive' => (bool)$request->getBodyParam('catchAllActive'),
             'catchAllTemplate' => (string)$request->getBodyParam('catchAllTemplate'),
+            'autoCreateRedirectOnUriChange' => (bool)$request->getBodyParam('autoCreateRedirectOnUriChange'),
 
         ];
 
