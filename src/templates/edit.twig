@@ -73,6 +73,7 @@
         { token: '<id:\\d+>', label: "Digits only"|t('redirect'), desc: "Constrain a parameter with a regex (here: numbers)."|t('redirect'), example: 'item/<id:\\d+> → products/<id>' },
         { token: '<rest:.+>', label: "Rest of path"|t('redirect'), desc: "Capture across multiple segments."|t('redirect'), example: 'old/<rest:.+> → new/<rest>' }
     ] %}
+    {% set regexTokens = ['^', '$', '(\\d+)', '(.+)', '([^/]+)'] %}
     <a class="fieldtoggle" data-target="pattern-help" role="button">{{ "Pattern help — click a token to insert it"|t('redirect') }}</a>
     <div id="pattern-help" class="hidden">
         <div class="pane" style="padding:14px;">
@@ -89,31 +90,29 @@
                 </tbody>
             </table>
             <p style="margin-bottom:0;"><a class="go" href="https://github.com/Dolphiq/craft-plugin-redirect/blob/master/RULES.md" target="_blank" rel="noopener">{{ "Full matching rules & examples"|t('redirect') }}</a></p>
-        </div>
-    </div>
 
-    {# Regex helper — shown only when the regex match type is selected. #}
-    {% set regexTokens = ['^', '$', '(\\d+)', '(.+)', '([^/]+)'] %}
-    <div id="regex-helper" class="hidden">
-        <div class="pane" style="padding:14px;">
-            <div class="field">
-                <div class="heading"><label>{{ "Source pattern (regex)"|t('redirect') }}</label></div>
-                <div class="input">
-                    <p class="light" style="margin-top:0;">{{ "Click to insert into the source. Add ^ … $ to anchor."|t('redirect') }}</p>
-                    {% for tok in regexTokens %}
-                        <button type="button" class="btn small token-insert" data-insert-into="source" data-insert="{{ tok }}"><code>{{ tok }}</code></button>
-                    {% endfor %}
-                    <div id="regex-status" style="margin-top:8px;"></div>
+            {# Regex helper — shown within this panel only when the regex match type is selected. #}
+            <div id="regex-helper" class="hidden">
+                <hr>
+                <div class="field">
+                    <div class="heading"><label>{{ "Source pattern (regex)"|t('redirect') }}</label></div>
+                    <div class="input">
+                        <p class="light" style="margin-top:0;">{{ "Click to insert into the source. Add ^ … $ to anchor."|t('redirect') }}</p>
+                        {% for tok in regexTokens %}
+                            <button type="button" class="btn small token-insert" data-insert-into="source" data-insert="{{ tok }}"><code>{{ tok }}</code></button>
+                        {% endfor %}
+                        <div id="regex-status" style="margin-top:8px;"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="field" style="margin-bottom:0;">
-                <div class="heading"><label>{{ "Destination backreferences"|t('redirect') }}</label></div>
-                <div class="input">
-                    <p class="light" style="margin-top:0;">{{ "Click to insert a capture group into the destination."|t('redirect') }}</p>
-                    <div id="regex-backrefs"><span class="light">{{ "Add a capture group to the source pattern first."|t('redirect') }}</span></div>
+                <div class="field" style="margin-bottom:0;">
+                    <div class="heading"><label>{{ "Destination backreferences"|t('redirect') }}</label></div>
+                    <div class="input">
+                        <p class="light" style="margin-top:0;">{{ "Click to insert a capture group into the destination."|t('redirect') }}</p>
+                        <div id="regex-backrefs"><span class="light">{{ "Add a capture group to the source pattern first."|t('redirect') }}</span></div>
+                    </div>
                 </div>
+                <p style="margin:10px 0 0;"><a class="go" href="https://regexr.com/" target="_blank" rel="noopener">{{ "Test & build regular expressions at regexr.com"|t('redirect') }}</a></p>
             </div>
-            <p style="margin:10px 0 0;"><a class="go" href="https://regexr.com/" target="_blank" rel="noopener">{{ "Test & build regular expressions at regexr.com"|t('redirect') }}</a></p>
         </div>
     </div>
 
@@ -305,6 +304,15 @@
         var isRegex = matchTypeSelect && matchTypeSelect.value === 'regex';
         regexHelper.classList.toggle('hidden', !isRegex);
         if (!isRegex) return;
+
+        // The regex helper lives inside the (collapsible) Pattern help panel — make
+        // sure that panel is expanded so the helper is actually visible.
+        var panel = document.getElementById('pattern-help');
+        if (panel && panel.classList.contains('hidden')) {
+            panel.classList.remove('hidden');
+            var toggle = document.querySelector('.fieldtoggle[data-target="pattern-help"]');
+            if (toggle) { toggle.classList.add('expanded'); }
+        }
 
         var pattern = srcInput.value;
         var status = document.getElementById('regex-status');
