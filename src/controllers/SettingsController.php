@@ -10,6 +10,7 @@
 namespace dolphiq\redirect\controllers;
 
 use Craft;
+use craft\helpers\DateTimeHelper;
 use craft\helpers\UrlHelper;
 use craft\records\Element as ElementRecord;
 use craft\web\Controller;
@@ -380,6 +381,7 @@ class SettingsController extends Controller
             'prefix' => Craft::t('redirect', 'Prefix — path starts with the source'),
             'wildcard' => Craft::t('redirect', 'Wildcard — * matches any segments'),
             'pattern' => Craft::t('redirect', 'Pattern — <name> / <name:regex>'),
+            'regex' => Craft::t('redirect', 'Regex — raw PCRE with $1 backreferences'),
         ];
 
 
@@ -453,6 +455,13 @@ class SettingsController extends Controller
         $redirect->statusCode = $request->getBodyParam('statusCode');
         $redirect->matchType = $request->getBodyParam('matchType');
         $redirect->priority = (int)$request->getBodyParam('priority', 0);
+        $redirect->enabled = (bool)$request->getBodyParam('enabled', true);
+
+        $postDate = $request->getBodyParam('postDate');
+        $redirect->postDate = $postDate ? (DateTimeHelper::toDateTime($postDate) ?: null) : null;
+        $expiryDate = $request->getBodyParam('expiryDate');
+        $redirect->expiryDate = $expiryDate ? (DateTimeHelper::toDateTime($expiryDate) ?: null) : null;
+
         $siteId = $request->getBodyParam('siteId');
         if ($siteId == null) {
             $siteId = Craft::$app->getSites()->currentSite->id;

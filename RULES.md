@@ -91,6 +91,26 @@ Destination URL:  help/*
 
 `/docs/getting-started` → `/help/getting-started`.
 
+## 6. Regex — raw PCRE with `$1` backreferences
+
+For full control, choose the **regex** match type and write a raw PCRE pattern. Numeric capture
+groups are substituted into the destination as `$1`, `$2`, …
+
+```
+Source URL:       ^blog/(\d+)/(.+)$
+Destination URL:  news/$2/$1
+```
+
+`/blog/2024/launch` → `/news/launch/2024`. Unknown backreferences (e.g. `$5` with no 5th group) are
+left untouched. The pattern is matched as-is — add `^…$` yourself to anchor it.
+
+## Enabling, disabling and scheduling
+
+- A redirect has a **status**: a disabled redirect is kept but never resolves. Toggle it on the edit
+  form, or select redirects in the index and use the **Set status** bulk action.
+- A redirect may have an optional **Start date** / **End date**. Outside that window it doesn't
+  resolve. Either bound may be left empty for an open-ended window.
+
 ## Query-string parameters
 
 Any `<name>` placeholder left in the destination that wasn't filled by the source match is taken

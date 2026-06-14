@@ -1,8 +1,5 @@
 <?php
 
-// Russian (ru) translations for the redirect plugin (handle: redirect).
-// Keys are the English source; values are translated.
-
 return [
     '404 analytics' => 'Аналитика 404',
     '404 statistics' => 'Статистика 404',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => 'Не удалось сохранить перенаправление.',
     'Destination URL' => 'URL назначения',
     'Digits only' => 'Только цифры',
+    'Disabled redirects are kept but don\'t resolve.' => 'Отключённые перенаправления сохраняются, но не срабатывают.',
     'Download all redirects for this site as a CSV file.' => 'Скачать все перенаправления этого сайта в виде файла CSV.',
     'Edit redirect' => 'Редактировать перенаправление',
+    'Enabled' => 'Включено',
+    'End date' => 'Дата окончания',
     'Enter a URL to check whether it matches. Nothing is saved.' => 'Введите URL, чтобы проверить, соответствует ли он. Ничего не сохраняется.',
     'Exact match' => 'Точное совпадение',
     'Exact path to match, relative to the site root.' => 'Точный путь для сопоставления относительно корня сайта.',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => 'Пропущенные URL пока не записаны.',
     'No referrers recorded.' => 'Источники переходов не записаны.',
     'No registered catch url\'s exist yet.' => 'Зарегистрированных перехватывающих URL пока нет.',
+    'Optional. The redirect only resolves from this moment.' => 'Необязательно. Перенаправление срабатывает только с этого момента.',
+    'Optional. The redirect stops resolving from this moment.' => 'Необязательно. Перенаправление перестаёт срабатывать с этого момента.',
     'Pattern help — click a token to insert it' => 'Справка по шаблонам — нажмите на токен, чтобы вставить его',
     'Pattern — <name> / <name:regex>' => 'Шаблон — <name> / <name:regex>',
     'Permanent redirects' => 'Постоянные перенаправления',
     'Prefix — path starts with the source' => 'Префикс — путь начинается с источника',
     'Priority' => 'Приоритет',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => 'Чистый шаблон PCRE; используйте группы захвата в назначении как $1, $2, …',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => 'Запись безопасной для конфиденциальности агрегированной статистики 404 (ежедневные счётчики, источники переходов, семейства браузеров). IP-адреса и необработанные user agent не сохраняются.',
     'Redirect' => 'Перенаправление',
     'Redirect entries' => 'Записи перенаправлений',
@@ -75,6 +78,7 @@ return [
     'Redirects' => 'Перенаправления',
     'Redirects deleted.' => 'Перенаправления удалены.',
     'Referrer' => 'Источник перехода',
+    'Regex — raw PCRE with $1 backreferences' => 'Regex — чистый PCRE с обратными ссылками $1',
     'Registered catch all urls' => 'Зарегистрированные перехватывающие URL',
     'Render a template for unmatched URLs and log the missed URLs.' => 'Отображать шаблон для несовпавших URL и записывать пропущенные URL.',
     'Rest of path' => 'Остаток пути',
@@ -82,6 +86,7 @@ return [
     'Site' => 'Сайт',
     'Site redirects' => 'Перенаправления сайта',
     'Source URL' => 'Исходный URL',
+    'Start date' => 'Дата начала',
     'Stats' => 'Статистика',
     'Template file name within the Craft templates folder.' => 'Имя файла шаблона в папке шаблонов Craft.',
     'Temporarily redirects' => 'Временные перенаправления',

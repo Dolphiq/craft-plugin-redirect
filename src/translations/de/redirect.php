@@ -1,8 +1,5 @@
 <?php
 
-// German (de) translations for the redirect plugin (handle: redirect).
-// Keys are the English source string; values are translated.
-
 return [
     '404 analytics' => '404-Analyse',
     '404 statistics' => '404-Statistiken',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => 'Die Weiterleitung konnte nicht gespeichert werden.',
     'Destination URL' => 'Ziel-URL',
     'Digits only' => 'Nur Ziffern',
+    'Disabled redirects are kept but don\'t resolve.' => 'Deaktivierte Weiterleitungen bleiben erhalten, greifen aber nicht.',
     'Download all redirects for this site as a CSV file.' => 'Alle Weiterleitungen dieser Site als CSV-Datei herunterladen.',
     'Edit redirect' => 'Weiterleitung bearbeiten',
+    'Enabled' => 'Aktiviert',
+    'End date' => 'Enddatum',
     'Enter a URL to check whether it matches. Nothing is saved.' => 'Geben Sie eine URL ein, um zu prüfen, ob sie zutrifft. Es wird nichts gespeichert.',
     'Exact match' => 'Exakte Übereinstimmung',
     'Exact path to match, relative to the site root.' => 'Exakter abzugleichender Pfad, relativ zum Site-Stammverzeichnis.',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => 'Es wurden noch keine nicht gefundenen URLs erfasst.',
     'No referrers recorded.' => 'Keine Referrer erfasst.',
     'No registered catch url\'s exist yet.' => 'Es sind noch keine registrierten Catch-URLs vorhanden.',
+    'Optional. The redirect only resolves from this moment.' => 'Optional. Die Weiterleitung greift erst ab diesem Zeitpunkt.',
+    'Optional. The redirect stops resolving from this moment.' => 'Optional. Die Weiterleitung greift nur bis zu diesem Zeitpunkt.',
     'Pattern help — click a token to insert it' => 'Hilfe zu Mustern — klicken Sie auf ein Token, um es einzufügen',
     'Pattern — <name> / <name:regex>' => 'Muster — <name> / <name:regex>',
     'Permanent redirects' => 'Permanente Weiterleitungen',
     'Prefix — path starts with the source' => 'Präfix — Pfad beginnt mit der Quelle',
     'Priority' => 'Priorität',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => 'Reines PCRE-Muster; Capture-Gruppen im Ziel als $1, $2, … wiederverwenden.',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => 'Erfasst datenschutzkonforme, aggregierte 404-Statistiken (tägliche Zählungen, Referrer, Browserfamilien). Es werden keine IP-Adressen oder vollständigen User-Agents gespeichert.',
     'Redirect' => 'Weiterleitung',
     'Redirect entries' => 'Weiterleitungseinträge',
@@ -75,6 +78,7 @@ return [
     'Redirects' => 'Weiterleitungen',
     'Redirects deleted.' => 'Weiterleitungen gelöscht.',
     'Referrer' => 'Referrer',
+    'Regex — raw PCRE with $1 backreferences' => 'Regex — reines PCRE mit $1-Rückverweisen',
     'Registered catch all urls' => 'Registrierte Catch-all-URLs',
     'Render a template for unmatched URLs and log the missed URLs.' => 'Ein Template für nicht zutreffende URLs rendern und die nicht gefundenen URLs protokollieren.',
     'Rest of path' => 'Rest des Pfads',
@@ -82,6 +86,7 @@ return [
     'Site' => 'Site',
     'Site redirects' => 'Site-Weiterleitungen',
     'Source URL' => 'Quell-URL',
+    'Start date' => 'Startdatum',
     'Stats' => 'Statistiken',
     'Template file name within the Craft templates folder.' => 'Template-Dateiname innerhalb des Craft-Templates-Ordners.',
     'Temporarily redirects' => 'Temporäre Weiterleitungen',

@@ -1,8 +1,5 @@
 <?php
 
-// Dutch (nl) translations for the redirect plugin (handle: redirect).
-// Keys are the English source; values are translated.
-
 return [
     '404 analytics' => '404-analyse',
     '404 statistics' => '404-statistieken',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => 'De doorverwijzing kon niet worden opgeslagen.',
     'Destination URL' => 'Doel-URL',
     'Digits only' => 'Alleen cijfers',
+    'Disabled redirects are kept but don\'t resolve.' => 'Uitgeschakelde doorverwijzingen blijven bewaard maar werken niet.',
     'Download all redirects for this site as a CSV file.' => 'Download alle doorverwijzingen voor deze site als CSV-bestand.',
     'Edit redirect' => 'Doorverwijzing bewerken',
+    'Enabled' => 'Ingeschakeld',
+    'End date' => 'Einddatum',
     'Enter a URL to check whether it matches. Nothing is saved.' => 'Voer een URL in om te controleren of deze overeenkomt. Er wordt niets opgeslagen.',
     'Exact match' => 'Exacte overeenkomst',
     'Exact path to match, relative to the site root.' => 'Exact pad om op te matchen, relatief aan de site-root.',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => 'Er zijn nog geen gemiste URL\'s geregistreerd.',
     'No referrers recorded.' => 'Geen verwijzers geregistreerd.',
     'No registered catch url\'s exist yet.' => 'Er bestaan nog geen geregistreerde catch-URL\'s.',
+    'Optional. The redirect only resolves from this moment.' => 'Optioneel. De doorverwijzing werkt pas vanaf dit moment.',
+    'Optional. The redirect stops resolving from this moment.' => 'Optioneel. De doorverwijzing stopt vanaf dit moment.',
     'Pattern help — click a token to insert it' => 'Patroonhulp — klik op een token om het in te voegen',
     'Pattern — <name> / <name:regex>' => 'Patroon — <name> / <name:regex>',
     'Permanent redirects' => 'Permanente doorverwijzingen',
     'Prefix — path starts with the source' => 'Prefix — pad begint met de bron',
     'Priority' => 'Prioriteit',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => 'Kaal PCRE-patroon; hergebruik capture-groepen in de bestemming als $1, $2, …',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => 'Registreer privacyveilige, geaggregeerde 404-statistieken (dagelijkse tellingen, verwijzers, browserfamilies). Er worden geen IP-adressen of ruwe user-agents opgeslagen.',
     'Redirect' => 'Doorverwijzing',
     'Redirect entries' => 'Doorverwijzingsitems',
@@ -75,6 +78,7 @@ return [
     'Redirects' => 'Doorverwijzingen',
     'Redirects deleted.' => 'Doorverwijzingen verwijderd.',
     'Referrer' => 'Verwijzer',
+    'Regex — raw PCRE with $1 backreferences' => 'Regex — kale PCRE met $1-backreferences',
     'Registered catch all urls' => 'Geregistreerde catch-all-URL\'s',
     'Render a template for unmatched URLs and log the missed URLs.' => 'Render een template voor niet-gematchte URL\'s en log de gemiste URL\'s.',
     'Rest of path' => 'Rest van het pad',
@@ -82,6 +86,7 @@ return [
     'Site' => 'Site',
     'Site redirects' => 'Site-doorverwijzingen',
     'Source URL' => 'Bron-URL',
+    'Start date' => 'Startdatum',
     'Stats' => 'Statistieken',
     'Template file name within the Craft templates folder.' => 'Bestandsnaam van de template binnen de Craft-templatesmap.',
     'Temporarily redirects' => 'Tijdelijke doorverwijzingen',

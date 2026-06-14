@@ -171,6 +171,11 @@ parameters:
 			path: src/elements/Redirect.php
 
 		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$expiryDate\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
 			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$hitAt\\.$#"
 			count: 1
 			path: src/elements/Redirect.php
@@ -187,6 +192,11 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$matchType\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$postDate\\.$#"
 			count: 1
 			path: src/elements/Redirect.php
 

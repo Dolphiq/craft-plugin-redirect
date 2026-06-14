@@ -103,7 +103,7 @@
     }) }}
 
     {# Rarely-changed options — collapsed by default. Match type auto-detects from the source URL. #}
-    {% set advancedOpen = redirect.matchType not in ['', 'exact'] or redirect.priority %}
+    {% set advancedOpen = redirect.matchType not in ['', 'exact'] or redirect.priority or redirect.postDate or redirect.expiryDate %}
     <a class="fieldtoggle{{ advancedOpen ? ' expanded' }}" data-target="advanced-options" role="button">{{ "Advanced"|t('redirect') }}</a>
     <div id="advanced-options"{% if not advancedOpen %} class="hidden"{% endif %}>
         {{ forms.selectField({
@@ -125,6 +125,24 @@
             size: 5,
             errors: redirect.getErrors('priority')
         }) }}
+
+        {{ forms.dateTimeField({
+            label: "Start date"|t('redirect'),
+            instructions: "Optional. The redirect only resolves from this moment."|t('redirect'),
+            id: 'postDate',
+            name: 'postDate',
+            value: redirect.postDate,
+            errors: redirect.getErrors('postDate')
+        }) }}
+
+        {{ forms.dateTimeField({
+            label: "End date"|t('redirect'),
+            instructions: "Optional. The redirect stops resolving from this moment."|t('redirect'),
+            id: 'expiryDate',
+            name: 'expiryDate',
+            value: redirect.expiryDate,
+            errors: redirect.getErrors('expiryDate')
+        }) }}
     </div>
 
     <hr>
@@ -145,8 +163,16 @@
 {% endblock %}
 
 {% block details %}
-    {% if craft.app.getIsMultiSite() %}
-        <div class="meta">
+    <div class="meta">
+        {{ forms.lightswitchField({
+            label: "Enabled"|t('redirect'),
+            instructions: "Disabled redirects are kept but don't resolve."|t('redirect'),
+            id: 'enabled',
+            name: 'enabled',
+            on: redirect.id ? redirect.enabled : true,
+        }) }}
+
+        {% if craft.app.getIsMultiSite() %}
             {{ forms.selectField({
                 label: "Site"|t('redirect'),
                 id: 'site-id',
@@ -155,8 +181,8 @@
                 value: currentSiteId,
                 errors: redirect.getErrors('siteId')
             }) }}
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 
     {% if redirect.id %}
         <div class="meta read-only">
@@ -222,7 +248,8 @@
         exact:    { ph: 'old/page',        instr: "Exact path to match, relative to the site root."|t('redirect') },
         prefix:   { ph: 'blog',            instr: "Match any URL beneath this path (e.g. blog matches /blog and /blog/2024)."|t('redirect') },
         wildcard: { ph: 'docs/*',          instr: "Use * to match across path segments; it is copied into the matching * in the destination."|t('redirect') },
-        pattern:  { ph: 'item/<id:\\d+>',  instr: "Capture segments with <name> or <name:regex>; reuse them in the destination."|t('redirect') }
+        pattern:  { ph: 'item/<id:\\d+>',  instr: "Capture segments with <name> or <name:regex>; reuse them in the destination."|t('redirect') },
+        regex:    { ph: '^blog/(\\d+)$',   instr: "Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …"|t('redirect') }
     }|json_encode|raw }};
     function applySrcHint() {
         if (!matchTypeSelect || !srcInput) return;

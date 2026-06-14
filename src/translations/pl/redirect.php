@@ -1,8 +1,5 @@
 <?php
 
-// Polish translations for the redirect plugin (handle: redirect).
-// Keys are the English source; values are Polish.
-
 return [
     '404 analytics' => 'Analityka błędów 404',
     '404 statistics' => 'Statystyki błędów 404',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => 'Nie udało się zapisać przekierowania.',
     'Destination URL' => 'Docelowy adres URL',
     'Digits only' => 'Tylko cyfry',
+    'Disabled redirects are kept but don\'t resolve.' => 'Wyłączone przekierowania są zachowywane, ale nie działają.',
     'Download all redirects for this site as a CSV file.' => 'Pobierz wszystkie przekierowania dla tej witryny jako plik CSV.',
     'Edit redirect' => 'Edytuj przekierowanie',
+    'Enabled' => 'Włączone',
+    'End date' => 'Data zakończenia',
     'Enter a URL to check whether it matches. Nothing is saved.' => 'Wprowadź adres URL, aby sprawdzić, czy pasuje. Nic nie jest zapisywane.',
     'Exact match' => 'Dokładne dopasowanie',
     'Exact path to match, relative to the site root.' => 'Dokładna ścieżka do dopasowania, względem katalogu głównego witryny.',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => 'Nie zarejestrowano jeszcze żadnych nietrafionych adresów URL.',
     'No referrers recorded.' => 'Nie zarejestrowano odsyłających.',
     'No registered catch url\'s exist yet.' => 'Nie istnieją jeszcze żadne zarejestrowane adresy przechwytujące.',
+    'Optional. The redirect only resolves from this moment.' => 'Opcjonalnie. Przekierowanie działa dopiero od tego momentu.',
+    'Optional. The redirect stops resolving from this moment.' => 'Opcjonalnie. Przekierowanie przestaje działać od tego momentu.',
     'Pattern help — click a token to insert it' => 'Pomoc dotycząca wzorca — kliknij token, aby go wstawić',
     'Pattern — <name> / <name:regex>' => 'Wzorzec — <name> / <name:regex>',
     'Permanent redirects' => 'Trwałe przekierowania',
     'Prefix — path starts with the source' => 'Prefiks — ścieżka zaczyna się od źródła',
     'Priority' => 'Priorytet',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => 'Surowy wzorzec PCRE; użyj ponownie grup przechwytujących w miejscu docelowym jako $1, $2, …',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => 'Rejestruj bezpieczne dla prywatności, zagregowane statystyki błędów 404 (dzienne liczniki, odsyłające, rodziny przeglądarek). Nie są przechowywane żadne adresy IP ani surowe identyfikatory user agent.',
     'Redirect' => 'Przekierowanie',
     'Redirect entries' => 'Wpisy przekierowań',
@@ -75,6 +78,7 @@ return [
     'Redirects' => 'Przekierowania',
     'Redirects deleted.' => 'Przekierowania usunięte.',
     'Referrer' => 'Odsyłający',
+    'Regex — raw PCRE with $1 backreferences' => 'Regex — surowe PCRE z odwołaniami $1',
     'Registered catch all urls' => 'Zarejestrowane adresy przechwytujące',
     'Render a template for unmatched URLs and log the missed URLs.' => 'Renderuj szablon dla niedopasowanych adresów URL i rejestruj nietrafione adresy URL.',
     'Rest of path' => 'Pozostała część ścieżki',
@@ -82,6 +86,7 @@ return [
     'Site' => 'Witryna',
     'Site redirects' => 'Przekierowania witryny',
     'Source URL' => 'Źródłowy adres URL',
+    'Start date' => 'Data rozpoczęcia',
     'Stats' => 'Statystyki',
     'Template file name within the Craft templates folder.' => 'Nazwa pliku szablonu w folderze szablonów Craft.',
     'Temporarily redirects' => 'Przekierowania tymczasowe',

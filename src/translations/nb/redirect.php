@@ -1,8 +1,5 @@
 <?php
 
-// Norwegian Bokmål (nb) translations for the redirect plugin (handle: redirect).
-// Keys are the English source; values are translated.
-
 return [
     '404 analytics' => '404-analyse',
     '404 statistics' => '404-statistikk',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => 'Kunne ikke lagre omdirigeringen.',
     'Destination URL' => 'Destinasjons-URL',
     'Digits only' => 'Kun sifre',
+    'Disabled redirects are kept but don\'t resolve.' => 'Deaktiverte omdirigeringer beholdes, men virker ikke.',
     'Download all redirects for this site as a CSV file.' => 'Last ned alle omdirigeringer for dette nettstedet som en CSV-fil.',
     'Edit redirect' => 'Rediger omdirigering',
+    'Enabled' => 'Aktivert',
+    'End date' => 'Sluttdato',
     'Enter a URL to check whether it matches. Nothing is saved.' => 'Skriv inn en URL for å sjekke om den samsvarer. Ingenting lagres.',
     'Exact match' => 'Nøyaktig treff',
     'Exact path to match, relative to the site root.' => 'Nøyaktig sti som skal matches, relativt til nettstedets rot.',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => 'Ingen tapte URL-er er registrert ennå.',
     'No referrers recorded.' => 'Ingen henvisere registrert.',
     'No registered catch url\'s exist yet.' => 'Det finnes ingen registrerte samle-URL-er ennå.',
+    'Optional. The redirect only resolves from this moment.' => 'Valgfritt. Omdirigeringen virker først fra dette tidspunktet.',
+    'Optional. The redirect stops resolving from this moment.' => 'Valgfritt. Omdirigeringen slutter å virke fra dette tidspunktet.',
     'Pattern help — click a token to insert it' => 'Mønsterhjelp — klikk på en token for å sette den inn',
     'Pattern — <name> / <name:regex>' => 'Mønster — <name> / <name:regex>',
     'Permanent redirects' => 'Permanente omdirigeringer',
     'Prefix — path starts with the source' => 'Prefiks — stien starter med kilden',
     'Priority' => 'Prioritet',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => 'Rått PCRE-mønster; gjenbruk fangstgrupper i destinasjonen som $1, $2, …',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => 'Registrer personvernvennlig, aggregert 404-statistikk (daglige tellinger, henvisere, nettleserfamilier). Ingen IP-adresser eller rå brukeragenter lagres.',
     'Redirect' => 'Omdirigering',
     'Redirect entries' => 'Omdirigeringsoppføringer',
@@ -75,6 +78,7 @@ return [
     'Redirects' => 'Omdirigeringer',
     'Redirects deleted.' => 'Omdirigeringer slettet.',
     'Referrer' => 'Henviser',
+    'Regex — raw PCRE with $1 backreferences' => 'Regex — rå PCRE med $1-tilbakereferanser',
     'Registered catch all urls' => 'Registrerte samle-URL-er',
     'Render a template for unmatched URLs and log the missed URLs.' => 'Vis en mal for URL-er uten treff og logg de tapte URL-ene.',
     'Rest of path' => 'Resten av stien',
@@ -82,6 +86,7 @@ return [
     'Site' => 'Nettsted',
     'Site redirects' => 'Nettstedets omdirigeringer',
     'Source URL' => 'Kilde-URL',
+    'Start date' => 'Startdato',
     'Stats' => 'Statistikk',
     'Template file name within the Craft templates folder.' => 'Malfilnavn innenfor Crafts malmappe.',
     'Temporarily redirects' => 'Midlertidige omdirigeringer',

@@ -1,8 +1,5 @@
 <?php
 
-// Italian (it) translations for the redirect plugin (handle: redirect).
-// Keys are the English source; values are the Italian translations.
-
 return [
     '404 analytics' => 'Analisi 404',
     '404 statistics' => 'Statistiche 404',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => 'Impossibile salvare il reindirizzamento.',
     'Destination URL' => 'URL di destinazione',
     'Digits only' => 'Solo cifre',
+    'Disabled redirects are kept but don\'t resolve.' => 'I reindirizzamenti disabilitati vengono mantenuti ma non si attivano.',
     'Download all redirects for this site as a CSV file.' => 'Scarica tutti i reindirizzamenti di questo sito come file CSV.',
     'Edit redirect' => 'Modifica reindirizzamento',
+    'Enabled' => 'Abilitato',
+    'End date' => 'Data di fine',
     'Enter a URL to check whether it matches. Nothing is saved.' => 'Inserisci un URL per verificare se corrisponde. Nulla viene salvato.',
     'Exact match' => 'Corrispondenza esatta',
     'Exact path to match, relative to the site root.' => 'Percorso esatto da abbinare, relativo alla radice del sito.',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => 'Non è stato ancora registrato alcun URL mancato.',
     'No referrers recorded.' => 'Nessun referrer registrato.',
     'No registered catch url\'s exist yet.' => 'Non esiste ancora alcun catch URL registrato.',
+    'Optional. The redirect only resolves from this moment.' => 'Facoltativo. Il reindirizzamento si attiva solo da questo momento.',
+    'Optional. The redirect stops resolving from this moment.' => 'Facoltativo. Il reindirizzamento smette di attivarsi da questo momento.',
     'Pattern help — click a token to insert it' => 'Guida al pattern — fai clic su un token per inserirlo',
     'Pattern — <name> / <name:regex>' => 'Pattern — <name> / <name:regex>',
     'Permanent redirects' => 'Reindirizzamenti permanenti',
     'Prefix — path starts with the source' => 'Prefisso — il percorso inizia con l’origine',
     'Priority' => 'Priorità',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => 'Pattern PCRE grezzo; riusa i gruppi di cattura nella destinazione come $1, $2, …',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => 'Registra statistiche 404 aggregate e rispettose della privacy (conteggi giornalieri, referrer, famiglie di browser). Non vengono memorizzati indirizzi IP né user agent grezzi.',
     'Redirect' => 'Reindirizzamento',
     'Redirect entries' => 'Voci di reindirizzamento',
@@ -75,6 +78,7 @@ return [
     'Redirects' => 'Reindirizzamenti',
     'Redirects deleted.' => 'Reindirizzamenti eliminati.',
     'Referrer' => 'Referrer',
+    'Regex — raw PCRE with $1 backreferences' => 'Regex — PCRE grezzo con backreference $1',
     'Registered catch all urls' => 'Catch all URL registrati',
     'Render a template for unmatched URLs and log the missed URLs.' => 'Esegui il rendering di un template per gli URL senza corrispondenza e registra gli URL mancati.',
     'Rest of path' => 'Resto del percorso',
@@ -82,6 +86,7 @@ return [
     'Site' => 'Sito',
     'Site redirects' => 'Reindirizzamenti del sito',
     'Source URL' => 'URL di origine',
+    'Start date' => 'Data di inizio',
     'Stats' => 'Statistiche',
     'Template file name within the Craft templates folder.' => 'Nome del file template all’interno della cartella dei template di Craft.',
     'Temporarily redirects' => 'Reindirizzamenti temporanei',

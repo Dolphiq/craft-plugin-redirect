@@ -1,8 +1,5 @@
 <?php
 
-// Czech (cs) translations for the redirect plugin (handle: redirect).
-// Keys are the English source; values are the Czech translations.
-
 return [
     '404 analytics' => 'Analytika 404',
     '404 statistics' => 'Statistiky 404',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => 'Přesměrování se nepodařilo uložit.',
     'Destination URL' => 'Cílová URL',
     'Digits only' => 'Pouze číslice',
+    'Disabled redirects are kept but don\'t resolve.' => 'Zakázaná přesměrování zůstávají zachována, ale neuplatňují se.',
     'Download all redirects for this site as a CSV file.' => 'Stáhněte všechna přesměrování pro tento web jako soubor CSV.',
     'Edit redirect' => 'Upravit přesměrování',
+    'Enabled' => 'Povoleno',
+    'End date' => 'Datum konce',
     'Enter a URL to check whether it matches. Nothing is saved.' => 'Zadejte URL a ověřte, zda odpovídá. Nic se neukládá.',
     'Exact match' => 'Přesná shoda',
     'Exact path to match, relative to the site root.' => 'Přesná cesta pro shodu, relativně ke kořeni webu.',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => 'Zatím nebyly zaznamenány žádné nenalezené URL.',
     'No referrers recorded.' => 'Nebyly zaznamenány žádné odkazující stránky.',
     'No registered catch url\'s exist yet.' => 'Zatím neexistují žádné registrované zachytávací URL.',
+    'Optional. The redirect only resolves from this moment.' => 'Volitelné. Přesměrování se uplatní až od tohoto okamžiku.',
+    'Optional. The redirect stops resolving from this moment.' => 'Volitelné. Přesměrování se přestane uplatňovat od tohoto okamžiku.',
     'Pattern help — click a token to insert it' => 'Nápověda ke vzoru — kliknutím na token jej vložíte',
     'Pattern — <name> / <name:regex>' => 'Vzor — <name> / <name:regex>',
     'Permanent redirects' => 'Trvalá přesměrování',
     'Prefix — path starts with the source' => 'Předpona — cesta začíná zdrojem',
     'Priority' => 'Priorita',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => 'Čistý vzor PCRE; znovu použijte zachycené skupiny v cíli jako $1, $2, …',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => 'Zaznamenávat souhrnné statistiky 404 šetrné k soukromí (denní počty, odkazující stránky, rodiny prohlížečů). Neukládají se žádné IP adresy ani nezpracované user agenty.',
     'Redirect' => 'Přesměrování',
     'Redirect entries' => 'Záznamy přesměrování',
@@ -75,6 +78,7 @@ return [
     'Redirects' => 'Přesměrování',
     'Redirects deleted.' => 'Přesměrování odstraněna.',
     'Referrer' => 'Odkazující stránka',
+    'Regex — raw PCRE with $1 backreferences' => 'Regex — čisté PCRE se zpětnými odkazy $1',
     'Registered catch all urls' => 'Registrované univerzální URL',
     'Render a template for unmatched URLs and log the missed URLs.' => 'Vykreslit šablonu pro neodpovídající URL a zaznamenat nenalezené URL.',
     'Rest of path' => 'Zbytek cesty',
@@ -82,6 +86,7 @@ return [
     'Site' => 'Web',
     'Site redirects' => 'Přesměrování webu',
     'Source URL' => 'Zdrojová URL',
+    'Start date' => 'Datum začátku',
     'Stats' => 'Statistiky',
     'Template file name within the Craft templates folder.' => 'Název souboru šablony ve složce šablon Craftu.',
     'Temporarily redirects' => 'Dočasná přesměrování',

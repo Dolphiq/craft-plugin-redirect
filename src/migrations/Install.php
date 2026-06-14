@@ -48,6 +48,8 @@ class Install extends Migration
             'statusCode' => $this->string(),
             'matchType' => $this->string(20)->notNull()->defaultValue('exact'),
             'priority' => $this->integer()->notNull()->defaultValue(0),
+            'postDate' => $this->dateTime(),
+            'expiryDate' => $this->dateTime(),
             'hitCount' => $this->integer()->unsigned()->notNull()->defaultValue(0),
             'hitAt' => $this->dateTime(),
             'dateCreated' => $this->dateTime()->notNull(),

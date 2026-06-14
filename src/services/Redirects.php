@@ -10,6 +10,7 @@ namespace dolphiq\redirect\services;
 
 use Craft;
 use craft\helpers\Db;
+use craft\helpers\DateTimeHelper;
 use dolphiq\redirect\elements\Redirect;
 use yii\base\Component;
 use yii\caching\TagDependency;
@@ -25,6 +26,13 @@ class Redirects extends Component
      * Cache tag for resolved redirect lookups; invalidated when a redirect changes.
      */
     public const CACHE_TAG = 'dolphiq-redirect';
+
+    /**
+     * TTL (seconds) for resolved lookups. Finite so a scheduled redirect's window
+     * opening/closing purely by the clock (with no save to invalidate the tag) is
+     * honored within this window. Saves still invalidate immediately via the tag.
+     */
+    public const CACHE_DURATION = 300;
 
     // Public Methods
     // =========================================================================
@@ -129,7 +137,7 @@ class Redirects extends Component
         }
 
         $match = $this->matchUri($uri, $siteId);
-        $cache->set($cacheKey, ['match' => $match], null, new TagDependency(['tags' => [self::CACHE_TAG]]));
+        $cache->set($cacheKey, ['match' => $match], self::CACHE_DURATION, new TagDependency(['tags' => [self::CACHE_TAG]]));
 
         return $match;
     }
@@ -154,6 +162,34 @@ class Redirects extends Component
     }
 
     /**
+     * Whether a redirect's optional schedule window is currently open.
+     * Either bound may be null (open-ended). Accepts anything DateTimeHelper can parse.
+     *
+     * @param mixed $postDate
+     * @param mixed $expiryDate
+     */
+    public function isScheduleActive($postDate, $expiryDate, ?\DateTimeInterface $now = null): bool
+    {
+        $now = $now ?: DateTimeHelper::currentUTCDateTime();
+
+        if ($postDate !== null && $postDate !== '') {
+            $start = DateTimeHelper::toDateTime($postDate, false, false);
+            if ($start && $now < $start) {
+                return false;
+            }
+        }
+
+        if ($expiryDate !== null && $expiryDate !== '') {
+            $end = DateTimeHelper::toDateTime($expiryDate, false, false);
+            if ($end && $now >= $end) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Matches a (already normalised) URI against the site's redirects.
      *
      * @return array{destinationUrl: string, statusCode: string, redirectId: int}|null
@@ -161,6 +197,10 @@ class Redirects extends Component
     private function matchUri(string $uri, int $siteId): ?array
     {
         foreach ($this->getAllRedirectsForSite($siteId) as $redirect) {
+            if (!$this->isScheduleActive($redirect->postDate ?? null, $redirect->expiryDate ?? null)) {
+                continue;
+            }
+
             $source = trim((string)$redirect->sourceUrl, '/');
             $matchType = $redirect->matchType ?: Redirect::inferMatchType($source);
 
@@ -206,18 +246,32 @@ class Redirects extends Component
     /**
      * Matches a normalised URI against one source pattern by type.
      *
-     * @return array{named: array<string,string>, wildcards: array<int,string>}|null
+     * @return array{named: array<string,string>, wildcards: array<int,string>, numeric: array<int,string>}|null
      */
     private function matchOne(string $matchType, string $source, string $uri): ?array
     {
         switch ($matchType) {
             case 'exact':
-                return $source === $uri ? ['named' => [], 'wildcards' => []] : null;
+                return $source === $uri ? ['named' => [], 'wildcards' => [], 'numeric' => []] : null;
 
             case 'prefix':
                 return ($uri === $source || str_starts_with($uri, $source . '/'))
-                    ? ['named' => [], 'wildcards' => []]
+                    ? ['named' => [], 'wildcards' => [], 'numeric' => []]
                     : null;
+
+            case 'regex':
+                // Source is a raw PCRE pattern; `#` is escaped so it can't break the delimiter.
+                $regex = '#' . str_replace('#', '\#', $source) . '#';
+                if (!preg_match($regex, $uri, $matches)) {
+                    return null;
+                }
+                $numeric = [];
+                foreach ($matches as $key => $value) {
+                    if (is_int($key) && $key > 0) {
+                        $numeric[$key] = $value;
+                    }
+                }
+                return ['named' => [], 'wildcards' => [], 'numeric' => $numeric];
 
             case 'wildcard':
             case 'pattern':
@@ -236,7 +290,7 @@ class Redirects extends Component
                         $named[$key] = $value;
                     }
                 }
-                return ['named' => $named, 'wildcards' => $wildcards];
+                return ['named' => $named, 'wildcards' => $wildcards, 'numeric' => []];
 
             default:
                 return null;
@@ -244,14 +298,20 @@ class Redirects extends Component
     }
 
     /**
-     * Substitutes captured named params and wildcards into a destination URL.
+     * Substitutes captured named params, wildcards and numeric backreferences into a destination URL.
      *
-     * @param array{named: array<string,string>, wildcards: array<int,string>} $captures
+     * @param array{named: array<string,string>, wildcards: array<int,string>, numeric: array<int,string>} $captures
      */
     private function applyCaptures(string $destinationUrl, array $captures): string
     {
         foreach ($captures['named'] as $name => $value) {
             $destinationUrl = str_replace("<$name>", $value, $destinationUrl);
+        }
+
+        if ($captures['numeric'] !== []) {
+            $destinationUrl = preg_replace_callback('/\$(\d+)/', static function(array $m) use ($captures) {
+                return $captures['numeric'][(int)$m[1]] ?? $m[0];
+            }, $destinationUrl);
         }
 
         if ($captures['wildcards'] !== []) {

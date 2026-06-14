@@ -11,8 +11,10 @@ namespace dolphiq\redirect\elements;
 use Craft;
 use craft\base\Element;
 use craft\elements\actions\Edit;
+use craft\elements\actions\SetStatus;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
+use craft\helpers\Db;
 use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\validators\DateTimeValidator;
@@ -71,7 +73,7 @@ class Redirect extends Element
      */
     public static function hasStatuses(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -283,6 +285,9 @@ class Redirect extends Element
             ]
         );
 
+        // Enable / disable (bulk)
+        $actions[] = SetStatus::class;
+
         // Delete
         $actions[] = DeleteRedirects::class;
 
@@ -307,7 +312,7 @@ class Redirect extends Element
     /**
      * Supported match types.
      */
-    public const MATCH_TYPES = ['exact', 'prefix', 'wildcard', 'pattern'];
+    public const MATCH_TYPES = ['exact', 'prefix', 'wildcard', 'pattern', 'regex'];
 
     /**
      * Infers a match type from a source URL's syntax (used as the default when one
@@ -394,6 +399,8 @@ class Redirect extends Element
         $record->statusCode = $this->statusCode;
         $record->matchType = $this->matchType ?: self::inferMatchType((string)$this->sourceUrl);
         $record->priority = (int)$this->priority;
+        $record->postDate = $this->postDate ? Db::prepareDateForDb($this->postDate) : null;
+        $record->expiryDate = $this->expiryDate ? Db::prepareDateForDb($this->expiryDate) : null;
 
         $record->save(false);
 
@@ -459,6 +466,8 @@ class Redirect extends Element
     {
         $names = parent::datetimeAttributes();
         $names[] = 'hitAt';
+        $names[] = 'postDate';
+        $names[] = 'expiryDate';
         return $names;
     }
 
@@ -500,6 +509,16 @@ class Redirect extends Element
      * @var int priority — lower number = evaluated first on overlap
      */
     public $priority = 0;
+
+    /**
+     * @var \DateTime|null postDate — redirect only resolves from this moment
+     */
+    public $postDate;
+
+    /**
+     * @var \DateTime|null expiryDate — redirect stops resolving from this moment
+     */
+    public $expiryDate;
 
     /**
      * @var int|null siteId

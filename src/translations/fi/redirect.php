@@ -1,8 +1,5 @@
 <?php
 
-// Finnish (fi) translations for the redirect plugin (handle: redirect).
-// Keys are the English source; values are Finnish.
-
 return [
     '404 analytics' => '404-analytiikka',
     '404 statistics' => '404-tilastot',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => 'Uudelleenohjauksen tallentaminen epäonnistui.',
     'Destination URL' => 'Kohde-URL',
     'Digits only' => 'Vain numerot',
+    'Disabled redirects are kept but don\'t resolve.' => 'Poistetut uudelleenohjaukset säilytetään, mutta ne eivät toimi.',
     'Download all redirects for this site as a CSV file.' => 'Lataa kaikki tämän sivuston uudelleenohjaukset CSV-tiedostona.',
     'Edit redirect' => 'Muokkaa uudelleenohjausta',
+    'Enabled' => 'Käytössä',
+    'End date' => 'Päättymispäivä',
     'Enter a URL to check whether it matches. Nothing is saved.' => 'Syötä URL-osoite tarkistaaksesi, vastaako se. Mitään ei tallenneta.',
     'Exact match' => 'Tarkka vastaavuus',
     'Exact path to match, relative to the site root.' => 'Tarkka vastaava polku suhteessa sivuston juureen.',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => 'Ohittuneita URL-osoitteita ei ole vielä tallennettu.',
     'No referrers recorded.' => 'Viittaajia ei ole tallennettu.',
     'No registered catch url\'s exist yet.' => 'Rekisteröityjä sieppaus-URL-osoitteita ei vielä ole.',
+    'Optional. The redirect only resolves from this moment.' => 'Valinnainen. Uudelleenohjaus toimii vasta tästä hetkestä alkaen.',
+    'Optional. The redirect stops resolving from this moment.' => 'Valinnainen. Uudelleenohjaus lakkaa toimimasta tästä hetkestä alkaen.',
     'Pattern help — click a token to insert it' => 'Mallin ohje — lisää merkki napsauttamalla sitä',
     'Pattern — <name> / <name:regex>' => 'Malli — <name> / <name:regex>',
     'Permanent redirects' => 'Pysyvät uudelleenohjaukset',
     'Prefix — path starts with the source' => 'Etuliite — polku alkaa lähteellä',
     'Priority' => 'Prioriteetti',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => 'Raaka PCRE-kuvio; käytä kaappausryhmiä kohteessa muodossa $1, $2, …',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => 'Tallenna yksityisyyden turvaavia, koostettuja 404-tilastoja (päivittäiset määrät, viittaajat, selainperheet). IP-osoitteita tai raakoja selaintunnisteita ei tallenneta.',
     'Redirect' => 'Uudelleenohjaus',
     'Redirect entries' => 'Uudelleenohjausmerkinnät',
@@ -75,6 +78,7 @@ return [
     'Redirects' => 'Uudelleenohjaukset',
     'Redirects deleted.' => 'Uudelleenohjaukset poistettu.',
     'Referrer' => 'Viittaaja',
+    'Regex — raw PCRE with $1 backreferences' => 'Regex — raaka PCRE ja $1-takaisinviittaukset',
     'Registered catch all urls' => 'Rekisteröidyt kaikki kattavat URL-osoitteet',
     'Render a template for unmatched URLs and log the missed URLs.' => 'Hahmonna malli vastaamattomille URL-osoitteille ja kirjaa ohittuneet URL-osoitteet.',
     'Rest of path' => 'Polun loppuosa',
@@ -82,6 +86,7 @@ return [
     'Site' => 'Sivusto',
     'Site redirects' => 'Sivuston uudelleenohjaukset',
     'Source URL' => 'Lähde-URL',
+    'Start date' => 'Alkamispäivä',
     'Stats' => 'Tilastot',
     'Template file name within the Craft templates folder.' => 'Mallitiedoston nimi Craftin templates-kansiossa.',
     'Temporarily redirects' => 'Väliaikaiset uudelleenohjaukset',

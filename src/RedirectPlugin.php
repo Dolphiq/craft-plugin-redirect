@@ -83,7 +83,7 @@ class RedirectPlugin extends Plugin
     public bool $hasCpSettings = true;
 
     // table schema version
-    public string $schemaVersion = '1.0.8';
+    public string $schemaVersion = '1.0.9';
 
     /*
     *

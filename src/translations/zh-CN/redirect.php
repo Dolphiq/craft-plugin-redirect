@@ -1,8 +1,5 @@
 <?php
 
-// Simplified Chinese (zh-CN) translations for the redirect plugin (handle: redirect).
-// Keys are the English source; values are translated.
-
 return [
     '404 analytics' => '404 分析',
     '404 statistics' => '404 统计',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => '无法保存重定向。',
     'Destination URL' => '目标 URL',
     'Digits only' => '仅限数字',
+    'Disabled redirects are kept but don\'t resolve.' => '已禁用的重定向会被保留，但不会生效。',
     'Download all redirects for this site as a CSV file.' => '将本站点的所有重定向下载为 CSV 文件。',
     'Edit redirect' => '编辑重定向',
+    'Enabled' => '已启用',
+    'End date' => '结束日期',
     'Enter a URL to check whether it matches. Nothing is saved.' => '输入一个 URL 以检查是否匹配。不会保存任何内容。',
     'Exact match' => '精确匹配',
     'Exact path to match, relative to the site root.' => '要匹配的精确路径，相对于站点根目录。',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => '尚未记录任何未匹配的 URL。',
     'No referrers recorded.' => '未记录来源页。',
     'No registered catch url\'s exist yet.' => '尚不存在已注册的捕获 URL。',
+    'Optional. The redirect only resolves from this moment.' => '可选。重定向从此刻起才生效。',
+    'Optional. The redirect stops resolving from this moment.' => '可选。重定向从此刻起不再生效。',
     'Pattern help — click a token to insert it' => '模式帮助 — 点击标记以插入',
     'Pattern — <name> / <name:regex>' => '模式 — <name> / <name:regex>',
     'Permanent redirects' => '永久重定向',
     'Prefix — path starts with the source' => '前缀 — 路径以源地址开头',
     'Priority' => '优先级',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => '原始 PCRE 模式；在目标中以 $1、$2 … 复用捕获组。',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => '记录注重隐私的聚合 404 统计数据（每日计数、来源页、浏览器系列）。不存储 IP 地址或原始用户代理。',
     'Redirect' => '重定向',
     'Redirect entries' => '重定向条目',
@@ -75,6 +78,7 @@ return [
     'Redirects' => '重定向',
     'Redirects deleted.' => '重定向已删除。',
     'Referrer' => '来源页',
+    'Regex — raw PCRE with $1 backreferences' => '正则 — 带 $1 反向引用的原始 PCRE',
     'Registered catch all urls' => '已注册的通用捕获 URL',
     'Render a template for unmatched URLs and log the missed URLs.' => '为未匹配的 URL 渲染模板并记录这些未匹配的 URL。',
     'Rest of path' => '路径的其余部分',
@@ -82,6 +86,7 @@ return [
     'Site' => '站点',
     'Site redirects' => '站点重定向',
     'Source URL' => '源 URL',
+    'Start date' => '开始日期',
     'Stats' => '统计',
     'Template file name within the Craft templates folder.' => 'Craft 模板文件夹中的模板文件名。',
     'Temporarily redirects' => '临时重定向',

@@ -1,8 +1,5 @@
 <?php
 
-// Canonical source strings for the redirect plugin (handle: redirect).
-// Keys are the English source; translations live in sibling locale folders.
-
 return [
     '404 analytics' => 'Analíticas de 404',
     '404 statistics' => 'Estadísticas de 404',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => 'No se pudo guardar la redirección.',
     'Destination URL' => 'URL de destino',
     'Digits only' => 'Solo dígitos',
+    'Disabled redirects are kept but don\'t resolve.' => 'Las redirecciones desactivadas se conservan pero no se aplican.',
     'Download all redirects for this site as a CSV file.' => 'Descarga todas las redirecciones de este sitio como un archivo CSV.',
     'Edit redirect' => 'Editar redirección',
+    'Enabled' => 'Activado',
+    'End date' => 'Fecha de fin',
     'Enter a URL to check whether it matches. Nothing is saved.' => 'Introduce una URL para comprobar si coincide. No se guarda nada.',
     'Exact match' => 'Coincidencia exacta',
     'Exact path to match, relative to the site root.' => 'Ruta exacta que se debe coincidir, relativa a la raíz del sitio.',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => 'Aún no se han registrado URL no encontradas.',
     'No referrers recorded.' => 'No se registraron referentes.',
     'No registered catch url\'s exist yet.' => 'Aún no existen URL de captura registradas.',
+    'Optional. The redirect only resolves from this moment.' => 'Opcional. La redirección solo se aplica a partir de este momento.',
+    'Optional. The redirect stops resolving from this moment.' => 'Opcional. La redirección deja de aplicarse a partir de este momento.',
     'Pattern help — click a token to insert it' => 'Ayuda de patrones — haz clic en un token para insertarlo',
     'Pattern — <name> / <name:regex>' => 'Patrón — <name> / <name:regex>',
     'Permanent redirects' => 'Redirecciones permanentes',
     'Prefix — path starts with the source' => 'Prefijo — la ruta empieza por el origen',
     'Priority' => 'Prioridad',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => 'Patrón PCRE en bruto; reutiliza los grupos de captura en el destino como $1, $2, …',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => 'Registra estadísticas de 404 agregadas y respetuosas con la privacidad (recuentos diarios, referentes, familias de navegadores). No se almacenan direcciones IP ni agentes de usuario sin procesar.',
     'Redirect' => 'Redirección',
     'Redirect entries' => 'Entradas de redirección',
@@ -75,6 +78,7 @@ return [
     'Redirects' => 'Redirecciones',
     'Redirects deleted.' => 'Redirecciones eliminadas.',
     'Referrer' => 'Referente',
+    'Regex — raw PCRE with $1 backreferences' => 'Regex — PCRE en bruto con retrorreferencias $1',
     'Registered catch all urls' => 'URL de captura general registradas',
     'Render a template for unmatched URLs and log the missed URLs.' => 'Renderiza una plantilla para las URL sin coincidencia y registra las URL no encontradas.',
     'Rest of path' => 'Resto de la ruta',
@@ -82,6 +86,7 @@ return [
     'Site' => 'Sitio',
     'Site redirects' => 'Redirecciones del sitio',
     'Source URL' => 'URL de origen',
+    'Start date' => 'Fecha de inicio',
     'Stats' => 'Estadísticas',
     'Template file name within the Craft templates folder.' => 'Nombre del archivo de plantilla dentro de la carpeta de plantillas de Craft.',
     'Temporarily redirects' => 'Redirecciones temporales',

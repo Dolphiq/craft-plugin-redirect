@@ -1,8 +1,5 @@
 <?php
 
-// Japanese (ja) translations for the redirect plugin (handle: redirect).
-// Keys are the English source; values are professional Japanese for the Craft CP.
-
 return [
     '404 analytics' => '404 分析',
     '404 statistics' => '404 統計',
@@ -29,8 +26,11 @@ return [
     'Couldn’t save the redirect.' => 'リダイレクトを保存できませんでした。',
     'Destination URL' => 'リダイレクト先 URL',
     'Digits only' => '数字のみ',
+    'Disabled redirects are kept but don\'t resolve.' => '無効なリダイレクトは保持されますが、適用されません。',
     'Download all redirects for this site as a CSV file.' => 'このサイトのすべてのリダイレクトを CSV ファイルとしてダウンロードします。',
     'Edit redirect' => 'リダイレクトを編集',
+    'Enabled' => '有効',
+    'End date' => '終了日',
     'Enter a URL to check whether it matches. Nothing is saved.' => '一致するかどうかを確認する URL を入力してください。何も保存されません。',
     'Exact match' => '完全一致',
     'Exact path to match, relative to the site root.' => 'サイトルートからの相対パスで、一致させる正確なパスです。',
@@ -61,11 +61,14 @@ return [
     'No missed URLs have been recorded yet.' => 'ミスした URL はまだ記録されていません。',
     'No referrers recorded.' => 'リファラーは記録されていません。',
     'No registered catch url\'s exist yet.' => '登録済みのキャッチ URL はまだ存在しません。',
+    'Optional. The redirect only resolves from this moment.' => '任意。リダイレクトはこの時点から適用されます。',
+    'Optional. The redirect stops resolving from this moment.' => '任意。リダイレクトはこの時点で適用されなくなります。',
     'Pattern help — click a token to insert it' => 'パターンのヘルプ — トークンをクリックして挿入します',
     'Pattern — <name> / <name:regex>' => 'パターン — <name> / <name:regex>',
     'Permanent redirects' => '恒久的リダイレクト',
     'Prefix — path starts with the source' => 'プレフィックス — パスがソースで始まる',
     'Priority' => '優先度',
+    'Raw PCRE pattern; reuse capture groups in the destination as $1, $2, …' => '素の PCRE パターン。キャプチャグループを宛先で $1、$2 … として再利用します。',
     'Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored.' => 'プライバシーに配慮した集計形式の 404 統計（日次カウント、リファラー、ブラウザの種類）を記録します。IP アドレスや生のユーザーエージェントは保存されません。',
     'Redirect' => 'リダイレクト',
     'Redirect entries' => 'リダイレクトエントリ',
@@ -75,6 +78,7 @@ return [
     'Redirects' => 'リダイレクト',
     'Redirects deleted.' => 'リダイレクトを削除しました。',
     'Referrer' => 'リファラー',
+    'Regex — raw PCRE with $1 backreferences' => '正規表現 — $1 後方参照付きの素の PCRE',
     'Registered catch all urls' => '登録済みのキャッチオール URL',
     'Render a template for unmatched URLs and log the missed URLs.' => '一致しなかった URL に対してテンプレートを表示し、ミスした URL をログに記録します。',
     'Rest of path' => 'パスの残り',
@@ -82,6 +86,7 @@ return [
     'Site' => 'サイト',
     'Site redirects' => 'サイトのリダイレクト',
     'Source URL' => 'ソース URL',
+    'Start date' => '開始日',
     'Stats' => '統計',
     'Template file name within the Craft templates folder.' => 'Craft のテンプレートフォルダ内のテンプレートファイル名です。',
     'Temporarily redirects' => '一時的リダイレクト',
