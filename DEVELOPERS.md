@@ -122,6 +122,25 @@ RedirectPlugin::getInstance()->getRedirects()->invalidateCache();
 When the [Feed Me](https://plugins.craftcms.com/feed-me) plugin is installed, redirects can be
 imported as a Feed Me element type.
 
+## Localization
+
+Translations live in `src/translations/<locale>/redirect.php`, each returning an
+`English source => translation` array. `src/translations/en/redirect.php` is the **canonical source**:
+its keys are the exact English strings used in `Craft::t('redirect', …)` / `|t('redirect')`.
+
+Shipped locales: `en, nl, de, fr, es, it, da, nb, sv, pt, pt-BR, pl, cs, fi, ja, zh-CN, ru`.
+
+Adding or changing strings:
+
+1. Add the string in code with `Craft::t('redirect', '…')` or `'…'|t('redirect')`.
+2. Add the same key to **every** locale file (and to `en`).
+3. Run the test suite — `TranslationsTest` fails if any locale is missing a key, has an unknown
+   key, or has an empty value, so strings can't ship untranslated.
+
+Keep ICU placeholders (`{name}`, `{n, plural, …}`), pattern tokens (`<name>`, `*`) and technical
+tokens (`URL`, `CSV`, `301`, …) identical across locales. Translations are machine-assisted; native
+review through a pull request is welcome.
+
 ---
 
 ← Back to the [README](README.md).

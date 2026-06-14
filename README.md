@@ -37,7 +37,7 @@ themselves, without touching server config or deploying code.
 - 📊 **Insight built in** — per-redirect hit count + last-hit date, plus a **"Latest 404s" dashboard widget**.
 - 🔗 **GraphQL** — query your redirects via the API.
 - 🧑‍💻 **Made for everyone.** A clean, native control-panel UI for admins *and* non-admin authors.
-- 🌐 **Multi-site aware** · 🔌 **Feed Me support** · 🗣️ **Translated** (EN, NL, DE, NB).
+- 🌐 **Multi-site aware** · 🔌 **Feed Me support** · 🗣️ **Translated into 16 languages** (EN, NL, DE, FR, ES, IT, DA, NB, SV, PT, PT-BR, PL, CS, FI, JA, ZH-CN, RU).
 
 ## Requirements
 

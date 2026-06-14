@@ -13,25 +13,25 @@
 {% endblock %}
 
 {% block content %}
-    <h2>{{ "Export"|t('redirect') }}</h2>
-    <p>{{ "Download all redirects for this site as a CSV file."|t('redirect') }}</p>
-    <p>
+    <div class="pane" style="margin-bottom:24px;">
+        <h2>{{ "Export"|t('redirect') }}</h2>
+        <p class="light">{{ "Download all redirects for this site as a CSV file."|t('redirect') }}</p>
         <a href="{{ url(pathPrefix ~ 'redirect/export') }}" class="btn submit icon download">{{ "Export CSV"|t('redirect') }}</a>
-    </p>
+    </div>
 
-    <hr>
-
-    <h2>{{ "Import"|t('redirect') }}</h2>
-    <p>{{ "Upload a CSV with columns: sourceUrl, destinationUrl, statusCode. A header row and blank/incomplete rows are skipped; missing status codes default to 301. Max 5 MB."|t('redirect') }}</p>
-    <form method="post" enctype="multipart/form-data">
-        {{ csrfInput() }}
-        {{ actionInput('redirect/settings/import-redirects') }}
-        {{ redirectInput(pathPrefix ~ 'redirect/import-export') }}
-        <div class="field">
-            <div class="input">
-                <input type="file" name="file" accept=".csv">
+    <div class="pane">
+        <h2>{{ "Import"|t('redirect') }}</h2>
+        <p class="light">{{ "Upload a CSV with columns {columns}. A header row and blank or incomplete rows are skipped; a missing status code defaults to 301. Max 5 MB."|t('redirect', { columns: 'sourceUrl, destinationUrl, statusCode' }) }}</p>
+        <form method="post" enctype="multipart/form-data">
+            {{ csrfInput() }}
+            {{ actionInput('redirect/settings/import-redirects') }}
+            {{ redirectInput(pathPrefix ~ 'redirect/import-export') }}
+            <div class="field">
+                <div class="input">
+                    <input type="file" name="file" accept=".csv" class="text">
+                </div>
             </div>
-        </div>
-        <button type="submit" class="btn submit">{{ "Import CSV"|t('redirect') }}</button>
-    </form>
+            <button type="submit" class="btn submit icon upload">{{ "Import CSV"|t('redirect') }}</button>
+        </form>
+    </div>
 {% endblock %}
