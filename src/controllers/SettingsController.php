@@ -15,6 +15,7 @@ use craft\records\Element as ElementRecord;
 use craft\web\Controller;
 use dolphiq\redirect\elements\Redirect;
 use dolphiq\redirect\RedirectPlugin;
+use yii\web\ForbiddenHttpException;
 use yii\web\UploadedFile;
 
 class SettingsController extends Controller
@@ -70,11 +71,17 @@ class SettingsController extends Controller
     public function actionDeleteCatchAllUrls(): craft\web\Response
     {
         $this->requireLogin();
-        $urlId = Craft::$app->getRequest()->getRequiredBodyParam('id');
+        $urlId = (int)Craft::$app->getRequest()->getRequiredBodyParam('id');
 
-        RedirectPlugin::$plugin->getCatchAll()->DeleteUrlById($urlId);
+        // Only allow deleting 404 entries for the requested site if the user can edit it.
+        $siteId = (int)Craft::$app->getRequest()->getBodyParam('siteId', Craft::$app->getSites()->getCurrentSite()->id);
+        if (!in_array($siteId, Craft::$app->getSites()->getEditableSiteIds(), true)) {
+            throw new ForbiddenHttpException('User not permitted to edit content for this site.');
+        }
 
-        return $this->asJson(['success' => true]);
+        $success = RedirectPlugin::$plugin->getCatchAll()->deleteUrlById($urlId, $siteId);
+
+        return $this->asJson(['success' => $success]);
     }
 
     /**

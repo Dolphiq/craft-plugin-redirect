@@ -132,6 +132,25 @@ class Redirects extends Component
     }
 
     /**
+     * Substitutes `<name>` placeholders left in a destination URL with values from
+     * the request query string. Unknown placeholders are left untouched.
+     *
+     * This runs per-request (not cached) so query values never pollute the cache.
+     *
+     * @param array<string, mixed> $queryParams
+     */
+    public function substituteQueryParams(string $destination, array $queryParams): string
+    {
+        if (!str_contains($destination, '<')) {
+            return $destination;
+        }
+
+        return preg_replace_callback('/<([\w._-]+)>/', static function(array $m) use ($queryParams) {
+            return isset($queryParams[$m[1]]) ? (string)$queryParams[$m[1]] : $m[0];
+        }, $destination);
+    }
+
+    /**
      * Matches a (already normalised) URI against the site's redirects.
      *
      * @return array{destinationUrl: string, statusCode: string, redirectId: int}|null
@@ -185,14 +204,15 @@ class Redirects extends Component
     }
 
     /**
-     * Turns a source URL pattern into an anchored regex. `<name>` placeholders
-     * become named groups matching a single path segment; `*` becomes a wildcard
-     * group (`wild0`, `wild1`, …) matching across segments.
+     * Turns a source URL pattern into an anchored regex:
+     * - `<name>` → named group matching a single path segment
+     * - `<name:regex>` → named group matching the given regex (e.g. `<id:\d+>`, `<rest:.+>`)
+     * - `*` → wildcard group (`wild0`, `wild1`, …) matching across segments
      */
     private function sourceUrlToRegex(string $source): string
     {
         $source = trim($source, '/');
-        $parts = preg_split('/(<[\w._-]+>|\*)/', $source, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split('/(<[\w._-]+(?::[^>]+)?>|\*)/', $source, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         $regex = '';
         $wildcardIndex = 0;
@@ -200,8 +220,9 @@ class Redirects extends Component
             if ($part === '') {
                 continue;
             }
-            if (preg_match('/^<([\w._-]+)>$/', $part, $m)) {
-                $regex .= '(?P<' . $m[1] . '>[^/]+)';
+            if (preg_match('/^<([\w._-]+)(?::([^>]+))?>$/', $part, $m)) {
+                $pattern = ($m[2] ?? '') !== '' ? $m[2] : '[^/]+';
+                $regex .= '(?P<' . $m[1] . '>' . $pattern . ')';
             } elseif ($part === '*') {
                 $regex .= '(?P<wild' . $wildcardIndex . '>.*)';
                 $wildcardIndex++;
@@ -376,7 +397,7 @@ class Redirects extends Component
         if ($redirectId < 1) {
             return false;
         }
-        $res = \Yii::$app->db->createCommand()
+        \Yii::$app->db->createCommand()
             ->update(
                 '{{%dolphiq_redirects}}',
                 [
@@ -386,6 +407,10 @@ class Redirects extends Component
                 ['id' => $redirectId]
             )
             ->execute();
+
+        // The raw UPDATE bypasses element caches; refresh them so the control-panel
+        // index shows the new hit count/last-hit without a manual cache clear.
+        Craft::$app->getElements()->invalidateCachesForElementType(Redirect::class);
 
         return true;
     }

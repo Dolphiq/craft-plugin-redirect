@@ -9,9 +9,18 @@
 - **Wildcard source URLs.** A `*` in a source URL matches across path segments and is substituted into the matching `*` in the destination (e.g. `docs/*` → `help/*`), alongside the existing `<name>` parameter patterns.
 - **"Latest 404s" dashboard widget** showing the most recently missed URLs and their hit counts.
 - **GraphQL support.** A `redirects(siteId)` query exposes `sourceUrl`, `destinationUrl`, `statusCode` and `hitCount`.
+- Documentation: rewrote `RULES.md` to cover every match type and added a `DEVELOPERS.md` reference (settings, service API, events, caching, GraphQL).
 
 ### Changed
 - Renamed the element index method `tableAttributeHtml()` to `attributeHtml()` per Craft 5.
+- Matching now supports `<name:regex>` constraints and `*` wildcards, and still fills `<name>` destination placeholders from the query string — preserved through the move to event-based resolution.
+
+### Fixed
+- `actionDeleteRedirect` referenced a non-existent service method (`deleteRedirectById`); the method now exists, so deleting a redirect no longer errors.
+- CSV import now validates status codes (`301/302/307/308`, default `301`) and rejects uploads over 5 MB.
+- Deleting a catch-all 404 entry is now scoped to the site (and requires edit access to it), so a user can no longer delete another site's 404 log by ID.
+- Element-index hit count and last-hit now refresh immediately after a redirect fires (caches are invalidated on hit) instead of showing stale values until a cache clear.
+- Imported the missing `ForbiddenHttpException` class in the settings controller (the permission guards previously referenced an unresolved class).
 
 ## Unreleased
 ### Security

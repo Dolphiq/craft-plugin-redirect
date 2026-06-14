@@ -155,6 +155,11 @@ Keep an eye on them from the dashboard with the **Latest 404s** widget:
 - **Catch all template** — the Twig template that renders your 404 page.
 - **Automatic redirects on URI change** — create a 301 automatically when an element's URI changes.
 
+## Documentation
+
+- **[Matching rules](RULES.md)** — exact, named `<name>`, constrained `<name:regex>`, wildcard `*`, and query-string parameters.
+- **[Developer reference](DEVELOPERS.md)** — settings, service API, events, caching, GraphQL and Feed Me.
+
 ## Roadmap
 
 - Priority/ordering control for overlapping rules

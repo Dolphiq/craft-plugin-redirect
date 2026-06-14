@@ -35,6 +35,18 @@ class RedirectHitCounterTest extends Unit
         $this->assertNotNull($record->hitAt);
     }
 
+    public function testHitCountIsVisibleViaElementAfterRegister(): void
+    {
+        $redirect = $this->makeRedirect();
+        $service = new Redirects();
+
+        $service->registerHitById($redirect->id);
+
+        // Re-fetched element reflects the new count (caches invalidated on hit).
+        $element = $service->getRedirectById($redirect->id);
+        $this->assertEquals(1, $element->hitCount);
+    }
+
     public function testHitsAccumulate(): void
     {
         $redirect = $this->makeRedirect();

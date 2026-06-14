@@ -61,16 +61,21 @@ class CatchAll extends Component
         return $query->all();
     }
 
-    public function deleteUrlById(int $id): bool
+    public function deleteUrlById(int $id, ?int $siteId = null): bool
     {
         if (!$id) {
             return false;
         }
-        $siteId = Craft::$app->getSites()->currentSite->id;
-        // search the redirect by its id
 
-        // TODO check if the user has rights in the siteId..
-        $catchAllurl = CatchAllUrlRecord::findOne($id);
+        if ($siteId === null) {
+            $siteId = Craft::$app->getSites()->currentSite->id;
+        }
+
+        // Scope the lookup to the site so a user can't delete another site's 404 log.
+        $catchAllurl = CatchAllUrlRecord::findOne([
+            'id' => $id,
+            'siteId' => $siteId,
+        ]);
 
         if ($catchAllurl == null) {
             return false;

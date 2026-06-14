@@ -71,11 +71,6 @@ parameters:
 			path: src/controllers/SettingsController.php
 
 		-
-			message: "#^Instantiated class dolphiq\\\\redirect\\\\controllers\\\\ForbiddenHttpException not found\\.$#"
-			count: 2
-			path: src/controllers/SettingsController.php
-
-		-
 			message: "#^Instantiated class dolphiq\\\\redirect\\\\controllers\\\\NotFoundHttpException not found\\.$#"
 			count: 2
 			path: src/controllers/SettingsController.php
@@ -173,11 +168,6 @@ parameters:
 		-
 			message: "#^PHPDoc tag @throws with type dolphiq\\\\redirect\\\\controllers\\\\NotFoundHttpException is not subtype of Throwable$#"
 			count: 1
-			path: src/controllers/SettingsController.php
-
-		-
-			message: "#^Throwing object of an unknown class dolphiq\\\\redirect\\\\controllers\\\\ForbiddenHttpException\\.$#"
-			count: 2
 			path: src/controllers/SettingsController.php
 
 		-

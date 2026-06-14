@@ -1,88 +1,98 @@
-## Using the Redirect plugin
+# Matching rules
 
-You can use the Redirect plugin to redirect simple routes but also use it for more advanced route matches. See some examples below.
+A redirect matches a requested URL by its **source URL**. Redirect Manager resolves a redirect
+only when a URL would otherwise 404, so a redirect never shadows a page that already exists.
 
-### Simple redirect exact match
-Source URL:
-```
-oldpage/wont/work/anymore
-```
-Destination URL:
-```
-newpage/will/work/again
-```
+Five kinds of source pattern are supported, from simplest to most powerful.
 
-### Simple redirect to an other (sub)domain
-Source URL:
+## 1. Exact match
+
 ```
-oldpage/wont/work/anymore
-```
-Destination URL:
-```
-https://www.newwebsite.com/newpage/will/work/again
+Source URL:       about-us
+Destination URL:  about
 ```
 
-### More advanced redirect with a parameter
-Source URL:
+`/about-us` → `/about`.
+
+## 2. Redirect to another (sub)domain
+
 ```
-category/<catname>/overview.php
-```
-Destination URL:
-```
-overview/category/<catname>/index.html
+Source URL:       shop
+Destination URL:  https://store.example.com/catalog
 ```
 
-### Multiple parameters mixed
-Source URL:
-```
-cars/<brand>/<dontusepart>/<color>/index.html
-```
-Destination URL:
-```
-overview/cars/<brand>/colors/<color>
-```
-*note: it is not required to use all the source parameters in the destination URL
+Any destination containing `://` is treated as an absolute URL. Relative destinations are
+resolved against the current site's base URL.
 
-### Replace a uri parameter in the source string to a new path
+## 3. Named parameter — `<name>`
 
-Source URL:
+Matches a single path segment and substitutes it into the destination.
+
 ```
-books/detail
-```
-Destination URL:
-```
-book-detail/<bookId>/index.html
+Source URL:       category/<catname>/overview.php
+Destination URL:  overview/category/<catname>
 ```
 
-Example: the original url looks like:
+`/category/books/overview.php` → `/overview/category/books`.
+
+You don't have to use every captured parameter in the destination:
+
 ```
-books/detail?bookId=124
+Source URL:       cars/<brand>/<unused>/<color>/index.html
+Destination URL:  overview/cars/<brand>/colors/<color>
 ```
 
-After the redirect, the url will look like:
+## 4. Constrained parameter — `<name:regex>`
+
+Add a regular expression to control what a parameter matches.
+
 ```
-book-detail/124/index.html
+Source URL:       item/<id:\d+>
+Destination URL:  products/<id>
 ```
 
-### Replace a long path with unknown amount of segments for an other url
+`/item/42` → `/products/42`, but `/item/abc` does **not** match (only digits).
 
-Source URL:
+Use `.+` to capture across multiple segments:
+
 ```
-wholepath/<options:.+>
-```
-Destination URL:
-```
-otherpath/index.html?cat=<a>&subcat=<b>
+Source URL:       wholepath/<rest:.+>
+Destination URL:  otherpath/<rest>
 ```
 
-Example: the original url looks like:
+`/wholepath/this/is/long` → `/otherpath/this/is/long`.
+
+## 5. Wildcard — `*`
+
+A shorthand that matches across path segments and is substituted into the matching `*` in the
+destination, in order.
+
 ```
-wholepath/this/is/a/long/path/with/params?a=1&b=2&c=4
+Source URL:       docs/*
+Destination URL:  help/*
 ```
 
-After the redirect, the url will look like:
+`/docs/getting-started` → `/help/getting-started`.
+
+## Query-string parameters
+
+Any `<name>` placeholder left in the destination that wasn't filled by the source match is taken
+from the request's query string:
+
 ```
-/otherpath/index.html?cat=1&subcat=2
+Source URL:       books/detail
+Destination URL:  book-detail/<bookId>/index.html
 ```
 
-[Click here](README.md) for the main readme.
+`/books/detail?bookId=124` → `/book-detail/124/index.html`.
+
+The original query string is otherwise preserved and appended to the destination.
+
+## Fragments and numeric sources
+
+- A `#fragment` in a source URL is ignored when matching (fragments aren't sent to the server).
+- A purely numeric source (e.g. `12`) is matched as a path segment.
+
+---
+
+← Back to the [README](README.md).
