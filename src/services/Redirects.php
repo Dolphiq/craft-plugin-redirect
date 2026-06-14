@@ -85,6 +85,27 @@ class Redirects extends Component
     }
 
     /**
+     * Returns a site's redirects as plain scalar rows, for GraphQL or export.
+     *
+     * @return array<int, array{id: int, sourceUrl: string, destinationUrl: string, statusCode: string, hitCount: int}>
+     */
+    public function getRedirectDataForSite(int $siteId): array
+    {
+        $rows = [];
+        foreach ($this->getAllRedirectsForSite($siteId) as $redirect) {
+            $rows[] = [
+                'id' => (int)$redirect->id,
+                'sourceUrl' => (string)$redirect->sourceUrl,
+                'destinationUrl' => (string)$redirect->destinationUrl,
+                'statusCode' => (string)$redirect->statusCode,
+                'hitCount' => (int)$redirect->hitCount,
+            ];
+        }
+
+        return $rows;
+    }
+
+    /**
      * Resolves a requested URI to a matching redirect for the given site.
      *
      * Matches an exact source URL or a named-parameter pattern (e.g.

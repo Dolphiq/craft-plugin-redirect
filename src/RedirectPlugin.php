@@ -15,8 +15,10 @@ use craft\base\Plugin;
 use craft\db\Query;
 use craft\events\ElementEvent;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterGqlQueriesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\services\Dashboard;
+use craft\services\Gql;
 use craft\feedme\events\RegisterFeedMeElementsEvent;
 use craft\feedme\Plugin as FeedmePlugin;
 use craft\feedme\services\Elements as FeedmeElements;
@@ -27,8 +29,10 @@ use dolphiq\redirect\elements\FeedMeRedirect;
 use dolphiq\redirect\elements\Redirect;
 use dolphiq\redirect\models\Settings;
 use dolphiq\redirect\services\CatchAll;
+use dolphiq\redirect\gql\RedirectType;
 use dolphiq\redirect\services\Redirects;
 use dolphiq\redirect\widgets\Latest404s;
+use GraphQL\Type\Definition\Type;
 use yii\base\Event;
 use yii\web\Response;
 
@@ -193,6 +197,18 @@ class RedirectPlugin extends Plugin
         // Register the "Latest 404s" dashboard widget
         Event::on(Dashboard::class, Dashboard::EVENT_REGISTER_WIDGET_TYPES, function(RegisterComponentTypesEvent $event) {
             $event->types[] = Latest404s::class;
+        });
+
+        // Register the `redirects` GraphQL query
+        Event::on(Gql::class, Gql::EVENT_REGISTER_GQL_QUERIES, function(RegisterGqlQueriesEvent $event) {
+            $event->queries['redirects'] = [
+                'type' => Type::listOf(RedirectType::getType()),
+                'args' => ['siteId' => Type::int()],
+                'resolve' => static function($source, array $arguments) {
+                    $siteId = $arguments['siteId'] ?? Craft::$app->getSites()->getPrimarySite()->id;
+                    return RedirectPlugin::$plugin->getRedirects()->getRedirectDataForSite((int)$siteId);
+                },
+            ];
         });
 
         $settings = RedirectPlugin::$plugin->getSettings();

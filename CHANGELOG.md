@@ -7,6 +7,8 @@
 - **Automatic redirects on URI change.** When an element's URI changes, a 301 from the old URI to the new one is created automatically (reverse redirects are removed to prevent loops). Toggle with the `autoCreateRedirectOnUriChange` setting.
 - **CSV import/export.** Bulk import redirects from CSV (`sourceUrl, destinationUrl, statusCode`; header and blank/incomplete rows are skipped) and export all redirects for a site.
 - **Wildcard source URLs.** A `*` in a source URL matches across path segments and is substituted into the matching `*` in the destination (e.g. `docs/*` → `help/*`), alongside the existing `<name>` parameter patterns.
+- **"Latest 404s" dashboard widget** showing the most recently missed URLs and their hit counts.
+- **GraphQL support.** A `redirects(siteId)` query exposes `sourceUrl`, `destinationUrl`, `statusCode` and `hitCount`.
 
 ### Changed
 - Renamed the element index method `tableAttributeHtml()` to `attributeHtml()` per Craft 5.
