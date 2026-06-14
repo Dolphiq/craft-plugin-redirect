@@ -36,11 +36,6 @@ parameters:
 			path: src/RedirectPlugin.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/RedirectPlugin.php
-
-		-
 			message: "#^PHPDoc tag @var for variable \\$this contains unknown class dolphiq\\\\redirect\\\\ConsoleApplication\\.$#"
 			count: 2
 			path: src/RedirectPlugin.php

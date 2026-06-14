@@ -365,7 +365,19 @@ class Redirect extends Element
 
         $record->save(false);
 
+        \dolphiq\redirect\RedirectPlugin::getInstance()->getRedirects()->invalidateCache();
+
         parent::afterSave($isNew);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterDelete(): void
+    {
+        \dolphiq\redirect\RedirectPlugin::getInstance()->getRedirects()->invalidateCache();
+
+        parent::afterDelete();
     }
 
 

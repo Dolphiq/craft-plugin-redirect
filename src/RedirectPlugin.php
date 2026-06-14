@@ -183,44 +183,12 @@ class RedirectPlugin extends Plugin
 
         $settings = RedirectPlugin::$plugin->getSettings();
         if ($settings->redirectsActive) {
-            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) use ($settings) {
-
-                // get rules from db!
-                // please only if we are on the site and the redirects are active in the plugin settings
-                if ($settings->redirectsActive) {
-                    $siteId = Craft::$app->getSites()->currentSite->id;
-                    $allRedirects = self::$plugin->getRedirects()->getAllRedirectsForSite($siteId);
-                    $activeRules = [];
-
-                    foreach ($allRedirects as $redirect) {
-                        $sourceUrl = self::ruleKeyForSourceUrl($redirect['sourceUrl']);
-
-                        $activeRules[$sourceUrl] = [
-                            'route' => 'redirect/redirect/index',
-                            'params' => [
-                                'sourceUrl' => $redirect['sourceUrl'],
-                                'destinationUrl' => $redirect['destinationUrl'],
-                                'statusCode' => $redirect['statusCode'],
-                                'redirectId' => $redirect['id'],
-                            ],
-                        ];
-                    }
-
-                    $event->rules = array_merge($activeRules, $event->rules);
-                }
-                // 404?
-
-                if ($settings->catchAllActive) {
-                    $event->rules['<all:.+>'] = [
-                        'route' => 'redirect/redirect/index',
-                        'params' => [
-                            'sourceUrl' => '',
-                            'destinationUrl' => '/404/',
-                            'statusCode' => 404,
-                            'redirectId' => null,
-                        ],
-                    ];
-                }
+            // Event-based resolution: instead of registering a URL rule per redirect on
+            // every request, register a single low-priority catch-all. Real pages and
+            // entries resolve first; only a URL that would otherwise 404 reaches our
+            // controller, which looks up (and caches) a matching redirect on demand.
+            Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) {
+                $event->rules['<all:.+>'] = 'redirect/redirect/index';
             });
         }
 

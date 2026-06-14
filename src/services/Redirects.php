@@ -12,6 +12,7 @@ use Craft;
 use craft\helpers\Db;
 use dolphiq\redirect\elements\Redirect;
 use yii\base\Component;
+use yii\caching\TagDependency;
 use yii\db\Expression;
 
 /**
@@ -20,8 +21,21 @@ use yii\db\Expression;
  */
 class Redirects extends Component
 {
+    /**
+     * Cache tag for resolved redirect lookups; invalidated when a redirect changes.
+     */
+    public const CACHE_TAG = 'dolphiq-redirect';
+
     // Public Methods
     // =========================================================================
+
+    /**
+     * Invalidates all cached redirect resolutions.
+     */
+    public function invalidateCache(): void
+    {
+        TagDependency::invalidate(Craft::$app->getCache(), self::CACHE_TAG);
+    }
 
     /**
      * Returns the redirects defined in `config/redirects.php`
@@ -82,7 +96,27 @@ class Redirects extends Component
     public function resolveForUri(string $uri, int $siteId): ?array
     {
         $uri = trim($uri, '/');
+        $cache = Craft::$app->getCache();
+        $cacheKey = "dolphiq-redirect:resolve:{$siteId}:{$uri}";
 
+        $cached = $cache->get($cacheKey);
+        if (is_array($cached)) {
+            return $cached['match'];
+        }
+
+        $match = $this->matchUri($uri, $siteId);
+        $cache->set($cacheKey, ['match' => $match], null, new TagDependency(['tags' => [self::CACHE_TAG]]));
+
+        return $match;
+    }
+
+    /**
+     * Matches a (already normalised) URI against the site's redirects.
+     *
+     * @return array{destinationUrl: string, statusCode: string, redirectId: int}|null
+     */
+    private function matchUri(string $uri, int $siteId): ?array
+    {
         foreach ($this->getAllRedirectsForSite($siteId) as $redirect) {
             $source = trim((string)$redirect->sourceUrl, '/');
             $params = [];

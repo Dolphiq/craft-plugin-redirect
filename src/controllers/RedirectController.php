@@ -53,86 +53,69 @@ class RedirectController extends Controller
             }
         }
 
-        $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
-        $sourceUrl = $routeParameters['sourceUrl'];
-        $destinationUrl = $routeParameters['destinationUrl'];
-        $statusCode = $routeParameters['statusCode'];
-        $redirectId = $routeParameters['redirectId'];
+        $request = Craft::$app->getRequest();
+        $siteId = Craft::$app->getSites()->getCurrentSite()->id;
 
-        // are there parameters in the destination url?
-        if ($statusCode != 404 && strpos($destinationUrl, '<') !== false && preg_match_all('/<([\w._-]+)>/', $destinationUrl, $matches)) {
+        // Resolve a matching redirect on demand (exact or parameter pattern, cached).
+        $match = RedirectPlugin::$plugin->getRedirects()->resolveForUri($request->getFullPath(), $siteId);
 
-            // a bug in Craft cms overwrites the parameters parsed by Yii-UrlRule.
-            // Please get them again
-            $parseRule = new UrlRule([
-                'pattern' => $sourceUrl,
-                'route' => 'templates/render',
-            ]);
+        if ($match !== null) {
+            $destinationUrl = $match['destinationUrl'];
 
-            $request = Craft::$app->getRequest();
-            $sourceParameters = $parseRule->parseRequestParams($request);
-            // insert the parameters into the destination url
-            foreach ($matches[1] as $name) {
-                if (isset($sourceParameters[$name])) {
-                    $destinationUrl = str_ireplace("<$name>", $sourceParameters[$name], $destinationUrl);
-                } elseif (isset($_GET[$name])) {
-                    $destinationUrl = str_ireplace("<$name>", $_GET[$name], $destinationUrl);
-                }
+            // add the site domain if the destination is not an absolute URL
+            if (strpos($destinationUrl, '://') === false) {
+                $destinationUrl = UrlHelper::baseUrl() . ltrim($destinationUrl, '/');
             }
-        }
 
-        // check if there is a full domain.. if not, please add the site domain
-        if (strpos($destinationUrl, '://') === false) {
-            $destinationUrl = UrlHelper::baseUrl() . ltrim($destinationUrl, '/');
-        }
-
-        $destinationUrl .= "?" . $this->request->getQueryStringWithoutPath();
-
-        // register the hit to the database
-        if ($redirectId != null && $statusCode != 404) {
-            RedirectPlugin::$plugin->getRedirects()->registerHitById($redirectId, $destinationUrl);
-            $this->redirect($destinationUrl, $statusCode);
-        } else {
-            // this is a not existing page, please register the hit to a catch all element
-
-            $uri = $_SERVER['REQUEST_URI'];
-
-            // check if the url is a known file type
-            // strip the uri
-            $uri = current(explode('?', $uri)); // split the uri on a ? to ignore parameters
-            $uriParts = pathinfo($uri);
-
-            Craft::$app->response->statusCode = $statusCode;
-
-            if (
-                is_array($uriParts) &&
-                isset($uriParts['extension']) &&
-                $uriParts['extension'] !== '' &&
-                in_array($uriParts['extension'], self::FILE_EXTENSIONS)
-            ) {
-                // this is a known extention, please don't handle but throw an exception
-                throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'), 404);
-            } else {
-                $event = new RedirectEvent([
-                    'uri' => $uri,
-                ]);
-                $this->trigger(self::EVENT_BEFORE_CATCHALL, $event);
-
-                // register the url and go to the template!
-
-                RedirectPlugin::$plugin->getCatchAll()->registerHitByUri($uri);
-
-
-                $settings = RedirectPlugin::$plugin->getSettings();
-                if ($settings->catchAllTemplate != '') {
-                    return $this->renderTemplate($settings->catchAllTemplate, ['request' => [
-                        'requestUri' => $_SERVER['REQUEST_URI'],
-                        'uriParts' => $uriParts,
-                    ]]);
-                } else {
-                    return ('This page does not exist.');
-                }
+            $queryString = $request->getQueryStringWithoutPath();
+            if ($queryString !== '') {
+                $destinationUrl .= '?' . $queryString;
             }
+
+            if (!empty($match['redirectId'])) {
+                RedirectPlugin::$plugin->getRedirects()->registerHitById($match['redirectId'], $destinationUrl);
+            }
+
+            return $this->redirect($destinationUrl, (int)$match['statusCode']);
         }
+
+        // No redirect matched — this is a genuine 404.
+        $uri = current(explode('?', $_SERVER['REQUEST_URI']));
+        $uriParts = pathinfo($uri);
+
+        Craft::$app->response->statusCode = 404;
+
+        // known static file types are left to Craft's normal 404 handling
+        if (
+            is_array($uriParts) &&
+            isset($uriParts['extension']) &&
+            $uriParts['extension'] !== '' &&
+            in_array($uriParts['extension'], self::FILE_EXTENSIONS)
+        ) {
+            throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'), 404);
+        }
+
+        $settings = RedirectPlugin::$plugin->getSettings();
+
+        // catch-all logging/template is opt-in; otherwise let it be a normal 404
+        if (!$settings->catchAllActive) {
+            throw new NotFoundHttpException(Craft::t('yii', 'Page not found.'), 404);
+        }
+
+        $event = new RedirectEvent([
+            'uri' => $uri,
+        ]);
+        $this->trigger(self::EVENT_BEFORE_CATCHALL, $event);
+
+        RedirectPlugin::$plugin->getCatchAll()->registerHitByUri($uri);
+
+        if ($settings->catchAllTemplate != '') {
+            return $this->renderTemplate($settings->catchAllTemplate, ['request' => [
+                'requestUri' => $_SERVER['REQUEST_URI'],
+                'uriParts' => $uriParts,
+            ]]);
+        }
+
+        return 'This page does not exist.';
     }
 }
