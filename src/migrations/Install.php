@@ -10,14 +10,7 @@
 namespace dolphiq\redirect\migrations;
 
 use Craft;
-use craft\config\DbConfig;
 use craft\db\Migration;
-use craft\elements\User;
-use craft\helpers\StringHelper;
-use craft\mail\Mailer;
-use craft\mail\transportadapters\Php;
-use craft\models\Info;
-use craft\models\Site;
 
 class Install extends Migration
 {
@@ -57,13 +50,12 @@ class Install extends Migration
             'hitAt' => $this->dateTime(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid()
+            'uid' => $this->uid(),
         ]);
 
         if (!$this->db->tableExists('{{%dolphiq_redirects_catch_all_urls}}')) {
-
             $this->createTable(
-                '{{%dolphiq_redirects_catch_all_urls%}}',
+                '{{%dolphiq_redirects_catch_all_urls}}',
                 [
                     'id' => $this->primaryKey(),
                     'uri' => $this->string(255)->notNull()->defaultValue(''),

@@ -12,6 +12,7 @@ use Craft;
 use craft\base\Element;
 use craft\elements\actions\Edit;
 use craft\elements\db\ElementQueryInterface;
+use craft\elements\User;
 use craft\helpers\Html;
 use craft\helpers\UrlHelper;
 use craft\validators\DateTimeValidator;
@@ -19,7 +20,6 @@ use dolphiq\redirect\elements\actions\DeleteRedirects;
 use dolphiq\redirect\elements\db\RedirectQuery;
 use dolphiq\redirect\records\Redirect as RedirectRecord;
 use Throwable;
-use craft\elements\User;
 
 class Redirect extends Element
 {
@@ -166,17 +166,17 @@ class Redirect extends Element
                 [
                     'key' => '*',
                     'label' => Craft::t('redirect', 'All redirects'),
-                    'criteria' => []
+                    'criteria' => [],
                 ],
                 [
                     'key' => 'permanent',
                     'label' => Craft::t('redirect', 'Permanent redirects'),
-                    'criteria' => ['statusCode' => 301]
+                    'criteria' => ['statusCode' => 301],
                 ],
                 [
                     'key' => 'temporarily',
                     'label' => Craft::t('redirect', 'Temporarily redirects'),
-                    'criteria' => ['statusCode' => 302]
+                    'criteria' => ['statusCode' => 302],
                 ],
                 /*
                  * @todo: add a toggle to set a redirect inactive
@@ -237,9 +237,15 @@ class Redirect extends Element
     /**
      * @inheritdoc
      */
-    protected function tableAttributeHtml(string $attribute): string
+    protected function attributeHtml(string $attribute): string
     {
         switch ($attribute) {
+            case 'sourceUrl':
+                return Html::encode((string)$this->sourceUrl);
+
+            case 'destinationUrl':
+                return Html::encode((string)$this->destinationUrl);
+
             case 'statusCode':
 
                 $statusCodesOptions = [
@@ -255,7 +261,7 @@ class Redirect extends Element
 
         }
 
-        return parent::tableAttributeHtml($attribute);
+        return parent::attributeHtml($attribute);
     }
 
 
@@ -359,7 +365,19 @@ class Redirect extends Element
 
         $record->save(false);
 
+        \dolphiq\redirect\RedirectPlugin::getInstance()->getRedirects()->invalidateCache();
+
         parent::afterSave($isNew);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterDelete(): void
+    {
+        \dolphiq\redirect\RedirectPlugin::getInstance()->getRedirects()->invalidateCache();
+
+        parent::afterDelete();
     }
 
 
@@ -398,6 +416,8 @@ class Redirect extends Element
         } catch (Throwable $e) {
             ErrorHandler::convertExceptionToError($e);
         }
+
+        return '';
     }
 
     /**

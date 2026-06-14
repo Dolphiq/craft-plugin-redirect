@@ -7,8 +7,8 @@
 
 <p align="center">
   <a href="https://packagist.org/packages/dolphiq/redirect"><img src="https://img.shields.io/packagist/v/dolphiq/redirect.svg?label=version" alt="Latest version"></a>
-  <img src="https://img.shields.io/badge/Craft%20CMS-4.x-E5422B.svg" alt="Craft CMS 4">
-  <img src="https://img.shields.io/badge/PHP-8.0%2B-777BB4.svg" alt="PHP 8.0+">
+  <img src="https://img.shields.io/badge/Craft%20CMS-5.x-E5422B.svg" alt="Craft CMS 5">
+  <img src="https://img.shields.io/badge/PHP-8.2%2B-777BB4.svg" alt="PHP 8.2+">
   <a href="LICENSE.md"><img src="https://img.shields.io/packagist/l/dolphiq/redirect.svg" alt="MIT license"></a>
   <a href="https://packagist.org/packages/dolphiq/redirect"><img src="https://img.shields.io/packagist/dt/dolphiq/redirect.svg?label=installs" alt="Total installs"></a>
 </p>
@@ -27,25 +27,26 @@ Restructuring a site, migrating from an old CMS, or renaming pages? Don't lose y
 your SEO ranking — to dead links. Redirect Manager lets editors and developers manage redirects
 themselves, without touching server config or deploying code.
 
-- ⚡ **Zero performance overhead.** Redirects are resolved with a fast database lookup; there's no
-  per-request cost for visitors hitting valid pages.
-- 🧑‍💻 **Made for everyone.** A clean, native control-panel UI that admins *and* non-admin authors can use.
+- ⚡ **Zero overhead on healthy pages.** Redirects resolve *only* when a URL would otherwise 404 —
+  matches are cached and never run on pages that already exist. A live page is never shadowed.
 - 🔁 **Permanent (301) & temporary (302)** redirects, with per-redirect status codes.
-- 🧩 **Pattern matching** with named parameters for advanced, rule-based routing.
+- 🧩 **Flexible matching** — exact, `<name>` named parameters, and `*` wildcards, substituted into the destination.
+- 🪄 **Automatic redirects on URI change** — rename an entry and a 301 is created for you (loop-safe).
 - 🎯 **Catch-all 404 handling** — register every missed URL and create a redirect from it in one click.
-- 📊 **Insight built in** — each redirect tracks its hit count and last-hit date.
-- 🌐 **Multi-site aware** — manage redirects per site.
-- 🔌 **Feed Me support** — bulk-import redirects from CSV, XML and JSON feeds.
-- 🗣️ **Translated** — ships with English, Dutch, German and Norwegian.
+- 📥 **CSV import/export** — bulk-manage redirects from the control panel.
+- 📊 **Insight built in** — per-redirect hit count + last-hit date, plus a **"Latest 404s" dashboard widget**.
+- 🔗 **GraphQL** — query your redirects via the API.
+- 🧑‍💻 **Made for everyone.** A clean, native control-panel UI for admins *and* non-admin authors.
+- 🌐 **Multi-site aware** · 🔌 **Feed Me support** · 🗣️ **Translated** (EN, NL, DE, NB).
 
 ## Requirements
 
 | | Version |
 |---|---|
-| Craft CMS | 4.0 or later |
-| PHP | 8.0 or later |
+| Craft CMS | 5.0 or later |
+| PHP | 8.2 or later |
 
-> Using Craft 3? Install the `1.x` release line. Craft 5 support is on the [roadmap](#roadmap).
+> On an older Craft? Use the `2.x` release line for **Craft 4**, or `1.x` for **Craft 3**.
 
 ## Installation
 
@@ -86,7 +87,44 @@ Source URL:       category/<catname>/overview.php
 Destination URL:  overview/category/<catname>
 ```
 
+#### Wildcards
+
+```
+Source URL:       docs/*
+Destination URL:  help/*
+```
+
+`docs/getting-started` → `help/getting-started`. The `*` matches across path segments and is
+substituted into the matching `*` in the destination.
+
 👉 See [RULES.md](RULES.md) for the full reference of matching rules and more examples.
+
+## Automatic redirects
+
+When an entry's URI changes (you rename or move it), Redirect Manager creates a **301** from the old
+URI to the new one automatically — and removes any reverse redirect so renames can't loop. Toggle it
+with the `autoCreateRedirectOnUriChange` setting.
+
+## Import & export (CSV)
+
+From **Site redirects**, use **Export CSV** to download all redirects, or **Import CSV** to bulk-add
+them. Columns: `sourceUrl, destinationUrl, statusCode` (a header row and blank/incomplete rows are
+skipped; missing status codes default to `301`).
+
+## GraphQL
+
+Query your redirects through Craft's GraphQL API:
+
+```graphql
+{
+  redirects(siteId: 1) {
+    sourceUrl
+    destinationUrl
+    statusCode
+    hitCount
+  }
+}
+```
 
 ## Catch-all 404 handling
 
@@ -112,10 +150,8 @@ Spot a URL that should point somewhere? Click it to create a redirect instantly.
 
 ## Roadmap
 
-- Craft 5 support
-- Dashboard widget with redirect & 404 statistics
-- CSV import/export from the control panel
-- Priority handling for overlapping rules
+- Priority/ordering control for overlapping rules
+- Richer 404 analytics
 
 Have an idea or found a bug? [Open an issue](https://github.com/Dolphiq/craft-plugin-redirect/issues) — contributions are welcome.
 

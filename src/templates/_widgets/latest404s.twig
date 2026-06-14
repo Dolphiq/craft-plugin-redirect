@@ -1,0 +1,22 @@
+{% if urls | length %}
+    <table class="data fullwidth">
+        <thead>
+            <tr>
+                <th scope="col">{{ "URL"|t('redirect') }}</th>
+                <th scope="col">{{ "Hits"|t('redirect') }}</th>
+                <th scope="col">{{ "Last hit"|t('redirect') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for url in urls %}
+                <tr>
+                    <td>{{ url.uri }}</td>
+                    <td>{{ url.hitCount }}</td>
+                    <td>{{ url.dateUpdated ? url.dateUpdated|datetime('short') : '' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>{{ "No missed URLs have been recorded yet."|t('redirect') }}</p>
+{% endif %}

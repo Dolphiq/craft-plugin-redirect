@@ -36,11 +36,6 @@ parameters:
 			path: src/RedirectPlugin.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/RedirectPlugin.php
-
-		-
 			message: "#^PHPDoc tag @var for variable \\$this contains unknown class dolphiq\\\\redirect\\\\ConsoleApplication\\.$#"
 			count: 2
 			path: src/RedirectPlugin.php
@@ -66,24 +61,9 @@ parameters:
 			path: src/controllers/RedirectController.php
 
 		-
-			message: "#^Call to an undefined method yii\\\\web\\\\UrlManager\\:\\:getRouteParams\\(\\)\\.$#"
-			count: 1
-			path: src/controllers/RedirectController.php
-
-		-
 			message: "#^Property dolphiq\\\\redirect\\\\controllers\\\\RedirectController\\:\\:\\$_sourceRouteParams is never read, only written\\.$#"
 			count: 1
 			path: src/controllers/RedirectController.php
-
-		-
-			message: "#^Call to an undefined method yii\\\\web\\\\UrlManager\\:\\:getRouteParams\\(\\)\\.$#"
-			count: 5
-			path: src/controllers/SettingsController.php
-
-		-
-			message: "#^Call to an undefined method yii\\\\web\\\\UrlManager\\:\\:setRouteParams\\(\\)\\.$#"
-			count: 2
-			path: src/controllers/SettingsController.php
 
 		-
 			message: "#^Class craft\\\\web\\\\Response referenced with incorrect case\\: Craft\\\\web\\\\Response\\.$#"
@@ -204,11 +184,6 @@ parameters:
 			message: "#^Throwing object of an unknown class dolphiq\\\\redirect\\\\controllers\\\\NotFoundHttpException\\.$#"
 			count: 2
 			path: src/controllers/SettingsController.php
-
-		-
-			message: "#^Call to static method get\\(\\) on an unknown class Cake\\\\Utility\\\\Hash\\.$#"
-			count: 2
-			path: src/elements/FeedMeRedirect.php
 
 		-
 			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$destinationUrl\\.$#"
