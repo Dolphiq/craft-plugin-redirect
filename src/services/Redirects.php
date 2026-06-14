@@ -119,17 +119,23 @@ class Redirects extends Component
     {
         foreach ($this->getAllRedirectsForSite($siteId) as $redirect) {
             $source = trim((string)$redirect->sourceUrl, '/');
-            $params = [];
+            $named = [];
+            $wildcards = [];
 
             if ($source === $uri) {
                 // exact match, no parameters
-            } elseif (str_contains($source, '<')) {
+            } elseif (str_contains($source, '<') || str_contains($source, '*')) {
                 if (!preg_match($this->sourceUrlToRegex($source), $uri, $matches)) {
                     continue;
                 }
                 foreach ($matches as $key => $value) {
-                    if (is_string($key)) {
-                        $params[$key] = $value;
+                    if (!is_string($key)) {
+                        continue;
+                    }
+                    if (str_starts_with($key, 'wild')) {
+                        $wildcards[] = $value;
+                    } else {
+                        $named[$key] = $value;
                     }
                 }
             } else {
@@ -137,8 +143,14 @@ class Redirects extends Component
             }
 
             $destinationUrl = (string)$redirect->destinationUrl;
-            foreach ($params as $name => $value) {
+            foreach ($named as $name => $value) {
                 $destinationUrl = str_replace("<$name>", $value, $destinationUrl);
+            }
+            if ($wildcards !== []) {
+                $i = 0;
+                $destinationUrl = preg_replace_callback('/\*/', static function() use (&$i, $wildcards) {
+                    return $wildcards[$i++] ?? '';
+                }, $destinationUrl);
             }
 
             return [
@@ -152,18 +164,26 @@ class Redirects extends Component
     }
 
     /**
-     * Turns a source URL pattern into an anchored regex, converting `<name>`
-     * placeholders into named capture groups that match a single path segment.
+     * Turns a source URL pattern into an anchored regex. `<name>` placeholders
+     * become named groups matching a single path segment; `*` becomes a wildcard
+     * group (`wild0`, `wild1`, …) matching across segments.
      */
     private function sourceUrlToRegex(string $source): string
     {
         $source = trim($source, '/');
-        $parts = preg_split('/(<[\w._-]+>)/', $source, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split('/(<[\w._-]+>|\*)/', $source, -1, PREG_SPLIT_DELIM_CAPTURE);
 
         $regex = '';
+        $wildcardIndex = 0;
         foreach ($parts as $part) {
+            if ($part === '') {
+                continue;
+            }
             if (preg_match('/^<([\w._-]+)>$/', $part, $m)) {
                 $regex .= '(?P<' . $m[1] . '>[^/]+)';
+            } elseif ($part === '*') {
+                $regex .= '(?P<wild' . $wildcardIndex . '>.*)';
+                $wildcardIndex++;
             } else {
                 $regex .= preg_quote($part, '#');
             }
@@ -221,6 +241,74 @@ class Redirects extends Component
         }
 
         return $redirect;
+    }
+
+    /**
+     * Exports all redirects for a site as CSV (sourceUrl, destinationUrl, statusCode).
+     */
+    public function exportCsv(int $siteId): string
+    {
+        $handle = fopen('php://temp', 'r+');
+        fputcsv($handle, ['sourceUrl', 'destinationUrl', 'statusCode']);
+
+        foreach ($this->getAllRedirectsForSite($siteId) as $redirect) {
+            fputcsv($handle, [$redirect->sourceUrl, $redirect->destinationUrl, $redirect->statusCode]);
+        }
+
+        rewind($handle);
+        $csv = stream_get_contents($handle);
+        fclose($handle);
+
+        return $csv;
+    }
+
+    /**
+     * Imports redirects from CSV. Columns: sourceUrl, destinationUrl, [statusCode].
+     * A header row is detected and skipped; blank/incomplete rows are skipped.
+     *
+     * @return array{created: int, skipped: int}
+     */
+    public function importCsv(string $csv, int $siteId): array
+    {
+        $created = 0;
+        $skipped = 0;
+        $lines = preg_split('/\r\n|\r|\n/', trim($csv));
+
+        foreach ($lines as $index => $line) {
+            if (trim($line) === '') {
+                continue;
+            }
+
+            $columns = str_getcsv($line);
+
+            // skip a header row
+            if ($index === 0 && strtolower(trim($columns[0] ?? '')) === 'sourceurl') {
+                continue;
+            }
+
+            $source = trim($columns[0] ?? '');
+            $destination = trim($columns[1] ?? '');
+            $statusCode = trim($columns[2] ?? '') ?: '301';
+
+            if ($source === '' || $destination === '') {
+                $skipped++;
+                continue;
+            }
+
+            $redirect = new Redirect();
+            $redirect->siteId = $siteId;
+            $redirect->sourceUrl = $source;
+            $redirect->destinationUrl = $destination;
+            $redirect->statusCode = $statusCode;
+
+            if (Craft::$app->getElements()->saveElement($redirect)) {
+                $created++;
+            } else {
+                $skipped++;
+            }
+        }
+
+        return ['created' => $created, 'skipped' => $skipped];
     }
 
     /**
