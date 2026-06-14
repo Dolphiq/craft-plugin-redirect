@@ -209,6 +209,7 @@ class Redirect extends Element
             'destinationUrl' => Craft::t('redirect', 'Destination URL'),
             'hitAt' => Craft::t('redirect', 'Last hit'),
             'statusCode' => Craft::t('redirect', 'Redirect type'),
+            'matchType' => Craft::t('redirect', 'Match type'),
             'hitCount' => Craft::t('redirect', 'Hit count'),
             'elements.dateCreated' => Craft::t('app', 'Date Created'),
         ];
@@ -227,8 +228,7 @@ class Redirect extends Element
             'hitCount' => ['label' => Craft::t('redirect', 'Hit count')],
             'dateCreated' => ['label' => Craft::t('app', 'Date Created')],
             'statusCode' => ['label' => Craft::t('redirect', 'Redirect type')],
-            // 'baseUrl' => ['label' => Craft::t('redirect', '')],
-
+            'matchType' => ['label' => Craft::t('redirect', 'Match type')],
         ];
 
         return $attributes;
@@ -254,6 +254,9 @@ class Redirect extends Element
                 ];
 
                 return $this->statusCode ? Html::encodeParams('{statusCode}', ['statusCode' => Craft::t('redirect', $statusCodesOptions[$this->statusCode])]) : '';
+
+            case 'matchType':
+                return Html::encode(ucfirst((string)$this->matchType));
 
             case 'baseUrl':
 
@@ -296,7 +299,29 @@ class Redirect extends Element
         $rules[] = [['hitCount'], 'number', 'integerOnly' => true];
         $rules[] = [['sourceUrl', 'destinationUrl'], 'string', 'max' => 1000];
         $rules[] = [['sourceUrl', 'destinationUrl'], 'required'];
+        $rules[] = [['matchType'], 'in', 'range' => self::MATCH_TYPES];
+        $rules[] = [['priority'], 'number', 'integerOnly' => true];
         return $rules;
+    }
+
+    /**
+     * Supported match types.
+     */
+    public const MATCH_TYPES = ['exact', 'prefix', 'wildcard', 'pattern'];
+
+    /**
+     * Infers a match type from a source URL's syntax (used as the default when one
+     * isn't explicitly chosen). `prefix` is never inferred — it's an explicit choice.
+     */
+    public static function inferMatchType(string $sourceUrl): string
+    {
+        if (str_contains($sourceUrl, '*')) {
+            return 'wildcard';
+        }
+        if (str_contains($sourceUrl, '<')) {
+            return 'pattern';
+        }
+        return 'exact';
     }
 
     /**
@@ -325,6 +350,11 @@ class Redirect extends Element
      */
     public function beforeSave(bool $isNew): bool
     {
+        // default the match type by inferring it from the source syntax
+        if (empty($this->matchType)) {
+            $this->matchType = self::inferMatchType((string)$this->sourceUrl);
+        }
+
         return parent::beforeSave($isNew);
     }
 
@@ -362,6 +392,8 @@ class Redirect extends Element
         $record->sourceUrl = $this->formatUrl($this->sourceUrl);
         $record->destinationUrl = $this->formatUrl($this->destinationUrl);
         $record->statusCode = $this->statusCode;
+        $record->matchType = $this->matchType ?: self::inferMatchType((string)$this->sourceUrl);
+        $record->priority = (int)$this->priority;
 
         $record->save(false);
 
@@ -386,7 +418,7 @@ class Redirect extends Element
      */
     protected static function defineDefaultTableAttributes(string $source): array
     {
-        $attributes = ['sourceUrl', 'destinationUrl', 'statusCode', 'hitAt', 'hitCount', 'dateCreated'];
+        $attributes = ['sourceUrl', 'destinationUrl', 'matchType', 'statusCode', 'hitAt', 'hitCount', 'dateCreated'];
 
         return $attributes;
     }
@@ -458,6 +490,16 @@ class Redirect extends Element
      * @var string|null statusCode
      */
     public $statusCode;
+
+    /**
+     * @var string|null matchType — exact | prefix | wildcard | pattern
+     */
+    public $matchType;
+
+    /**
+     * @var int priority — lower number = evaluated first on overlap
+     */
+    public $priority = 0;
 
     /**
      * @var int|null siteId

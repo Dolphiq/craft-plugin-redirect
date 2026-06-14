@@ -9,78 +9,14 @@
 
 namespace dolphiq\redirect\migrations;
 
-use Craft;
 use craft\db\Migration;
 
-class Install extends Migration
+/**
+ * Adds the aggregate (PII-free) 404 analytics tables.
+ */
+class m260614_000002_add_404_analytics extends Migration
 {
-    public function safeUp()
-    {
-        $this->createTables();
-
-        echo " done\n";
-    }
-
-    public function safeDown()
-    {
-        $this->dropTableIfExists('{{%dolphiq_redirects}}');
-        $this->dropTableIfExists('{{%dolphiq_redirects_catch_all_urls}}');
-        $this->removeRedirectsFromElementsTable();
-        return true;
-    }
-
-    // Protected Methods
-    // =========================================================================
-
-    /**
-     * Creates the tables.
-     *
-     * @return void
-     */
-    protected function createTables()
-    {
-        // new table!!
-
-        $this->createTable('{{%dolphiq_redirects}}', [
-            'id' => $this->primaryKey(),
-            'sourceUrl' => $this->string(),
-            'destinationUrl' => $this->string(),
-            'statusCode' => $this->string(),
-            'matchType' => $this->string(20)->notNull()->defaultValue('exact'),
-            'priority' => $this->integer()->notNull()->defaultValue(0),
-            'hitCount' => $this->integer()->unsigned()->notNull()->defaultValue(0),
-            'hitAt' => $this->dateTime(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
-        ]);
-
-        if (!$this->db->tableExists('{{%dolphiq_redirects_catch_all_urls}}')) {
-            $this->createTable(
-                '{{%dolphiq_redirects_catch_all_urls}}',
-                [
-                    'id' => $this->primaryKey(),
-                    'uri' => $this->string(255)->notNull()->defaultValue(''),
-                    // 'firstHitAt' => $this->dateTime()->notNull(),
-                    // 'lastHitAt' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    'siteId' => $this->integer()->unsigned()->notNull()->defaultValue(0),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'hitCount' => $this->integer()->unsigned()->notNull()->defaultValue(0),
-                ]
-            );
-        }
-
-        $this->addForeignKey(null, '{{%dolphiq_redirects}}', ['id'], '{{%elements}}', ['id'], 'CASCADE', null);
-
-        $this->createAnalyticsTables();
-    }
-
-    /**
-     * Aggregate (PII-free) 404 analytics tables.
-     */
-    protected function createAnalyticsTables()
+    public function safeUp(): bool
     {
         $catchAll = '{{%dolphiq_redirects_catch_all_urls}}';
 
@@ -126,15 +62,16 @@ class Install extends Migration
             $this->createIndex(null, '{{%dolphiq_redirect_404_agents}}', ['catchAllUrlId', 'browserFamily'], true);
             $this->addForeignKey(null, '{{%dolphiq_redirect_404_agents}}', ['catchAllUrlId'], $catchAll, ['id'], 'CASCADE', null);
         }
+
+        return true;
     }
 
-    /**
-     * Remove the redirect elements from the Craft elements table.
-     *
-     * @return void
-     */
-    protected function removeRedirectsFromElementsTable()
+    public function safeDown(): bool
     {
-        $this->delete('{{%elements}}', ['type' => 'dolphiq\redirect\elements\Redirect']);
+        $this->dropTableIfExists('{{%dolphiq_redirect_404_daily}}');
+        $this->dropTableIfExists('{{%dolphiq_redirect_404_referrers}}');
+        $this->dropTableIfExists('{{%dolphiq_redirect_404_agents}}');
+
+        return true;
     }
 }

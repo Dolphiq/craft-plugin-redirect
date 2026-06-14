@@ -10,6 +10,7 @@ namespace dolphiq\redirect\services;
 
 use Craft;
 use dolphiq\redirect\records\CatchAllUrl as CatchAllUrlRecord;
+use dolphiq\redirect\RedirectPlugin;
 use yii\base\Component;
 
 /**
@@ -46,7 +47,32 @@ class CatchAll extends Component
             $catchAllurl->hitCount = $catchAllurl->hitCount + 1;
         }
         $catchAllurl->save();
+
+        $this->recordAnalytics((int)$catchAllurl->id);
+
         return true;
+    }
+
+    /**
+     * Records privacy-safe aggregate analytics for a 404 hit, if enabled and this is a web request.
+     */
+    private function recordAnalytics(int $catchAllUrlId): void
+    {
+        if (!RedirectPlugin::$plugin->getSettings()->analyticsEnabled) {
+            return;
+        }
+
+        $request = Craft::$app->getRequest();
+        if (!$request instanceof \craft\web\Request) {
+            return;
+        }
+
+        RedirectPlugin::$plugin->getAnalytics()->record(
+            $catchAllUrlId,
+            $request->getReferrer(),
+            $request->getUserAgent(),
+            (new \DateTime())->format('Y-m-d')
+        );
     }
 
     public function getLastUrls(int $limit = 100, int $siteId = 0): array

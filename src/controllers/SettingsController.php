@@ -16,6 +16,7 @@ use craft\web\Controller;
 use dolphiq\redirect\elements\Redirect;
 use dolphiq\redirect\RedirectPlugin;
 use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
 class SettingsController extends Controller
@@ -129,6 +130,52 @@ class SettingsController extends Controller
     }
 
     /**
+     * Per-404 analytics detail (daily trend, top referrers, browser families).
+     */
+    public function actionCatchAllStats(int $id): \yii\web\Response
+    {
+        $this->requireLogin();
+
+        $siteId = Craft::$app->getSites()->currentSite->id;
+        $record = \dolphiq\redirect\records\CatchAllUrl::findOne(['id' => $id, 'siteId' => $siteId]);
+        if ($record === null) {
+            throw new NotFoundHttpException('Missed URL not found');
+        }
+
+        $analytics = RedirectPlugin::$plugin->getAnalytics();
+        $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
+        $source = $routeParameters['source'] ?? 'CpSection';
+
+        return $this->renderTemplate('redirect/404stats', [
+            'navItems' => $this->getMenuItems(),
+            'pathPrefix' => ($source == 'CpSettings' ? 'settings/' : ''),
+            'uri' => $record->uri,
+            'trend' => $analytics->dailyTrend($id, 30),
+            'referrers' => $analytics->topReferrers($id, 10),
+            'agents' => $analytics->agentBreakdown($id),
+        ]);
+    }
+
+    /**
+     * Import / Export sub-page (CSV).
+     */
+    public function actionImportExport(): \yii\web\Response
+    {
+        $this->requireLogin();
+
+        $routeParameters = Craft::$app->getUrlManager()->getRouteParams();
+        $source = $routeParameters['source'] ?? 'CpSection';
+        $siteId = Craft::$app->getRequest()->getQueryParam('siteId', Craft::$app->getSites()->currentSite->id);
+
+        return $this->renderTemplate('redirect/importexport', [
+            'navItems' => $this->getMenuItems(),
+            'source' => $source,
+            'selectedSiteId' => $siteId,
+            'pathPrefix' => ($source == 'CpSettings' ? 'settings/' : ''),
+        ]);
+    }
+
+    /**
      * Downloads all redirects for a site as a CSV file.
      */
     public function actionExportRedirects(): \yii\web\Response
@@ -196,6 +243,10 @@ class SettingsController extends Controller
             'label' => "Redirect entries",
             'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect'),
         ];
+        $navItems['importexport'] = [
+            'label' => "Import / Export",
+            'url' => UrlHelper::url(($source == 'CpSettings' ? 'settings/' : '') . 'redirect/import-export'),
+        ];
 
         return $navItems;
     }
@@ -246,6 +297,8 @@ class SettingsController extends Controller
             'catchAllActive' => (bool)$request->getBodyParam('catchAllActive'),
             'catchAllTemplate' => (string)$request->getBodyParam('catchAllTemplate'),
             'autoCreateRedirectOnUriChange' => (bool)$request->getBodyParam('autoCreateRedirectOnUriChange'),
+            'analyticsEnabled' => (bool)$request->getBodyParam('analyticsEnabled'),
+            'analyticsRetentionDays' => (int)$request->getBodyParam('analyticsRetentionDays', 90),
 
         ];
 
@@ -263,6 +316,25 @@ class SettingsController extends Controller
         Craft::$app->getSession()->setNotice(Craft::t('app', 'Plugin settings saved.'));
 
         return $this->redirectToPostedUrl((object)$newSettings);
+    }
+
+    /**
+     * Live-tests a redirect definition against a URL (no DB write). Returns JSON
+     * `{matched, destination, error}` for the edit-form "test this redirect" box.
+     */
+    public function actionTest(): \yii\web\Response
+    {
+        $this->requireAcceptsJson();
+        $this->requireLogin();
+
+        $request = Craft::$app->getRequest();
+
+        return $this->asJson(RedirectPlugin::$plugin->getRedirects()->testMatch(
+            (string)$request->getBodyParam('matchType', 'exact'),
+            (string)$request->getBodyParam('sourceUrl', ''),
+            (string)$request->getBodyParam('destinationUrl', ''),
+            (string)$request->getBodyParam('testUrl', ''),
+        ));
     }
 
     /**
@@ -303,6 +375,12 @@ class SettingsController extends Controller
 
         $variables['statusCodeOptions'] = $statusCodesOptions;
         $variables['editableSitesOptions'] = $editableSitesOptions;
+        $variables['matchTypeOptions'] = [
+            'exact' => Craft::t('redirect', 'Exact match'),
+            'prefix' => Craft::t('redirect', 'Prefix — path starts with the source'),
+            'wildcard' => Craft::t('redirect', 'Wildcard — * matches any segments'),
+            'pattern' => Craft::t('redirect', 'Pattern — <name> / <name:regex>'),
+        ];
 
 
         $variables['brandNewRedirect'] = false;
@@ -334,6 +412,7 @@ class SettingsController extends Controller
                     if ($url !== null) {
                         $redirect->sourceUrl = $url->uri;
                         $redirect->siteId = $url->siteId;
+                        $redirect->matchType = 'exact';
                     }
                 }
 
@@ -372,6 +451,8 @@ class SettingsController extends Controller
         $redirect->sourceUrl = $request->getBodyParam('sourceUrl');
         $redirect->destinationUrl = $request->getBodyParam('destinationUrl');
         $redirect->statusCode = $request->getBodyParam('statusCode');
+        $redirect->matchType = $request->getBodyParam('matchType');
+        $redirect->priority = (int)$request->getBodyParam('priority', 0);
         $siteId = $request->getBodyParam('siteId');
         if ($siteId == null) {
             $siteId = Craft::$app->getSites()->currentSite->id;

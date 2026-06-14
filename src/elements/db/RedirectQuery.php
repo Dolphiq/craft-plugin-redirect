@@ -123,6 +123,8 @@ class RedirectQuery extends ElementQuery
             'dolphiq_redirects.hitAt',
             'dolphiq_redirects.hitCount',
             'dolphiq_redirects.statusCode',
+            'dolphiq_redirects.matchType',
+            'dolphiq_redirects.priority',
         ]);
 
         if ($this->sourceUrl) {

@@ -63,8 +63,14 @@ That's it — open **Site redirects** in the control panel and add your first re
 
 ## Usage
 
-Add a redirect under **Site redirects → New redirect**. Provide a source URL, a destination URL,
-and choose the redirect type. A few common patterns:
+Add a redirect under **Site redirects → New redirect**. Pick a **match type**, enter a source and
+destination URL, choose the redirect type — and use **Test this redirect** to check a URL before saving.
+
+<p align="center">
+  <img src="resources/screenshots/edit-form.png" alt="Redirect edit form with match-type picker and live test" width="100%">
+</p>
+
+A few common patterns:
 
 #### Rename a page (exact match)
 
@@ -107,9 +113,13 @@ with the `autoCreateRedirectOnUriChange` setting.
 
 ## Import & export (CSV)
 
-From **Site redirects**, use **Export CSV** to download all redirects, or **Import CSV** to bulk-add
-them. Columns: `sourceUrl, destinationUrl, statusCode` (a header row and blank/incomplete rows are
-skipped; missing status codes default to `301`).
+On the **Site redirects → Import / Export** page, use **Export CSV** to download all redirects, or
+**Import CSV** to bulk-add them. Columns: `sourceUrl, destinationUrl, statusCode` (a header row and
+blank/incomplete rows are skipped; missing status codes default to `301`).
+
+<p align="center">
+  <img src="resources/screenshots/import-export.png" alt="Import / Export page" width="100%">
+</p>
 
 ## GraphQL
 

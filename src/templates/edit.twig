@@ -38,6 +38,15 @@
             }) }}
         {% endif %}
 
+        {{ forms.selectField({
+            label: "Match type"|t('redirect'),
+            instructions: "How the source URL is matched against incoming requests."|t('redirect'),
+            id: 'match-type',
+            name: 'matchType',
+            options: matchTypeOptions,
+            value: redirect.matchType,
+        }) }}
+
         {{ forms.textField({
             label: "Source URL"|t('redirect'),
             instructions: "The URL to be redirected"|t('redirect'),
@@ -71,8 +80,84 @@
             targetPrefix: '.statusCode-',
             errors: redirect.getErrors('statusCode')
         }) }}
+
+        {{ forms.textField({
+            label: "Priority"|t('redirect'),
+            instructions: "Lower numbers are evaluated first when more than one redirect could match."|t('redirect'),
+            id: 'priority',
+            type: 'number',
+            name: 'priority',
+            value: redirect.priority,
+            size: 5,
+            errors: redirect.getErrors('priority')
+        }) }}
+
+        <hr>
+
+        <div class="field">
+            <div class="heading">
+                <label>{{ "Test this redirect"|t('redirect') }}</label>
+                <div class="instructions"><p>{{ "Enter a URL to check whether it matches (nothing is saved)."|t('redirect') }}</p></div>
+            </div>
+            <div class="input ltr">
+                <input type="text" id="redirect-test-url" class="text fullwidth" placeholder="docs/getting-started">
+                <button type="button" id="redirect-test-btn" class="btn" style="margin-top:6px;">{{ "Test"|t('redirect') }}</button>
+                <div id="redirect-test-result" style="margin-top:8px;"></div>
+            </div>
+        </div>
+
+        {% if redirect.id %}
+            <hr>
+            <button type="button" id="redirect-delete-btn" class="btn delete">{{ "Delete redirect"|t('redirect') }}</button>
+        {% endif %}
     </div>
 
 {% endblock %}
+
+{% js %}
+(function () {
+    var btn = document.getElementById('redirect-test-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+        var result = document.getElementById('redirect-test-result');
+        result.textContent = '…';
+        Craft.sendActionRequest('POST', 'redirect/settings/test', {
+            data: {
+                matchType: document.getElementById('match-type').value,
+                sourceUrl: document.getElementById('source-url').value,
+                destinationUrl: document.getElementById('destination-url').value,
+                testUrl: document.getElementById('redirect-test-url').value
+            }
+        }).then(function (resp) {
+            var r = resp.data;
+            if (r.error) {
+                result.innerHTML = '<span class="error">' + r.error + '</span>';
+            } else if (r.matched) {
+                result.innerHTML = '<span style="color:#127fbf;">✓ ' + Craft.t('redirect', 'Matches') + ' → ' + r.destination + '</span>';
+            } else {
+                result.innerHTML = '<span>✗ ' + Craft.t('redirect', 'No match') + '</span>';
+            }
+        }).catch(function () {
+            result.innerHTML = '<span class="error">' + Craft.t('redirect', 'Test failed') + '</span>';
+        });
+    });
+
+    var del = document.getElementById('redirect-delete-btn');
+    if (del) {
+        del.addEventListener('click', function () {
+            if (!confirm(Craft.t('redirect', 'Are you sure you want to delete this redirect?'))) {
+                return;
+            }
+            Craft.sendActionRequest('POST', 'redirect/settings/delete-redirect', {
+                data: { id: {{ redirect.id ?? 'null' }} }
+            }).then(function () {
+                window.location.href = '{{ url(pathPrefix ~ 'redirect')|raw }}';
+            }).catch(function () {
+                Craft.cp.displayError(Craft.t('redirect', 'Couldn’t delete the redirect.'));
+            });
+        });
+    }
+})();
+{% endjs %}
 
 

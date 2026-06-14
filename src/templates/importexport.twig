@@ -1,0 +1,37 @@
+{% extends "_layouts/cp" %}
+
+{% set title = "Import / Export"|t('redirect') %}
+
+{% set crumbs = [
+    { label: "Settings"|t('app'), url: url('settings') },
+    { label: "Redirects"|t('redirect'), url: url(pathPrefix ~ 'redirect') },
+] %}
+
+{% block sidebar %}
+    {% set selectedItem = 'importexport' %}
+    {% include "redirect/nav" %}
+{% endblock %}
+
+{% block content %}
+    <h2>{{ "Export"|t('redirect') }}</h2>
+    <p>{{ "Download all redirects for this site as a CSV file."|t('redirect') }}</p>
+    <p>
+        <a href="{{ url(pathPrefix ~ 'redirect/export') }}" class="btn submit icon download">{{ "Export CSV"|t('redirect') }}</a>
+    </p>
+
+    <hr>
+
+    <h2>{{ "Import"|t('redirect') }}</h2>
+    <p>{{ "Upload a CSV with columns: sourceUrl, destinationUrl, statusCode. A header row and blank/incomplete rows are skipped; missing status codes default to 301. Max 5 MB."|t('redirect') }}</p>
+    <form method="post" enctype="multipart/form-data">
+        {{ csrfInput() }}
+        {{ actionInput('redirect/settings/import-redirects') }}
+        {{ redirectInput(pathPrefix ~ 'redirect/import-export') }}
+        <div class="field">
+            <div class="input">
+                <input type="file" name="file" accept=".csv">
+            </div>
+        </div>
+        <button type="submit" class="btn submit">{{ "Import CSV"|t('redirect') }}</button>
+    </form>
+{% endblock %}

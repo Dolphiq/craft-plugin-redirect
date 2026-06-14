@@ -80,7 +80,10 @@ class Redirects extends Component
      */
     public function getAllRedirectsForSite($siteId = null): array
     {
-        $results = Redirect::find()->andWhere(Db::parseParam('elements_sites.siteId', $siteId))->all();
+        $results = Redirect::find()
+            ->andWhere(Db::parseParam('elements_sites.siteId', $siteId))
+            ->orderBy(['dolphiq_redirects.priority' => SORT_ASC, 'elements.id' => SORT_ASC])
+            ->all();
         return $results;
     }
 
@@ -159,15 +162,70 @@ class Redirects extends Component
     {
         foreach ($this->getAllRedirectsForSite($siteId) as $redirect) {
             $source = trim((string)$redirect->sourceUrl, '/');
-            $named = [];
-            $wildcards = [];
+            $matchType = $redirect->matchType ?: Redirect::inferMatchType($source);
 
-            if ($source === $uri) {
-                // exact match, no parameters
-            } elseif (str_contains($source, '<') || str_contains($source, '*')) {
+            $captures = $this->matchOne($matchType, $source, $uri);
+            if ($captures === null) {
+                continue;
+            }
+
+            return [
+                'destinationUrl' => $this->applyCaptures((string)$redirect->destinationUrl, $captures),
+                'statusCode' => (string)$redirect->statusCode,
+                'redirectId' => (int)$redirect->id,
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Tests a single redirect definition against a URL without touching the database.
+     * Never throws — an invalid pattern is reported via `error`.
+     *
+     * @return array{matched: bool, destination: string|null, error: string|null}
+     */
+    public function testMatch(string $matchType, string $sourceUrl, string $destinationUrl, string $testUrl): array
+    {
+        try {
+            $captures = $this->matchOne($matchType, trim($sourceUrl, '/'), trim($testUrl, '/'));
+            if ($captures === null) {
+                return ['matched' => false, 'destination' => null, 'error' => null];
+            }
+
+            return [
+                'matched' => true,
+                'destination' => $this->applyCaptures($destinationUrl, $captures),
+                'error' => null,
+            ];
+        } catch (\Throwable $e) {
+            return ['matched' => false, 'destination' => null, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Matches a normalised URI against one source pattern by type.
+     *
+     * @return array{named: array<string,string>, wildcards: array<int,string>}|null
+     */
+    private function matchOne(string $matchType, string $source, string $uri): ?array
+    {
+        switch ($matchType) {
+            case 'exact':
+                return $source === $uri ? ['named' => [], 'wildcards' => []] : null;
+
+            case 'prefix':
+                return ($uri === $source || str_starts_with($uri, $source . '/'))
+                    ? ['named' => [], 'wildcards' => []]
+                    : null;
+
+            case 'wildcard':
+            case 'pattern':
                 if (!preg_match($this->sourceUrlToRegex($source), $uri, $matches)) {
-                    continue;
+                    return null;
                 }
+                $named = [];
+                $wildcards = [];
                 foreach ($matches as $key => $value) {
                     if (!is_string($key)) {
                         continue;
@@ -178,29 +236,32 @@ class Redirects extends Component
                         $named[$key] = $value;
                     }
                 }
-            } else {
-                continue;
-            }
+                return ['named' => $named, 'wildcards' => $wildcards];
 
-            $destinationUrl = (string)$redirect->destinationUrl;
-            foreach ($named as $name => $value) {
-                $destinationUrl = str_replace("<$name>", $value, $destinationUrl);
-            }
-            if ($wildcards !== []) {
-                $i = 0;
-                $destinationUrl = preg_replace_callback('/\*/', static function() use (&$i, $wildcards) {
-                    return $wildcards[$i++] ?? '';
-                }, $destinationUrl);
-            }
+            default:
+                return null;
+        }
+    }
 
-            return [
-                'destinationUrl' => $destinationUrl,
-                'statusCode' => (string)$redirect->statusCode,
-                'redirectId' => (int)$redirect->id,
-            ];
+    /**
+     * Substitutes captured named params and wildcards into a destination URL.
+     *
+     * @param array{named: array<string,string>, wildcards: array<int,string>} $captures
+     */
+    private function applyCaptures(string $destinationUrl, array $captures): string
+    {
+        foreach ($captures['named'] as $name => $value) {
+            $destinationUrl = str_replace("<$name>", $value, $destinationUrl);
         }
 
-        return null;
+        if ($captures['wildcards'] !== []) {
+            $i = 0;
+            $destinationUrl = preg_replace_callback('/\*/', static function() use (&$i, $captures) {
+                return $captures['wildcards'][$i++] ?? '';
+            }, $destinationUrl);
+        }
+
+        return $destinationUrl;
     }
 
     /**

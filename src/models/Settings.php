@@ -28,6 +28,20 @@ class Settings extends Model
     public $autoCreateRedirectOnUriChange = true;
 
     /**
+     * Whether to collect privacy-safe 404 analytics (aggregate counts; no IPs/UA stored).
+     *
+     * @var bool
+     */
+    public $analyticsEnabled = false;
+
+    /**
+     * How many days of daily 404 analytics to keep before pruning.
+     *
+     * @var int
+     */
+    public $analyticsRetentionDays = 90;
+
+    /**
      * @inheritdoc
      */
     public function init(): void

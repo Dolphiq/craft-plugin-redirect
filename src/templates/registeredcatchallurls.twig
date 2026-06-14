@@ -37,6 +37,7 @@
             <th scope="col">{{ "Url"|t('redirect') }}</th>
             <th scope="col">{{ "Hits"|t('redirect') }}</th>
             <th scope="col">{{ "Last hit"|t('redirect') }}</th>
+            {% if settings.analyticsEnabled %}<th scope="col">{{ "Stats"|t('redirect') }}</th>{% endif %}
             <td class="thin"></td>
             </thead>
             <tbody>
@@ -48,6 +49,9 @@
                     <td data-title="{{ 'Hits'|t('redirect') }}"><code>{{ urlItem.hitCount }}</code></td>
                     <td data-title="{{ 'Last hit'|t('redirect') }}">
                         <code>{{ urlItem.dateUpdated|datetime('short') }}</code></td>
+                    {% if settings.analyticsEnabled %}
+                        <td data-title="{{ 'Stats'|t('redirect') }}"><a href="{{ url(pathPrefix ~ 'redirect/404-stats/' ~ urlItem.id) }}">{{ "View"|t('redirect') }}</a></td>
+                    {% endif %}
                     <td class="thin"><a class="delete icon" title="{{ 'Delete'|t('app') }}" role="button"></a></td>
                 </tr>
             {% endfor %}

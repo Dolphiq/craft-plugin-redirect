@@ -5,17 +5,7 @@
 {% set docsUrl = 'https://github.com/Dolphiq/craft-plugin-redirect' %}
 
 {% block actionButton %}
-    <div class="btngroup">
-        <a href="{{ url( pathPrefix ~ 'redirect/new') }}" class="submit btn add icon">{{ "New redirect"|t('redirect') }}</a>
-        <a href="{{ url( pathPrefix ~ 'redirect/export') }}" class="btn icon download">{{ "Export CSV"|t('redirect') }}</a>
-    </div>
-    <form method="post" enctype="multipart/form-data" style="display:inline-block; margin-left: 5px;">
-        {{ csrfInput() }}
-        {{ actionInput('redirect/settings/import-redirects') }}
-        {{ redirectInput(pathPrefix ~ 'redirect') }}
-        <input type="file" name="file" accept=".csv" style="display:inline-block; width:auto;">
-        <button type="submit" class="btn">{{ "Import CSV"|t('redirect') }}</button>
-    </form>
+    <a href="{{ url( pathPrefix ~ 'redirect/new') }}" class="submit btn add icon">{{ "New redirect"|t('redirect') }}</a>
 {% endblock %}
 
 {% block sidebar %}

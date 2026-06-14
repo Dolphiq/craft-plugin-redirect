@@ -34,6 +34,7 @@ use dolphiq\redirect\RedirectPlugin;
 $redirects = RedirectPlugin::getInstance()->getRedirects();
 
 $match    = $redirects->resolveForUri('old-page', $siteId);   // ?array{destinationUrl,statusCode,redirectId}
+$test     = $redirects->testMatch('pattern', 'item/<id>', 'products/<id>', 'item/42'); // {matched,destination,error}
 $redirects->createUriChangeRedirect('old', 'new', $siteId);   // auto-redirect (loop-safe)
 $csv      = $redirects->exportCsv($siteId);                    // string
 $result   = $redirects->importCsv($csv, $siteId);             // ['created' => int, 'skipped' => int]
@@ -42,6 +43,12 @@ $redirects->deleteRedirectById($id);                          // bool
 $catchAll = RedirectPlugin::getInstance()->getCatchAll();
 $missed   = $catchAll->getLastUrls(10, $siteId);              // recent 404s
 ```
+
+## Match types
+
+Each redirect stores a `matchType` (`exact | prefix | wildcard | pattern`), chosen on the edit form.
+If omitted it's inferred from the source syntax (`*` → wildcard, `<…>` → pattern, otherwise exact)
+via `Redirect::inferMatchType()`. See [RULES.md](RULES.md) for behavior per type.
 
 ## Config-file redirects
 
@@ -73,6 +80,20 @@ Event::on(
     }
 );
 ```
+
+## 404 analytics (privacy-first)
+
+Opt-in (`analyticsEnabled`, off by default). When on, each 404 records **aggregate** counts only —
+**no IP addresses and no raw User-Agents are stored**:
+
+- daily hit counts, top **referrers** (host + path, query string stripped), and coarse **browser
+  family** (derived from the UA, e.g. `Chrome`/`Bot`; the raw UA is discarded).
+- Tables: `dolphiq_redirect_404_daily`, `…_referrers`, `…_agents` (all cascade-delete with the 404 URL).
+- Retained for `analyticsRetentionDays` (default 90); old daily rows are pruned during Craft's garbage collection.
+- View per-URL stats at **Registered catch all urls → View**.
+
+Disable/purge: turn `analyticsEnabled` off (collection stops); deleting a missed URL removes its stats;
+lower `analyticsRetentionDays` to prune sooner. Service: `RedirectPlugin::getInstance()->getAnalytics()`.
 
 ## Caching
 

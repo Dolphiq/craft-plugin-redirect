@@ -66,13 +66,13 @@ parameters:
 			path: src/controllers/RedirectController.php
 
 		-
-			message: "#^Class craft\\\\web\\\\Response referenced with incorrect case\\: Craft\\\\web\\\\Response\\.$#"
-			count: 6
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\CatchAllUrl\\:\\:\\$uri\\.$#"
+			count: 1
 			path: src/controllers/SettingsController.php
 
 		-
-			message: "#^Instantiated class dolphiq\\\\redirect\\\\controllers\\\\NotFoundHttpException not found\\.$#"
-			count: 2
+			message: "#^Class craft\\\\web\\\\Response referenced with incorrect case\\: Craft\\\\web\\\\Response\\.$#"
+			count: 6
 			path: src/controllers/SettingsController.php
 
 		-
@@ -166,16 +166,6 @@ parameters:
 			path: src/controllers/SettingsController.php
 
 		-
-			message: "#^PHPDoc tag @throws with type dolphiq\\\\redirect\\\\controllers\\\\NotFoundHttpException is not subtype of Throwable$#"
-			count: 1
-			path: src/controllers/SettingsController.php
-
-		-
-			message: "#^Throwing object of an unknown class dolphiq\\\\redirect\\\\controllers\\\\NotFoundHttpException\\.$#"
-			count: 2
-			path: src/controllers/SettingsController.php
-
-		-
 			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$destinationUrl\\.$#"
 			count: 1
 			path: src/elements/Redirect.php
@@ -192,6 +182,16 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$id\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$matchType\\.$#"
+			count: 1
+			path: src/elements/Redirect.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\Redirect\\:\\:\\$priority\\.$#"
 			count: 1
 			path: src/elements/Redirect.php
 
@@ -263,6 +263,11 @@ parameters:
 		-
 			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\CatchAllUrl\\:\\:\\$hitCount\\.$#"
 			count: 3
+			path: src/services/CatchAll.php
+
+		-
+			message: "#^Access to an undefined property dolphiq\\\\redirect\\\\records\\\\CatchAllUrl\\:\\:\\$id\\.$#"
+			count: 1
 			path: src/services/CatchAll.php
 
 		-

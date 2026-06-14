@@ -3,7 +3,10 @@
 A redirect matches a requested URL by its **source URL**. Redirect Manager resolves a redirect
 only when a URL would otherwise 404, so a redirect never shadows a page that already exists.
 
-Five kinds of source pattern are supported, from simplest to most powerful.
+Each redirect has a **match type** — `exact`, `prefix`, `wildcard`, or `pattern` — chosen from the
+picker on the edit form. Use the **"Test this redirect"** box there to check a URL against your
+redirect before saving (nothing is written). The match types are described below, from simplest to
+most powerful.
 
 ## 1. Exact match
 
@@ -13,6 +16,18 @@ Destination URL:  about
 ```
 
 `/about-us` → `/about`.
+
+## 1b. Prefix — path starts with the source
+
+Match any URL beneath a path. Match type: **prefix**.
+
+```
+Source URL:       blog
+Destination URL:  news
+```
+
+`/blog`, `/blog/2024`, `/blog/2024/post` all → `/news`. `/blogger` does **not** match (it's not a
+path segment boundary).
 
 ## 2. Redirect to another (sub)domain
 

@@ -70,5 +70,25 @@
         errors:       settings.getErrors('autoCreateRedirectOnUriChange')
     }) }}
 
+    {{ forms.lightswitchField({
+        label:        "Collect 404 analytics"|t('redirect'),
+        instructions: "Record privacy-safe, aggregate 404 statistics (daily counts, referrers, browser families). No IP addresses or raw user agents are stored."|t('redirect'),
+        id:           'analyticsEnabled',
+        name:         'analyticsEnabled',
+        on:           settings.analyticsEnabled,
+        errors:       settings.getErrors('analyticsEnabled')
+    }) }}
+
+    {{ forms.textField({
+        label: "Analytics retention (days)"|t('redirect'),
+        instructions: "How many days of daily 404 statistics to keep."|t('redirect'),
+        id: 'analyticsRetentionDays',
+        type: 'number',
+        name: 'analyticsRetentionDays',
+        value: settings.analyticsRetentionDays,
+        size: 5,
+        errors: settings.getErrors('analyticsRetentionDays')
+    }) }}
+
 
 {% endblock content %}

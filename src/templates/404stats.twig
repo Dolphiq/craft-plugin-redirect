@@ -1,0 +1,66 @@
+{% extends "_layouts/cp" %}
+
+{% set title = "404 statistics"|t('redirect') %}
+
+{% set crumbs = [
+    { label: "Settings"|t('app'), url: url('settings') },
+    { label: "Redirects"|t('redirect'), url: url(pathPrefix ~ 'redirect') },
+    { label: "Registered catch all urls"|t('redirect'), url: url(pathPrefix ~ 'redirect/registered-catch-all-urls') },
+] %}
+
+{% block sidebar %}
+    {% set selectedItem = 'registeredcatchall' %}
+    {% include "redirect/nav" %}
+{% endblock %}
+
+{% block content %}
+    <h2 class="ltr"><code>{{ uri }}</code></h2>
+
+    <h3>{{ "Hits per day (last 30 days)"|t('redirect') }}</h3>
+    {% if trend|length %}
+        {% set maxCount = max(trend|map(r => r.count)) %}
+        <table class="data">
+            <tbody>
+                {% for row in trend %}
+                    <tr>
+                        <td style="white-space:nowrap;">{{ row.date }}</td>
+                        <td style="width:60%;">
+                            <span style="display:inline-block;height:12px;background:#127fbf;border-radius:2px;width:{{ maxCount ? (row.count / maxCount * 100)|round : 0 }}%;"></span>
+                        </td>
+                        <td>{{ row.count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{{ "No data yet."|t('redirect') }}</p>
+    {% endif %}
+
+    <h3>{{ "Top referrers"|t('redirect') }}</h3>
+    {% if referrers|length %}
+        <table class="data fullwidth">
+            <thead><tr><th>{{ "Referrer"|t('redirect') }}</th><th>{{ "Hits"|t('redirect') }}</th></tr></thead>
+            <tbody>
+                {% for r in referrers %}
+                    <tr><td class="ltr">{{ r.host }}{{ r.path }}</td><td>{{ r.count }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{{ "No referrers recorded."|t('redirect') }}</p>
+    {% endif %}
+
+    <h3>{{ "Browsers"|t('redirect') }}</h3>
+    {% if agents|length %}
+        <table class="data fullwidth">
+            <thead><tr><th>{{ "Browser"|t('redirect') }}</th><th>{{ "Hits"|t('redirect') }}</th></tr></thead>
+            <tbody>
+                {% for a in agents %}
+                    <tr><td>{{ a.browserFamily }}</td><td>{{ a.count }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{{ "No browser data recorded."|t('redirect') }}</p>
+    {% endif %}
+{% endblock %}

@@ -10,6 +10,12 @@
 - **"Latest 404s" dashboard widget** showing the most recently missed URLs and their hit counts.
 - **GraphQL support.** A `redirects(siteId)` query exposes `sourceUrl`, `destinationUrl`, `statusCode` and `hitCount`.
 - Documentation: rewrote `RULES.md` to cover every match type and added a `DEVELOPERS.md` reference (settings, service API, events, caching, GraphQL).
+- **Explicit match types** (`exact | prefix | wildcard | pattern`) chosen from a picker on the edit form, with a new `prefix` type and a `matchType` index column. Existing redirects are migrated with an inferred type.
+- **"Test this redirect"** box on the edit form — checks a URL against the redirect live, without saving.
+- Moved CSV import/export to a dedicated **Import / Export** page (decluttered the redirects index).
+- **Priority** field on redirects — when more than one could match a URL, the lower priority number is evaluated first.
+- **Delete** button on the redirect edit page.
+- **Privacy-first 404 analytics** (opt-in, off by default): aggregate daily counts, top referrers and browser families per missed URL — **no IP addresses or raw user agents are stored**. Configurable retention (default 90 days), pruned during garbage collection.
 
 ### Changed
 - Renamed the element index method `tableAttributeHtml()` to `attributeHtml()` per Craft 5.
