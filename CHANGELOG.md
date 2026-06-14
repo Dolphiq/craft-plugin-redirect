@@ -1,5 +1,12 @@
 # Redirect Changelog
 
+## 3.0.0 - unreleased
+### Added
+- **Craft 5 support.** Requires Craft CMS `^5.0` and PHP `^8.2`.
+
+### Changed
+- Renamed the element index method `tableAttributeHtml()` to `attributeHtml()` per Craft 5.
+
 ## Unreleased
 ### Security
 - HTML-encode the source and destination URLs shown in the redirect element index, so a URL value containing markup (e.g. `<catname>`) can no longer inject HTML into the control panel.

@@ -16,7 +16,7 @@ class RedirectTableAttributeTest extends Unit
         $redirect = new Redirect();
         $redirect->sourceUrl = 'category/<catname>/overview.php';
 
-        $html = $redirect->getTableAttributeHtml('sourceUrl');
+        $html = $redirect->getAttributeHtml('sourceUrl');
 
         $this->assertStringNotContainsString('<catname>', $html);
         $this->assertStringContainsString('&lt;catname&gt;', $html);
@@ -27,7 +27,7 @@ class RedirectTableAttributeTest extends Unit
         $redirect = new Redirect();
         $redirect->destinationUrl = 'overview/<catname>';
 
-        $html = $redirect->getTableAttributeHtml('destinationUrl');
+        $html = $redirect->getAttributeHtml('destinationUrl');
 
         $this->assertStringNotContainsString('<catname>', $html);
         $this->assertStringContainsString('&lt;catname&gt;', $html);
