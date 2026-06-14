@@ -54,6 +54,19 @@ class RedirectsServiceTest extends Unit
         $this->assertSame([], (new Redirects())->getConfigFileRedirects());
     }
 
+    public function testDeleteRedirectByIdRemovesIt(): void
+    {
+        $redirect = $this->makeRedirect('delete/me', 'gone');
+
+        $this->assertTrue((new Redirects())->deleteRedirectById($redirect->id));
+        $this->assertNull((new Redirects())->getRedirectById($redirect->id, $this->siteId()));
+    }
+
+    public function testDeleteRedirectByIdReturnsFalseForMissing(): void
+    {
+        $this->assertFalse((new Redirects())->deleteRedirectById(999999));
+    }
+
     public function testInvalidateCacheClearsResolution(): void
     {
         $redirect = $this->makeRedirect('cached/path', 'somewhere');

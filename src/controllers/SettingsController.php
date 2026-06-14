@@ -150,6 +150,12 @@ class SettingsController extends Controller
             return null;
         }
 
+        // Guard against oversized uploads exhausting memory.
+        if ($file->size > 5 * 1024 * 1024) {
+            Craft::$app->getSession()->setError(Craft::t('redirect', 'The CSV file is too large (max 5 MB).'));
+            return null;
+        }
+
         $result = RedirectPlugin::$plugin->getRedirects()->importCsv(file_get_contents($file->tempName), $siteId);
 
         Craft::$app->getSession()->setNotice(Craft::t('redirect', '{created} redirect(s) imported, {skipped} skipped.', $result));

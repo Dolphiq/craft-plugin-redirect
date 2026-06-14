@@ -68,4 +68,13 @@ class CsvImportExportTest extends Unit
 
         $this->assertSame('301', (new Redirects())->resolveForUri('good', $this->siteId())['statusCode']);
     }
+
+    public function testImportNormalisesInvalidStatusCodeTo301(): void
+    {
+        $csv = "bad/code,dest,500\n";
+
+        (new Redirects())->importCsv($csv, $this->siteId());
+
+        $this->assertSame('301', (new Redirects())->resolveForUri('bad/code', $this->siteId())['statusCode']);
+    }
 }

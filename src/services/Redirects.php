@@ -310,6 +310,9 @@ class Redirects extends Component
             $source = trim($columns[0] ?? '');
             $destination = trim($columns[1] ?? '');
             $statusCode = trim($columns[2] ?? '') ?: '301';
+            if (!in_array($statusCode, ['301', '302', '307', '308'], true)) {
+                $statusCode = '301';
+            }
 
             if ($source === '' || $destination === '') {
                 $skipped++;
@@ -344,6 +347,19 @@ class Redirects extends Component
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return Craft::$app->getElements()->getElementById($redirectId, Redirect::class, $siteId);
+    }
+
+    /**
+     * Deletes a redirect by its ID. Returns false if no such redirect exists.
+     */
+    public function deleteRedirectById(int $redirectId): bool
+    {
+        $redirect = $this->getRedirectById($redirectId);
+        if ($redirect === null) {
+            return false;
+        }
+
+        return Craft::$app->getElements()->deleteElement($redirect, true);
     }
 
 
