@@ -21,6 +21,13 @@ class Settings extends Model
     public $catchAllTemplate = '';
 
     /**
+     * Whether to automatically create a 301 redirect when an element's URI changes.
+     *
+     * @var bool
+     */
+    public $autoCreateRedirectOnUriChange = true;
+
+    /**
      * @inheritdoc
      */
     public function init(): void

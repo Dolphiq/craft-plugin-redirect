@@ -12,13 +12,17 @@ namespace dolphiq\redirect;
 
 use Craft;
 use craft\base\Plugin;
+use craft\db\Query;
+use craft\events\ElementEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\feedme\events\RegisterFeedMeElementsEvent;
 use craft\feedme\Plugin as FeedmePlugin;
 use craft\feedme\services\Elements as FeedmeElements;
 use craft\helpers\UrlHelper;
+use craft\services\Elements;
 use craft\web\UrlManager;
 use dolphiq\redirect\elements\FeedMeRedirect;
+use dolphiq\redirect\elements\Redirect;
 use dolphiq\redirect\models\Settings;
 use dolphiq\redirect\services\CatchAll;
 use dolphiq\redirect\services\Redirects;
@@ -189,6 +193,44 @@ class RedirectPlugin extends Plugin
             // controller, which looks up (and caches) a matching redirect on demand.
             Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_SITE_URL_RULES, function(RegisterUrlRulesEvent $event) {
                 $event->rules['<all:.+>'] = 'redirect/redirect/index';
+            });
+        }
+
+        // Automatically create a 301 when an element's URI changes.
+        if ($settings->autoCreateRedirectOnUriChange) {
+            $oldUris = [];
+
+            Event::on(Elements::class, Elements::EVENT_BEFORE_SAVE_ELEMENT, function(ElementEvent $event) use (&$oldUris) {
+                $element = $event->element;
+                if ($event->isNew || $element instanceof Redirect || !$element->id || $element->getIsDraft() || $element->getIsRevision()) {
+                    return;
+                }
+
+                $oldUri = (new Query())
+                    ->select(['uri'])
+                    ->from('{{%elements_sites}}')
+                    ->where(['elementId' => $element->id, 'siteId' => $element->siteId])
+                    ->scalar();
+
+                if ($oldUri) {
+                    $oldUris["{$element->id}-{$element->siteId}"] = $oldUri;
+                }
+            });
+
+            Event::on(Elements::class, Elements::EVENT_AFTER_SAVE_ELEMENT, function(ElementEvent $event) use (&$oldUris) {
+                $element = $event->element;
+                if ($element instanceof Redirect) {
+                    return;
+                }
+
+                $key = "{$element->id}-{$element->siteId}";
+                $oldUri = $oldUris[$key] ?? null;
+                $newUri = $element->uri;
+                unset($oldUris[$key]);
+
+                if ($oldUri && $newUri && $oldUri !== $newUri) {
+                    self::$plugin->getRedirects()->createUriChangeRedirect($oldUri, $newUri, (int)$element->siteId);
+                }
             });
         }
 

@@ -4,6 +4,7 @@
 ### Added
 - **Craft 5 support.** Requires Craft CMS `^5.0` and PHP `^8.2`.
 - **Event-based redirect resolution.** Redirects are now resolved on demand only when a URL would otherwise 404, instead of registering a URL rule per redirect on every request. Resolved matches are cached and invalidated automatically when a redirect changes. This is faster and means a redirect no longer shadows a real page that exists at the same path.
+- **Automatic redirects on URI change.** When an element's URI changes, a 301 from the old URI to the new one is created automatically (reverse redirects are removed to prevent loops). Toggle with the `autoCreateRedirectOnUriChange` setting.
 
 ### Changed
 - Renamed the element index method `tableAttributeHtml()` to `attributeHtml()` per Craft 5.

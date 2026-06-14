@@ -174,6 +174,56 @@ class Redirects extends Component
 
 
     /**
+     * Creates a 301 redirect from an old URI to a new one after an element's URI
+     * changes. No-ops when the URI is unchanged/empty or a redirect from the old URI
+     * already exists. Any reverse redirect (new -> old) is removed to avoid a loop.
+     *
+     * @return Redirect|null the created redirect, or null when nothing was created
+     */
+    public function createUriChangeRedirect(string $oldUri, string $newUri, int $siteId): ?Redirect
+    {
+        $oldUri = trim($oldUri, '/');
+        $newUri = trim($newUri, '/');
+
+        if ($oldUri === '' || $newUri === '' || $oldUri === $newUri) {
+            return null;
+        }
+
+        // Already have a redirect from the old URI on this site? Leave it alone.
+        $existing = Redirect::find()
+            ->andWhere(['dolphiq_redirects.sourceUrl' => $oldUri])
+            ->andWhere(Db::parseParam('elements_sites.siteId', $siteId))
+            ->one();
+        if ($existing !== null) {
+            return null;
+        }
+
+        // Remove any reverse redirect (new -> old) so renaming back and forth can't loop.
+        $reverse = Redirect::find()
+            ->andWhere([
+                'dolphiq_redirects.sourceUrl' => $newUri,
+                'dolphiq_redirects.destinationUrl' => $oldUri,
+            ])
+            ->andWhere(Db::parseParam('elements_sites.siteId', $siteId))
+            ->one();
+        if ($reverse !== null) {
+            Craft::$app->getElements()->deleteElement($reverse, true);
+        }
+
+        $redirect = new Redirect();
+        $redirect->siteId = $siteId;
+        $redirect->sourceUrl = $oldUri;
+        $redirect->destinationUrl = $newUri;
+        $redirect->statusCode = '301';
+
+        if (!Craft::$app->getElements()->saveElement($redirect)) {
+            return null;
+        }
+
+        return $redirect;
+    }
+
+    /**
      * Returns a redirect by its ID.
      *
      * @param int $redirectId

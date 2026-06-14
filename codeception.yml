@@ -9,6 +9,13 @@ bootstrap: _bootstrap.php
 settings:
     shuffle: false
     lint: true
+coverage:
+    enabled: true
+    include:
+        - src/*
+    exclude:
+        - src/migrations/*
+        - src/web/assets/*
 modules:
     config:
         \craft\test\Craft:
