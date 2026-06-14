@@ -162,6 +162,21 @@ class Redirects extends Component
     }
 
     /**
+     * Appends the incoming request's query string to a redirect destination.
+     * No-ops when there is no query string (so destinations never gain a bare `?`),
+     * and joins with `&` when the destination already carries a query string.
+     */
+    public function appendQueryString(string $destinationUrl, string $queryString): string
+    {
+        if ($queryString === '') {
+            return $destinationUrl;
+        }
+
+        $separator = str_contains($destinationUrl, '?') ? '&' : '?';
+        return $destinationUrl . $separator . $queryString;
+    }
+
+    /**
      * Whether a redirect's optional schedule window is currently open.
      * Either bound may be null (open-ended). Accepts anything DateTimeHelper can parse.
      *
