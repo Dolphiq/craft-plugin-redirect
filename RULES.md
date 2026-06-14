@@ -3,8 +3,10 @@
 A redirect matches a requested URL by its **source URL**. Redirect Manager resolves a redirect
 only when a URL would otherwise 404, so a redirect never shadows a page that already exists.
 
-Each redirect has a **match type** — `exact`, `prefix`, `wildcard`, or `pattern` — chosen from the
-picker on the edit form. Use the **"Test this redirect"** box there to check a URL against your
+Each redirect has a **match type** — `exact`, `prefix`, `wildcard`, or `pattern` — inferred from the
+source syntax (or forced from the **Advanced** picker on the edit form). On the form you don't have to
+memorize the syntax: open **"Pattern help"** to click tokens (`*`, `<name>`, `<name:regex>`) straight
+into the last-focused URL field, and use the **"Test this redirect"** box to check a URL against your
 redirect before saving (nothing is written). The match types are described below, from simplest to
 most powerful.
 

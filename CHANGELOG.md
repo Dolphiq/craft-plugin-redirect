@@ -16,6 +16,8 @@
 - **Priority** field on redirects — when more than one could match a URL, the lower priority number is evaluated first.
 - **Delete** button on the redirect edit page.
 - **Privacy-first 404 analytics** (opt-in, off by default): aggregate daily counts, top referrers and browser families per missed URL — **no IP addresses or raw user agents are stored**. Configurable retention (default 90 days), pruned during garbage collection.
+- **Redesigned control-panel screens** to Craft 5 conventions: the redirect edit form now uses a two-pane layout (URLs in the main pane, read-only meta in the details sidebar), the **Delete** action moved into the header action menu, and rarely-used options (match type, priority) collapse into an **Advanced** section. Settings are grouped into sections with dependent fields revealed by their toggle. The "Latest 404s" widget gained an empty state and a "view all" link.
+- **Pattern helper on the redirect form** — a collapsible cheat sheet with click-to-insert tokens (`*`, `<name>`, `<name:regex>`) that drop the syntax into whichever URL field was last focused, so the matching syntax no longer has to be memorized. Picking a match type also updates the Source URL hint and placeholder to match.
 
 ### Changed
 - Renamed the element index method `tableAttributeHtml()` to `attributeHtml()` per Craft 5.
